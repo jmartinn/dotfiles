@@ -4,9 +4,28 @@ This repository contains my personal Neovim configuration, which includes a set 
 
 ## Features
 
-- Language Server Protocol (LSP) support for code completion, diagnostics, and more
+## Features
+
+- Language Server Protocol (LSP) support using [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 - [Telescope](https://github.com/nvim-telescope/telescope.nvim) for powerful and flexible fuzzy finding
-- (Add more notable plugins or features here)
+- Automatic handling of brackets, quotes, and other pairs with [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
+- File explorer integrated into Neovim with [nvim-tree](https://github.com/kyazdani42/nvim-tree.lua)
+- Git integration, including signs and blame information, through [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
+- Debug Adapter Protocol (DAP) integration with [nvim-dap](https://github.com/mfussenegger/nvim-dap), [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui), and [DAPInstall.nvim](https://github.com/ravenxrz/DAPInstall.nvim)
+- Completion powered by [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) and various completion sources
+- Snippet support with [LuaSnip](https://github.com/L3MON4D3/LuaSnip) and [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
+- Treesitter integration using [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- Bufferline management with [bufferline.nvim](https://github.com/akinsho/bufferline.nvim)
+- Status line customization with [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
+- Improved Neovim startup time using [impatient.nvim](https://github.com/lewis6991/impatient.nvim)
+- Buffer deletion without closing the window via [vim-bbye](https://github.com/moll/vim-bbye)
+- Comment management with [Comment.nvim](https://github.com/numToStr/Comment.nvim)
+- Project management using [project.nvim](https://github.com/ahmedkhalf/project.nvim)
+- Various colorschemes, including [darkplus.nvim](https://github.com/lunarvim/darkplus.nvim), [onedarkpro.nvim](https://github.com/olimorris/onedarkpro.nvim), and [gruvbox](https://github.com/gruvbox-community/gruvbox)
+- Illumination of matching text with [vim-illuminate](https://github.com/RRethy/vim-illuminate)
+- GitHub Copilot integration using [copilot.vim](https://github.com/github/copilot.vim)
+- Support for Prisma schema files with [vim-prisma](https://github.com/pantharshit00/vim-prisma)
+
 
 ## Installation
 

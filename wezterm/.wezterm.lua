@@ -7,8 +7,7 @@ if wezterm.config_builder then
 end
 
 local fonts = {
-	"JetBrainsMono Nerd Font",
-	"Geist Mono",
+	{ family = "CaskaydiaMono Nerd Font",  weight = "Book" },
 	"SF Mono",
 	"Monaspace Neon",
 	"Monaspace Xenon",
@@ -22,6 +21,7 @@ local emoji_fonts = { "Apple Color Emoji", "Joypixels", "Twemoji", "Noto Color E
 config.harfbuzz_features =
 	{ "calt", "liga", "zero", "-ss01", "ss02", "-ss03", "ss04", "ss05", "-ss06", "-ss07", "-ss08", "-ss09", "ss10", "ss11", "ss12", "-ss13", "ss14", "ss15", "ss16", "ss17", "ss18" }
 config.font = wezterm.font_with_fallback({ fonts[1], emoji_fonts[1], emoji_fonts[2] })
+-- config.font = wezterm.font('CaskaydiaMono Nerd Font', { weight = "Book" })
 -- config.disable_default_key_bindings = true
 config.front_end = "WebGpu"
 config.enable_scroll_bar = false
@@ -46,7 +46,6 @@ config.window_padding = {
 }
 config.window_frame = {
 	font = wezterm.font({ family = "SF Mono" }),
-	-- font = wezterm.font({ family = "Geist Mono" }),
 	active_titlebar_bg = "#1e1e1e",
 	inactive_titlebar_bg = "#1e1e1e",
 	font_size = 15.0,
@@ -118,12 +117,5 @@ config.colors = {
 		},
 	},
 }
-
--- local act = wezterm.action
-
--- config.keys = {
--- 	{ key = "a", mods = "ctrl", action = act.ActivateTabRelative(-1) },
--- 	{ key = "b", mods = "ctrl", action = act.ActivateTabRelative(1) },
--- }
 
 return config

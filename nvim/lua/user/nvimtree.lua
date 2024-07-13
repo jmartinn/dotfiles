@@ -15,18 +15,21 @@ function M.config()
 		hijack_netrw = false,
 		sync_root_with_cwd = true,
 		view = {
-			relativenumber = true,
+			relativenumber = false,
 		},
+    filters = {
+      dotfiles = true,
+    },
 		renderer = {
 			add_trailing = false,
-			group_empty = false,
-			highlight_git = false,
+			group_empty = true,
+			highlight_git = true,
 			full_name = false,
 			highlight_opened_files = "none",
 			root_folder_label = ":t",
 			indent_width = 2,
 			indent_markers = {
-				enable = false,
+				enable = true,
 				inline_arrows = true,
 				icons = {
 					corner = "└",

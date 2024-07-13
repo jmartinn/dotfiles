@@ -8,8 +8,8 @@ local M = {
 
 function M.config()
 	local wk = require("which-key")
-	wk.register({
-		["<leader>k"] = { "<cmd>ZenMode<CR>", "Zen Mode" },
+	wk.add({
+    { "<leader>k", "<cmd>ZenMode<CR>", desc = "Zen Mode" },
 	})
 
 	require("zen-mode").setup({

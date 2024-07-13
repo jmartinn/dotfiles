@@ -5,35 +5,31 @@ local M = {
 
 function M.config()
 	local mappings = {
-		q = { "<cmd>confirm q<CR>", "Quit" },
-		h = { "<cmd>nohlsearch<CR>", "NOHL" },
-		[";"] = { "<cmd>tabnew | terminal<CR>", "Term" },
-		["]"] = {
-			name = "Pomo",
-			w = { "<cmd>TimerStart 50m Work<CR>", "Work" },
-			b = { "<cmd>TimerStart 15m Break<CR>", "Break" },
-			s = { "<cmd>TimerStop<CR>", "Stop Timer" },
-			p = { "<cmd>TimerPause<CR>", "Pause Timer" },
-			r = { "<cmd>TimerResume<CR>", "Resume Timer" },
-		},
-		v = { "<cmd>vsplit<CR>", "Split" },
-		b = { name = "Buffers" },
-		d = { name = "Debug" },
-		f = { name = "Find" },
-		g = { name = "Git" },
-		l = { name = "LSP" },
-		p = { name = "Plugins" },
-		t = { name = "Test" },
-		o = { name = "Obsidian" },
-		a = {
-			name = "Tab",
-			n = { "<cmd>$tabnew<cr>", "New Empty Tab" },
-			N = { "<cmd>tabnew %<cr>", "New Tab" },
-			o = { "<cmd>tabonly<cr>", "Only" },
-			h = { "<cmd>-tabmove<cr>", "Move Left" },
-			l = { "<cmd>+tabmove<cr>", "Move Right" },
-		},
-		T = { name = "Treesitter" },
+		{ "<leader>;", "<cmd>tabnew | terminal<CR>", desc = "Term" },
+		{ "<leader>T", group = "Treesitter" },
+		{ "<leader>]", group = "Pomo" },
+		{ "<leader>]b", "<cmd>TimerStart 15m Break<CR>", desc = "Break" },
+		{ "<leader>]p", "<cmd>TimerPause<CR>", desc = "Pause Timer" },
+		{ "<leader>]r", "<cmd>TimerResume<CR>", desc = "Resume Timer" },
+		{ "<leader>]s", "<cmd>TimerStop<CR>", desc = "Stop Timer" },
+		{ "<leader>]w", "<cmd>TimerStart 50m Work<CR>", desc = "Work" },
+		{ "<leader>a", group = "Tab" },
+		{ "<leader>aN", "<cmd>tabnew %<cr>", desc = "New Tab" },
+		{ "<leader>ah", "<cmd>-tabmove<cr>", desc = "Move Left" },
+		{ "<leader>al", "<cmd>+tabmove<cr>", desc = "Move Right" },
+		{ "<leader>an", "<cmd>$tabnew<cr>", desc = "New Empty Tab" },
+		{ "<leader>ao", "<cmd>tabonly<cr>", desc = "Only" },
+		{ "<leader>b", group = "Buffers" },
+		{ "<leader>d", group = "Debug" },
+		{ "<leader>f", group = "Find" },
+		{ "<leader>g", group = "Git" },
+		{ "<leader>h", "<cmd>nohlsearch<CR>", desc = "NOHL" },
+		{ "<leader>l", group = "LSP" },
+		{ "<leader>o", group = "Obsidian" },
+		{ "<leader>p", group = "Plugins" },
+		{ "<leader>q", "<cmd>confirm q<CR>", desc = "Quit" },
+		{ "<leader>t", group = "Test" },
+		{ "<leader>v", "<cmd>vsplit<CR>", desc = "Split" },
 	}
 
 	local which_key = require("which-key")
@@ -74,7 +70,7 @@ function M.config()
 		prefix = "<leader>",
 	}
 
-	which_key.register(mappings, opts)
+	which_key.add(mappings, opts)
 end
 
 return M

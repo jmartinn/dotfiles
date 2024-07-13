@@ -42,7 +42,7 @@ M.config = function()
 			topdelete = {
 				-- hl = "GitSignsDelete",
 				text = icons.ui.TriangleShortArrowRight,
-				-- numhl = "GitSignsDeleteNr",
+				-- numhl = "GitSignsTopDeleteNr",
 				-- linehl = "GitSignsDeleteLn",
 			},
 			changedelete = {
@@ -71,3 +71,4 @@ M.config = function()
 end
 
 return M
+

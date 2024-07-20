@@ -16,7 +16,7 @@ function M.config()
 		"bashls",
 		"jsonls",
 		"yamlls",
-		"cmake",
+		"clangd",
     "tailwindcss",
 	}
 

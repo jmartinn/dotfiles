@@ -81,6 +81,7 @@ function M.config()
 		"bashls",
 		"jsonls",
 		"yamlls",
+    "clangd",
 		"tailwindcss",
 	}
 

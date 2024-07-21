@@ -52,12 +52,16 @@ function M.config()
 			},
 		},
 		win = {
-			border = "rounded",
-			position = "bottom",
-			padding = { 2, 2, 2, 2 },
+			padding = { 1, 2 },
+			title = true,
+			title_pos = "center",
 		},
-		show_help = false,
-		show_keys = false,
+		layout = {
+			width = { min = 20 }, -- min and max width of the columns
+			spacing = 3, -- spacing between columns
+		},
+		show_help = true,
+		show_keys = true,
 		disable = {
 			buftypes = {},
 			filetypes = { "TelescopePrompt" },

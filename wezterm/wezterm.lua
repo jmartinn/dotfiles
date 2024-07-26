@@ -17,7 +17,7 @@ schemes:select(config, "Ayu Custom")
 
 -- Configuration
 config.animation_fps = 60
-config.default_cursor_style = "BlinkingUnderline"
+config.default_cursor_style = "BlinkingBlock"
 config.front_end = "WebGpu"
 config.force_reverse_video_cursor = true
 
@@ -26,22 +26,26 @@ config.adjust_window_size_when_changing_font_size = false
 
 config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 config.window_frame = {
-  font = wezterm.font({ family = "JetBrains Mono", weight = "ExtraBold" }),
-  font_size = 12,
+	font = wezterm.font({ family = "JetBrains Mono", weight = "ExtraBold" }),
+	font_size = 12,
 }
+
+config.initial_rows = 30
+config.initial_cols = 150
+
 config.window_padding = {
-  left = 0,
-  right = 0,
-  top = 0,
-  bottom = 0,
+	left = 0,
+	right = 0,
+	top = 0,
+	bottom = 0,
 }
 
 config.mouse_bindings = {
-  {
-    event = { Down = { streak = 3, button = "Left" } },
-    action = wezterm.action.SelectTextAtMouseCursor("SemanticZone"),
-    mods = "NONE",
-  },
+	{
+		event = { Down = { streak = 3, button = "Left" } },
+		action = wezterm.action.SelectTextAtMouseCursor("SemanticZone"),
+		mods = "NONE",
+	},
 }
 
 config.leader = { key = "o", mods = "SUPER", timeout_milliseconds = 1000 }
@@ -70,61 +74,61 @@ config.keys = {
 }
 
 config.key_tables = {
-  resize_pane = {
-    { key = "Escape", action = "PopKeyTable" },
-    { key = "h", action = act.AdjustPaneSize({ "Left", 1 }) },
-    { key = "j", action = act.AdjustPaneSize({ "Down", 1 }) },
-    { key = "k", action = act.AdjustPaneSize({ "Up", 1 }) },
-    { key = "l", action = act.AdjustPaneSize({ "Right", 1 }) },
-  },
+	resize_pane = {
+		{ key = "Escape", action = "PopKeyTable" },
+		{ key = "h", action = act.AdjustPaneSize({ "Left", 1 }) },
+		{ key = "j", action = act.AdjustPaneSize({ "Down", 1 }) },
+		{ key = "k", action = act.AdjustPaneSize({ "Up", 1 }) },
+		{ key = "l", action = act.AdjustPaneSize({ "Right", 1 }) },
+	},
 }
 
 -- Event handlers
 
 -- Better inc/dec font size
 wezterm.on("kaz-inc-font-size", function(window)
-  local size = window:effective_config().font_size + 1
-  local overrides = window:get_config_overrides() or {}
-  overrides.font_size = size
-  window:set_config_overrides(overrides)
+	local size = window:effective_config().font_size + 1
+	local overrides = window:get_config_overrides() or {}
+	overrides.font_size = size
+	window:set_config_overrides(overrides)
 end)
 wezterm.on("kaz-dec-font-size", function(window)
-  local size = window:effective_config().font_size - 1
-  local overrides = window:get_config_overrides() or {}
-  overrides.font_size = size
-  window:set_config_overrides(overrides)
+	local size = window:effective_config().font_size - 1
+	local overrides = window:get_config_overrides() or {}
+	overrides.font_size = size
+	window:set_config_overrides(overrides)
 end)
 
 -- Add font name and size to status bar
 wezterm.on("update-right-status", function(window)
-  local font = window:effective_config().font.font[1].family
-  local size = window:effective_config().font_size
-  local status = wezterm.format({
-    "ResetAttributes",
-    { Background = { Color = "#666666" } },
-    { Foreground = { Color = "White" } },
-    { Text = string.format(" %s %spt  ", font, size) },
-  })
-  window:set_right_status(status)
+	local font = window:effective_config().font.font[1].family
+	local size = window:effective_config().font_size
+	local status = wezterm.format({
+		"ResetAttributes",
+		{ Background = { Color = "#666666" } },
+		{ Foreground = { Color = "White" } },
+		{ Text = string.format(" %s %spt  ", font, size) },
+	})
+	window:set_right_status(status)
 end)
 
 -- Customize the tab title to show zoom icon when zoomed
 wezterm.on("format-tab-title", function(tab)
-  local icon = ""
-  local attrs = {
-    { Background = { Color = "#333333" } },
-  }
-  if tab.is_active then
-    table.insert(attrs, { Foreground = { Color = "#CCCCCC" } })
-  end
-  if tab.active_pane.is_zoomed then
-    icon = "🔎 "
-    table.insert(attrs, { Foreground = { Color = "Orange" } })
-  end
-  table.insert(attrs, {
-    Text = "[" .. tab.tab_index + 1 .. "] " .. icon .. tab.active_pane.title,
-  })
-  return attrs
+	local icon = ""
+	local attrs = {
+		{ Background = { Color = "#333333" } },
+	}
+	if tab.is_active then
+		table.insert(attrs, { Foreground = { Color = "#CCCCCC" } })
+	end
+	if tab.active_pane.is_zoomed then
+		icon = "🔎 "
+		table.insert(attrs, { Foreground = { Color = "Orange" } })
+	end
+	table.insert(attrs, {
+		Text = "[" .. tab.tab_index + 1 .. "] " .. icon .. tab.active_pane.title,
+	})
+	return attrs
 end)
 
 return config

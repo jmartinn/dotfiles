@@ -34,6 +34,7 @@ spec("user.bufdelete")
 -- Extras
 spec("user.extras.colorizer")
 spec("user.extras.obsidian")
+spec("user.extras.vimtex")
 spec("user.extras.pomo")
 -- spec("user.extras.nostr")
 -- spec("user.extras.neoscroll")

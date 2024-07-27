@@ -76,3 +76,4 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # bun completions
 [ -s "/Users/johnny/.bun/_bun" ] && source "/Users/johnny/.bun/_bun"
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"

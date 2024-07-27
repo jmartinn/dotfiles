@@ -83,8 +83,6 @@ config.key_tables = {
 	},
 }
 
--- Event handlers
-
 -- Better inc/dec font size
 wezterm.on("kaz-inc-font-size", function(window)
 	local size = window:effective_config().font_size + 1

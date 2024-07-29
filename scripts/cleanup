@@ -11,7 +11,7 @@ COLOR_RESET="\033[0m"
 
 # Cleanup function to remove all node_modules directories
 cleanup() {
-  find "$REPOS" -name 'node_modules' -type d -prune | fzf -m --preview 'du -sh {}' | xargs rm -rf
+  find "$REPOS" -name 'node_modules' -type d -prune -exec du -sh {} + | tee /dev/tty | xargs rm -rf
 }
 
 # Utility function to show the help message

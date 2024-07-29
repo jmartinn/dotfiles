@@ -2,7 +2,7 @@ local M = {
 	"epwalsh/pomo.nvim",
 	version = "*",
 	lazy = true,
-	cmd = { "TimerStart", "TimerRepeat" },
+	cmd = { "TimerStart", "TimerRepeat", "TimerSession" },
 	dependencies = {
 		"rcarriga/nvim-notify",
 	},
@@ -43,6 +43,16 @@ function M.config()
 			-- e.g. ':TimerStart 2m Break'.
 			Break = {
 				{ name = "System" },
+			},
+		},
+		sessions = {
+			default = {
+				{ name = "Work", duration = "25m" },
+				{ name = "Short Break", duration = "5m" },
+				{ name = "Work", duration = "25m" },
+				{ name = "Short Break", duration = "5m" },
+				{ name = "Work", duration = "25m" },
+				{ name = "Long Break", duration = "15m" },
 			},
 		},
 	})

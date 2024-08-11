@@ -10,15 +10,15 @@ local M = {
 function M.config()
 	local wk = require("which-key")
 	wk.add({
-    { "<leader>oT", "<cmd>:ObsidianTags<cr>", desc = "Search By Tag" },
-    { "<leader>ob", "<cmd>:ObsidianBacklinks<cr>", desc = "Show Backlinks" },
-    { "<leader>oc", "<cmd>:ObsidianNew<cr>", desc = "Create New Note" },
-    { "<leader>od", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", desc = "Toggle Check-Box" },
-    { "<leader>of", "<cmd>:ObsidianSearch<cr>", desc = "Search Note" },
-    { "<leader>ok", "<cmd>:ObsidianTemplate<cr>", desc = "Template Palette" },
-    { "<leader>ol", "<cmd>:ObsidianLinks<cr>", desc = "Show Links" },
-    { "<leader>oo", "<cmd>:ObsidianOpen<cr>", desc = "Open Current Buffer" },
-    { "<leader>ot", "<cmd>:ObsidianToday<cr>", desc = "Open/Create Today's Note" },
+		{ "<leader>oT", "<cmd>:ObsidianTags<cr>", desc = "Search By Tag" },
+		{ "<leader>ob", "<cmd>:ObsidianBacklinks<cr>", desc = "Show Backlinks" },
+		{ "<leader>oc", "<cmd>:ObsidianNew<cr>", desc = "Create New Note" },
+		{ "<leader>od", "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", desc = "Toggle Check-Box" },
+		{ "<leader>of", "<cmd>:ObsidianSearch<cr>", desc = "Search Note" },
+		{ "<leader>ok", "<cmd>:ObsidianTemplate<cr>", desc = "Template Palette" },
+		{ "<leader>ol", "<cmd>:ObsidianLinks<cr>", desc = "Show Links" },
+		{ "<leader>oo", "<cmd>:ObsidianOpen<cr>", desc = "Open Current Buffer" },
+		{ "<leader>ot", "<cmd>:ObsidianToday<cr>", desc = "Open/Create Today's Note" },
 	})
 
 	local home = os.getenv("HOME")

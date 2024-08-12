@@ -5,9 +5,8 @@ local M = {
 
 function M.config()
 	local dashboard = require("alpha.themes.dashboard")
-  local fortune = require("alpha.fortune")
 	local icons = require("user.icons")
-	local quotes = require("user.quotes").quotes
+	local quote = require("user.quotes")
 
 	local function button(sc, txt, keybind, keybind_opts)
 		local b = dashboard.button(sc, txt, keybind, keybind_opts)
@@ -34,7 +33,7 @@ function M.config()
 		button("q", icons.ui.SignOut .. "  Quit", ":qa<CR>"),
 	}
 
-	dashboard.section.footer.val = fortune()
+	dashboard.section.footer.val = quote();
 
 	dashboard.section.header.opts.hl = "Keyword"
 	dashboard.section.buttons.opts.hl = "Include"

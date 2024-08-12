@@ -1,6 +1,69 @@
-local M = {}
+local list_extend = vim.list_extend
 
-M.quotes = {
+--- @param line string
+--- @param max_width number
+--- @return table
+local format_line = function(line, max_width)
+	if line == "" then
+		return { " " }
+	end
+
+	local formatted_line = {}
+
+	-- split line by spaces into list of words
+	local words = {}
+	local target = "%S+"
+	for word in line:gmatch(target) do
+		table.insert(words, word)
+	end
+
+	local bufstart = " "
+	local buffer = bufstart
+	for i, word in ipairs(words) do
+		if (#buffer + #word) <= max_width then
+			buffer = buffer .. word .. " "
+			if i == #words then
+				table.insert(formatted_line, buffer:sub(1, -2))
+			end
+		else
+			table.insert(formatted_line, buffer:sub(1, -2))
+			buffer = bufstart .. word .. " "
+			if i == #words then
+				table.insert(formatted_line, buffer:sub(1, -2))
+			end
+		end
+	end
+	-- right-justify text if the line begins with -
+	if line:sub(1, 1) == "-" then
+		for i, val in ipairs(formatted_line) do
+			local space = string.rep(" ", max_width - #val - 2)
+			formatted_line[i] = space .. val:sub(2, -1)
+		end
+	end
+	return formatted_line
+end
+
+--- @param quote table
+--- @param max_width number
+--- @return table
+local format_quote = function(quote, max_width)
+	-- Converts list of strings to one formatted string (with linebreaks)
+	local formatted_quote = { " " } -- adds spacing between alpha-menu and footer
+	for _, line in ipairs(quote) do
+		local formatted_line = format_line(line, max_width)
+		formatted_quote = list_extend(formatted_quote, formatted_line)
+	end
+	return formatted_quote
+end
+
+local get_quote = function(quote_list)
+	-- selects an entry from quotes_list randomly
+	math.randomseed(os.time())
+	local ind = math.random(1, #quote_list)
+	return quote_list[ind]
+end
+
+local quote_list = {
 	{ "Code is the poetry of logic, and through its simplicity, I find elegance, purpose, and the art of creation." },
 	{ "Simplicity is the ultimate sophistication.", "", "- Steve Jobs" },
 	{ "Waste no more time arguing what a good man should be. Be one.", "", "- Marcus Aurelius" },
@@ -965,4 +1028,25 @@ M.quotes = {
 	{ "Faith is the bird that feels the light and sings when the dawn is still dark.", "", "- Rabindranath Tagore" },
 }
 
-return M
+--- @return table
+--- @param opts number|table? optional
+--- returns an array of strings
+local main = function(opts)
+	local options = {
+		max_width = 54,
+		quote_list = quote_list,
+	}
+
+	if type(opts) == "number" then
+		options.max_width = opts
+	elseif type(opts) == "table" then
+		options = vim.tbl_extend("force", options, opts)
+	end
+
+	local quote = get_quote(options.quote_list)
+	local formatted_quote = format_quote(quote, options.max_width)
+
+	return formatted_quote
+end
+
+return main

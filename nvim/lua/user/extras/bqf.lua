@@ -35,4 +35,4 @@ function M.config()
   }
 end
 
-return Mocal M = {
+return M;

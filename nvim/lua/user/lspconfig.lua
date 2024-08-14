@@ -3,7 +3,7 @@ local M = {
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		{
-			"folke/neodev.nvim",
+			"folke/lazydev.nvim",
 		},
 	},
 }
@@ -131,7 +131,7 @@ function M.config()
 		end
 
 		if server == "lua_ls" then
-			require("neodev").setup({})
+			require("lazydev").setup({})
 		end
 
 		lspconfig[server].setup(opts)

@@ -46,7 +46,7 @@ vim.opt.fillchars:append({
 
 vim.opt.shortmess:append("c")
 
-vim.cmd("set whichwrap+=<,>,[,],h,l")
+vim.cmd("set whichwrap+=<,>,[,]")
 vim.cmd([[set iskeyword+=-]])
 
 vim.g.netrw_banner = 0

@@ -134,12 +134,9 @@ function M.config()
 			end,
 		},
 		sources = {
-			{ name = "copilot" },
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
-			{ name = "cmp_tabnine" },
 			{ name = "nvim_lua" },
-			{ name = "buffer" },
 			{ name = "path" },
 			{ name = "calc" },
 			{ name = "emoji" },

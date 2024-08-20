@@ -1,54 +1,66 @@
-require("user.launch")
-require("user.options")
-require("user.keymaps")
-require("user.autocmds")
-spec("user.colorscheme")
-spec("user.devicons")
-spec("user.treesitter")
-spec("user.mason")
-spec("user.schemastore")
-spec("user.lspconfig")
-spec("user.cmp")
-spec("user.telescope")
-spec("user.none-ls")
-spec("user.illuminate")
-spec("user.gitsigns")
-spec("user.whichkey")
-spec("user.nvimtree")
-spec("user.comment")
-spec("user.lualine")
-spec("user.navic")
-spec("user.breadcrumbs")
-spec("user.harpoon")
-spec("user.autopairs")
-spec("user.neogit")
-spec("user.alpha")
-spec("user.project")
-spec("user.indentline")
-spec("user.toggleterm")
-spec("user.luvit")
-spec("user.lazydev")
-spec("user.dap")
-spec("user.bufdelete")
+-- Core Setup
+require "user.launch" -- Launch sequence or bootstrap logic
+require "user.lazy" -- Plugin manager
+require "user.options" -- Core options
+require "user.keymaps" -- Key mappings
+require "user.autocmds" -- Auto commands
+
+-- UI and Aesthetics
+spec "user.colorscheme" -- Theme and colors
+spec "user.devicons" -- Icons
+spec "user.lualine" -- Status line
+spec "user.navic" -- Navigation indicator (LSP)
+spec "user.breadcrumbs" -- Breadcrumbs
+
+-- Core Plugins
+spec "user.treesitter" -- Syntax highlighting
+spec "user.mason" -- LSP, DAP, Linters/Formatters installer
+spec "user.schemastore" -- JSON schemas
+spec "user.lspconfig" -- LSP configuration
+spec "user.cmp" -- Autocompletion
+
+-- Additional Tools and Extensions
+spec "user.telescope" -- Fuzzy finder
+spec "user.none-ls" -- Null-LS integration (formatters/linters)
+spec "user.illuminate" -- Highlight word under cursor
+spec "user.gitsigns" -- Git integration
+spec "user.whichkey" -- Keybinding hints
+spec "user.nvimtree" -- File explorer
+spec "user.comment" -- Commenting utility
+spec "user.harpoon" -- Quick file navigation
+spec "user.neogit" -- Git interface
+
+-- Text Enhancements and Other Utilities
+spec "user.autopairs" -- Auto close brackets and quotes
+spec "user.alpha" -- Startup screen
+spec "user.project" -- Project management
+spec "user.indentline" -- Indentation lines
+spec "user.toggleterm" -- Terminal management
+spec "user.bufdelete" -- Buffer deletion management
+spec "user.dap" -- Debugging
+spec "user.luvit" -- Lua plugin development
+spec "user.lazydev" -- Lazy development utilities
+
 -- Extras
-spec("user.extras.colorizer")
-spec("user.extras.obsidian")
-spec("user.extras.vimtex")
-spec("user.extras.pomo")
-spec("user.extras.modicator")
-spec("user.extras.rainbow")
-spec("user.extras.zen")
-spec "user.extras.bqf"
-spec("user.extras.dressing")
-spec("user.extras.eyeliner")
-spec("user.extras.navbuddy")
-spec("user.extras.oil")
-spec("user.extras.fidget")
-spec("user.extras.neotab")
-spec("user.extras.lab")
-spec("user.extras.tabby")
-spec("user.extras.tsc")
-spec("user.extras.gitlinker")
-spec("user.extras.todo-comments")
-spec("user.extras.cellular-automaton")
-require("user.lazy")
+spec "user.extras.colorizer" -- Color highlighter
+spec "user.extras.obsidian" -- Obsidian note integration
+spec "user.extras.vimtex" -- LaTeX support
+spec "user.extras.pomo" -- Pomodoro timer
+spec "user.extras.modicator" -- Mode indicator
+spec "user.extras.rainbow" -- Rainbow parentheses
+spec "user.extras.zen" -- Distraction-free mode
+spec "user.extras.bqf" -- Quickfix enhancements
+spec "user.extras.dressing" -- UI components
+spec "user.extras.eyeliner" -- Motion highlighting
+spec "user.extras.navbuddy" -- LSP code navigation
+spec "user.extras.surround" -- Surround text manipulation
+spec "user.extras.oil" -- Floating terminal/file viewer
+spec "user.extras.fidget" -- LSP progress indicator
+spec "user.extras.neotab" -- Tab management
+spec "user.extras.lab" -- Laboratory for testing
+spec "user.extras.tabby" -- Tabline plugin
+spec "user.extras.tsc" -- TypeScript support
+spec "user.extras.gitlinker" -- Git link generator
+spec "user.extras.todo-comments" -- Highlight and manage TODOs
+spec "user.extras.ufo" -- Code folding
+spec "user.extras.cellular-automaton" -- Cellular Automaton simulation

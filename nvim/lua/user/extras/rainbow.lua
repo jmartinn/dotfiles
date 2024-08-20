@@ -22,7 +22,6 @@ function M.config()
 			html = "rainbow-parens",
 		},
 		highlight = {
-
 			"TSRainbowYellow",
 			"TSRainbowViolet",
 			"TSRainbowBlue",

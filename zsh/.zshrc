@@ -17,6 +17,9 @@ export SECOND_BRAIN="$HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Docume
 export NVM_DIR="$HOME/.nvm"
 export BUN_INSTALL="$HOME/.bun"
 
+# GPG
+export GPG_TTY=$(tty)
+
 # Consolidated PATH assignment
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/Users/johnny/Library/Python/3.9/bin:/opt/homebrew/opt/libpq/bin:$SCRIPTS:$BUN_INSTALL/bin/:$HOME/bin:/usr/local/bin:$PATH"
 

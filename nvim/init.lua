@@ -1,6 +1,5 @@
 -- Core Setup
 require "user.launch" -- Launch sequence or bootstrap logic
-require "user.lazy" -- Plugin manager
 require "user.options" -- Core options
 require "user.keymaps" -- Key mappings
 require "user.autocmds" -- Auto commands
@@ -64,3 +63,5 @@ spec "user.extras.gitlinker" -- Git link generator
 spec "user.extras.todo-comments" -- Highlight and manage TODOs
 spec "user.extras.ufo" -- Code folding
 spec "user.extras.cellular-automaton" -- Cellular Automaton simulation
+
+require "user.lazy" -- Plugin manager

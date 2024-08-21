@@ -1,6 +1,6 @@
 local M = {
   "goolord/alpha-nvim",
-  -- event = "VimEnter",
+  event = "VimEnter",
 }
 
 function M.config()
@@ -24,7 +24,7 @@ function M.config()
   }
 
   dashboard.section.buttons.val = {
-    button("f", icons.ui.Files .. "  Find file", "<leader>f:Telescope find_files <CR>"),
+    button("f", icons.ui.Files .. "  Find file", "<leader>:Telescope find_files <CR>"),
     button("n", icons.ui.NewFile .. "  New file", ":ene <BAR> startinsert <CR>"),
     -- button("s", icons.ui.SignIn .. " Load session", ":lua require('persistence').load()<CR>"),
     button("p", icons.git.Repo .. "  Find project", ":lua require('telescope').extensions.projects.projects()<CR>"),
@@ -38,29 +38,10 @@ function M.config()
 
   dashboard.section.header.opts.hl = "Function"
   dashboard.section.buttons.opts.hl = "Boolean"
-  dashboard.section.footer.opts.hl = "@keyword.return"
+  dashboard.section.footer.opts.hl = "Type"
 
   dashboard.opts.opts.noautocmd = true
   require("alpha").setup(dashboard.opts)
-
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "LazyVimStarted",
-    callback = function()
-      -- local stats = require("lazy").stats()
-      -- local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-      -- dashboard.section.footer.val = "Loaded " .. stats.count .. " plugins in " .. ms .. "ms"
-      pcall(vim.cmd.AlphaRedraw)
-    end,
-  })
-
-  vim.api.nvim_create_autocmd({ "User" }, {
-    pattern = { "AlphaReady" },
-    callback = function()
-      vim.cmd [[
-      set laststatus=0 | autocmd BufUnload <buffer> set laststatus=3
-    ]]
-    end,
-  })
 end
 
 return M

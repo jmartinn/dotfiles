@@ -54,7 +54,7 @@ spec "user.extras.eyeliner" -- Motion highlighting
 spec "user.extras.navbuddy" -- LSP code navigation
 spec "user.extras.surround" -- Surround text manipulation
 spec "user.extras.oil" -- Floating terminal/file viewer
-spec "user.extras.fidget" -- LSP progress indicator
+-- spec "user.extras.fidget" -- LSP progress indicator
 spec "user.extras.neotab" -- Tab management
 spec "user.extras.lab" -- Laboratory for testing
 spec "user.extras.tabby" -- Tabline plugin

@@ -48,6 +48,22 @@ function M.config()
 
   wk.add {
     {
+      "<leader>]",
+      group = "Pomo",
+      icon = {
+        icon = "󱎫",
+        color = "blue",
+      },
+    },
+    {
+      "<leader>o]",
+      group = "Obsidian",
+      icon = {
+        icon = "",
+        color = "purple",
+      },
+    },
+    {
       "<leader>a",
       group = "AI",
       icon = {
@@ -110,14 +126,6 @@ function M.config()
         icon = " ",
         color = "blue",
       },
-    },
-    {
-      "<leader>n",
-      icon = {
-        icon = "󱞂 ",
-        color = "yellow",
-      },
-      group = "Nostr",
     },
     {
       "<leader>p",

@@ -64,5 +64,6 @@ spec "user.extras.todo-comments" -- Highlight and manage TODOs
 spec "user.extras.ufo" -- Code folding
 spec "user.extras.cellular-automaton" -- Cellular Automaton simulation
 spec"user.extras.llm" -- AI
+spec "user.extras.avante"
 
 require "user.lazy" -- Plugin manager

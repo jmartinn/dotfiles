@@ -100,7 +100,13 @@ function M.config()
     {
       "<leader>v",
       "<cmd>vsplit<CR>",
-      desc = "Split",
+      desc = "Split Vertical",
+      hidden = true,
+    },
+    {
+      "<leader>h",
+      "<cmd>split<CR>",
+      desc = "Split Horizontal",
       hidden = true,
     },
     {

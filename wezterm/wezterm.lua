@@ -14,7 +14,6 @@ local opacity  = selector.new({ title = "Opacity Selector",       subdir = "modu
 
 fonts:select(config, "JetBrains Mono")
 schemes:select(config, "Ayu Custom")
-opacity:select(config, "80%")
 
 -- Configuration
 config.animation_fps = 60

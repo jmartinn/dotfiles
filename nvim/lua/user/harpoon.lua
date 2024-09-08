@@ -43,12 +43,12 @@ function M.config()
 	-- end, opts)
 
 	-- Navigate to previous and next file in the list
-	keymap("n", "<C-h>", function()
-		harpoon:list():prev()
-	end, opts)
-	keymap("n", "<C-l>", function()
-		harpoon:list():next()
-	end, opts)
+	-- keymap("n", "<C-h>", function()
+	-- 	harpoon:list():prev()
+	-- end, opts)
+	-- keymap("n", "<C-l>", function()
+	-- 	harpoon:list():next()
+	-- end, opts)
 end
 
 return M

@@ -28,6 +28,7 @@ spec "user.nvimtree" -- File explorer
 spec "user.comment" -- Commenting utility
 spec "user.harpoon" -- Quick file navigation
 spec "user.neogit" -- Git interface
+spec"user.tmux" -- Tmux integration
 
 -- Text Enhancements and Other Utilities
 spec "user.autopairs" -- Auto close brackets and quotes

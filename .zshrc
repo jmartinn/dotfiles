@@ -15,7 +15,6 @@ export GHREPOS="$REPOS/github.com/$GITUSER"
 export SECOND_BRAIN="$HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/personal"
 
 export NVM_DIR="$HOME/.nvm"
-export HOMEBREW_PREFIX="$(brew --prefix)"
 export BUN_INSTALL="$HOME/.bun"
 
 # GPG
@@ -78,6 +77,7 @@ alias cat="bat"
 eval "$(fzf --zsh)"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
+export HOMEBREW_PREFIX="$(brew --prefix)"
 
 # bun completions
 [ -s "/Users/johnny/.bun/_bun" ] && source "/Users/johnny/.bun/_bun"

@@ -1,88 +1,77 @@
-#!/bin/sh
+#!/bin/zsh
 
-# history
+# History
 HISTFILE=~/.zsh_history
+HIST_STAMPS="dd.mm.yyyy"
 
-# Path to your oh-my-zsh installation.
+# Oh-My-Zsh
 export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+zstyle ':omz:update' mode auto
+zstyle ':omz:update' frequency 7
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
+plugins=(git)
 
 # Directories
 export REPOS="$HOME/Documents/projects/"
 export DOTFILES="$HOME/dotfiles"
 export SCRIPTS="$HOME/scripts"
-export GITUSER="jmartinn"
+export GITUSER="YOUR_GITHUB_USERNAME"
 export GHREPOS="$REPOS/github.com/$GITUSER"
-export SECOND_BRAIN="$HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/personal"
+export SECOND_BRAIN="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/personal"
 
+# Environment variables
 export NVM_DIR="$HOME/.nvm"
 export BUN_INSTALL="$HOME/.bun"
-
-# GPG
 export GPG_TTY=$(tty)
+export EDITOR='nvim'
 
-# Consolidated PATH assignment
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/Users/johnny/Library/Python/3.9/bin:/opt/homebrew/opt/libpq/bin:$SCRIPTS:$BUN_INSTALL/bin/:$HOME/bin:/usr/local/bin:$PATH"
+# PATH management
+typeset -U path
+path=(
+    /opt/homebrew/bin
+    /opt/homebrew/sbin
+    /Users/johnny/Library/Python/3.9/bin
+    /opt/homebrew/opt/libpq/bin
+    $SCRIPTS
+    $BUN_INSTALL/bin
+    $HOME/bin
+    /usr/local/bin
+    /opt/homebrew/opt/openjdk@17/bin
+    $path
+)
 
-# Homebrew completions
+# Homebrew
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
-# Set name of the theme to load
-ZSH_THEME="robbyrussell"
-
-zstyle ':omz:update' mode auto      # update automatically without asking
-
-# Auto-update frequency
-zstyle ':omz:update' frequency 7
-
-# Command autocorrection
-ENABLE_CORRECTION="true"
-
-COMPLETION_WAITING_DOTS="true"
-
-# Timestamp
-HIST_STAMPS="dd.mm.yyyy"
-
-# Plugin settings
-plugins=(git)
-
+# Source Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='vim'
-fi
 
 # Functions
 function gclone() {
-  git clone git@github.com:jmartinn/$1.git
+    git clone git@github.com:$GITUSER/$1.git
 }
 
-# Personal aliases
+# Aliases
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias cl="clear"
-
 alias sb="cd $SECOND_BRAIN"
 alias vim="nvim"
 alias repos="cd $REPOS"
-
 alias ls="eza"
 alias ll="eza -alh"
 alias tree="eza --tree"
 alias cat="bat"
 
-# Set up fzf key bindings and fuzzy completion
-eval "$(fzf --zsh)"
+# Load NVM
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-export HOMEBREW_PREFIX="$(brew --prefix)"
-
-# bun completions
+# Bun completions
 [ -s "/Users/johnny/.bun/_bun" ] && source "/Users/johnny/.bun/_bun"
-export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# Performance-intensive operations (consider lazy-loading or caching)
+eval "$(fzf --zsh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"

@@ -1,3 +1,4 @@
 .env
 .DS_Store
 .lazy-lock.json
+**/tmux/plugins

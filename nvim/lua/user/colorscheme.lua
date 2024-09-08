@@ -1,5 +1,4 @@
 local M = {
-	-- "LunarVim/darkplus.nvim",
 	"rose-pine/neovim",
 	name = "rose-pine",
 	lazy = false, -- make sure we load this during startup if it is your main colorscheme
@@ -22,7 +21,7 @@ function M.config()
 		styles = {
 			bold = true,
 			italic = true,
-			transparency = true,
+			transparency = false,
 		},
 
 		groups = {
@@ -79,8 +78,8 @@ function M.config()
 	-- vim.cmd("colorscheme rose-pine-moon")
 	-- vim.cmd("colorscheme rose-pine-dawn")
 
-  vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+  -- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+  -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end
 
 return M

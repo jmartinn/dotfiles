@@ -32,7 +32,7 @@ typeset -U path
 path=(
     /opt/homebrew/bin
     /opt/homebrew/sbin
-    /Users/johnny/Library/Python/3.9/bin
+    $HOME/Library/Python/3.9/bin
     /opt/homebrew/opt/libpq/bin
     $SCRIPTS
     $BUN_INSTALL/bin
@@ -70,7 +70,7 @@ alias cat="bat"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Bun completions
-[ -s "/Users/johnny/.bun/_bun" ] && source "/Users/johnny/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Performance-intensive operations (consider lazy-loading or caching)
 eval "$(fzf --zsh)"

@@ -162,7 +162,7 @@ function M.config()
 			-- Not all pickers support all mappings.
 			note_mappings = {
 				-- Insert a link to the selected note.
-				insert_link = "<C-l>",
+				-- insert_link = "<C-l>",
 			},
 			tag_mappings = {},
 		},

@@ -15,6 +15,7 @@ export GHREPOS="$REPOS/github.com/$GITUSER"
 export SECOND_BRAIN="$HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/personal"
 
 export NVM_DIR="$HOME/.nvm"
+export HOMEBREW_PREFIX="$(brew --prefix)"
 export BUN_INSTALL="$HOME/.bun"
 
 # GPG
@@ -22,6 +23,9 @@ export GPG_TTY=$(tty)
 
 # Consolidated PATH assignment
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/Users/johnny/Library/Python/3.9/bin:/opt/homebrew/opt/libpq/bin:$SCRIPTS:$BUN_INSTALL/bin/:$HOME/bin:/usr/local/bin:$PATH"
+
+# Homebrew completions
+FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 # Set name of the theme to load
 ZSH_THEME="robbyrussell"

@@ -18,7 +18,7 @@ M.activate = function(config)
       "#4CD4BD",
       "#c1c9e6",
     },
-    background = "#0B0B12",
+    background = "#1B1B2A",
     brights = {
       "#3A3D4A",
       "#EB788B",

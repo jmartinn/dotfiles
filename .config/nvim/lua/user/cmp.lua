@@ -11,10 +11,6 @@ local M = {
       event = "InsertEnter",
     },
     {
-      "uga-rosa/cmp-dictionary",
-      event = "InsertEnter",
-    },
-    {
       "hrsh7th/cmp-path",
       event = "InsertEnter",
     },
@@ -41,7 +37,6 @@ local M = {
 
 function M.config()
   local cmp = require "cmp"
-  local dict = require "cmp_dictionary"
   local luasnip = require "luasnip"
   require("luasnip/loaders/from_vscode").lazy_load()
 
@@ -159,8 +154,8 @@ function M.config()
       { name = "buffer" },
       { name = "path" },
       { name = "calc" },
-      { name = "emoji" },
-      { name = "dictionary", keyword_length = 2 },
+      { name = "treesitter" },
+      { name = "tmux" },
     },
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,
@@ -186,26 +181,13 @@ function M.config()
       },
       documentation = {
         border = "rounded",
-        winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,Search:None"
+        winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,Search:None",
       },
     },
     experimental = {
       ghost_text = false,
     },
   }
-  dict.setup {
-    paths = { "~/.config/nvim/dictionaries/es_ES.dic" },
-    exact_length = 2,
-  }
-  -- vim.api.nvim_create_autocmd("FileType", {
-  --   pattern = { "txt", "markdown" }, -- Aplica a archivos .txt y .md
-  --   callback = function()
-  --     dict.switcher {
-  --       filetype = { "*.txt", "*.md" }, -- Tipos de archivo que activan el diccionario
-  --       paths = { "~/.config/nvim/dictionaries/es_ES.dic" }, -- Ruta al diccionario
-  --     }
-  --   end,
-  -- })
 end
 
 return M

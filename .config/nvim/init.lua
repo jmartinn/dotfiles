@@ -64,6 +64,7 @@ spec "user.extras.gitlinker" -- Git link generator
 spec "user.extras.todo-comments" -- Highlight and manage TODOs
 spec "user.extras.ufo" -- Code folding
 spec "user.extras.cellular-automaton" -- Cellular Automaton simulation
+spec "user.extras.discord"
 spec"user.extras.llm" -- AI
 spec "user.extras.avante"
 

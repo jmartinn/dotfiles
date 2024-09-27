@@ -77,12 +77,6 @@ function M.config()
       desc = "Quit",
     },
     {
-      "<leader>h",
-      "<cmd>nohlsearch<CR>",
-      desc = "NOHL",
-      hidden = true,
-    },
-    {
       "<leader>;",
       "<cmd>tabnew | terminal<CR>",
       desc = "Term",

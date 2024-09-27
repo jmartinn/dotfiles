@@ -28,7 +28,7 @@ spec "user.nvimtree" -- File explorer
 spec "user.comment" -- Commenting utility
 spec "user.harpoon" -- Quick file navigation
 spec "user.neogit" -- Git interface
-spec"user.tmux" -- Tmux integration
+spec "user.tmux" -- Tmux integration
 
 -- Text Enhancements and Other Utilities
 spec "user.autopairs" -- Auto close brackets and quotes
@@ -55,7 +55,6 @@ spec "user.extras.eyeliner" -- Motion highlighting
 spec "user.extras.navbuddy" -- LSP code navigation
 spec "user.extras.surround" -- Surround text manipulation
 spec "user.extras.oil" -- Floating terminal/file viewer
--- spec "user.extras.fidget" -- LSP progress indicator
 spec "user.extras.neotab" -- Tab management
 spec "user.extras.lab" -- Laboratory for testing
 spec "user.extras.tabby" -- Tabline plugin
@@ -65,7 +64,7 @@ spec "user.extras.todo-comments" -- Highlight and manage TODOs
 spec "user.extras.ufo" -- Code folding
 spec "user.extras.cellular-automaton" -- Cellular Automaton simulation
 spec "user.extras.discord"
-spec"user.extras.llm" -- AI
+spec "user.extras.llm" -- AI
 spec "user.extras.avante"
 
 require "user.lazy" -- Plugin manager

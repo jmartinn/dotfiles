@@ -95,28 +95,9 @@ function M.config()
     },
   }
 
-  -- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-  -- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
-  -- vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
-  -- vim.keymap.set("n", "zm", require("ufo").closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
+  vim.keymap.set("n", "zr", require("ufo").openAllFolds)
+  vim.keymap.set("n", "zm", require("ufo").closeAllFolds)
 
-  local wk = require "which-key"
-  wk.add {
-    {
-      "za",
-      desc = "Toggle fold",
-    },
-    {
-      "zm",
-      "<cmd>require('ufo').closeAllFolds<cr>",
-      desc = "Close all folds",
-    },
-    {
-      "zr",
-      "<cmd>require('ufo').openAllFolds<cr>",
-      desc = "Open all folds",
-    },
-  }
 
   vim.keymap.set("n", "K", function()
     local winid = require("ufo").peekFoldedLinesUnderCursor()

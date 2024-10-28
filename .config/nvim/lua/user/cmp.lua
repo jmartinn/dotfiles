@@ -152,7 +152,7 @@ function M.config()
       },
       { name = "luasnip" },
       { name = "nvim_lua" },
-      { name = "buffer" },
+      -- { name = "buffer" },
       { name = "path" },
       { name = "calc" },
       { name = "treesitter" },

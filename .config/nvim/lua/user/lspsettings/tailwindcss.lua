@@ -3,7 +3,7 @@ return {
   cmd = { "tailwindcss-language-server", "--stdio" },
   -- filetypes copied and adjusted from tailwindcss-intellisense
   filetypes = {
-    "typescript-react",
+    "typescriptreact",
   },
   settings = {
     tailwindcss = {

@@ -39,7 +39,7 @@ function M.config()
       -- Disable sections and component separators
       component_separators = "",
       section_separators = "",
-      theme = 'tokyonight',
+      theme = "tokyonight",
     },
     sections = {
       -- these are to remove the defaults
@@ -149,25 +149,43 @@ function M.config()
     end,
   }
 
-  ins_left {
-    -- Lsp server name .
+  -- ins_left {
+  --   -- Lsp server name .
+  --   function()
+  --     local msg = "No Active Lsp"
+  --     local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
+  --     local clients = vim.lsp.get_clients()
+  --     if next(clients) == nil then
+  --       return msg
+  --     end
+  --     for _, client in ipairs(clients) do
+  --       local filetypes = client.config.filetypes
+  --       if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+  --         return client.name
+  --       end
+  --     end
+  --     return msg
+  --   end,
+  --   icon = " :",
+  --   color = { fg = "#ffffff", gui = "bold" },
+  -- }
+
+  ins_right {
     function()
-      local msg = "No Active Lsp"
-      local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
-      local clients = vim.lsp.get_clients()
-      if next(clients) == nil then
-        return msg
+      local ok, pomo = pcall(require, "pomo")
+      if not ok then
+        return ""
       end
-      for _, client in ipairs(clients) do
-        local filetypes = client.config.filetypes
-        if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-          return client.name
-        end
+
+      local timer = pomo.get_first_to_finish()
+      if timer == nil then
+        return ""
       end
-      return msg
+
+      return "󰄉 " .. tostring(timer)
     end,
-    icon = " LSP:",
-    color = { fg = "#ffffff", gui = "bold" },
+    color = { fg = colors.yellow, gui = "bold" },
+    cond = conditions.hide_in_width,
   }
 
   -- Add components to right sections
@@ -201,6 +219,10 @@ function M.config()
       removed = { fg = colors.red },
     },
     cond = conditions.hide_in_width,
+  }
+
+  ins_right {
+    "filetype",
   }
 
   ins_right {

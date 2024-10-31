@@ -65,6 +65,7 @@ alias ls="eza"
 alias ll="eza -alh"
 alias tree="eza --tree"
 alias cat="bat"
+alias npm="pnpm"
 
 # Load NVM
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -76,3 +77,11 @@ alias cat="bat"
 # Performance-intensive operations (consider lazy-loading or caching)
 eval "$(fzf --zsh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# pnpm
+export PNPM_HOME="/Users/johnny/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

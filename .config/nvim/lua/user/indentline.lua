@@ -1,6 +1,7 @@
 local M = {
   "lukas-reineke/indent-blankline.nvim",
   name = "ibl",
+  tag = "v3.8.2",
 }
 
 function M.config()

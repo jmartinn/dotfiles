@@ -14,7 +14,7 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git)
 
 # Directories
-export REPOS="$HOME/Documents/projects/"
+export REPOS="$HOME/Developer/projects/"
 export DOTFILES="$HOME/dotfiles"
 export SCRIPTS="$HOME/scripts"
 export GITUSER="YOUR_GITHUB_USERNAME"

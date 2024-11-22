@@ -121,6 +121,7 @@ function M.config()
     "ts_ls",
     "eslint",
     "pyright",
+    "prismals",
     "bashls",
     "jsonls",
     "yamlls",

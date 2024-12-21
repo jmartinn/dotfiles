@@ -42,8 +42,6 @@ function M.config()
   require("luasnip/loaders/from_vscode").lazy_load()
 
   vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
-  vim.api.nvim_set_hl(0, "CmpItemKindTabnine", { fg = "#CA42F0" })
-  vim.api.nvim_set_hl(0, "CmpItemKindEmoji", { fg = "#FDE030" })
 
   local check_backspace = function()
     local col = vim.fn.col "." - 1
@@ -109,23 +107,13 @@ function M.config()
       format = function(entry, vim_item)
         vim_item.kind = icons.kind[vim_item.kind]
         vim_item.menu = ({
-          nvim_lsp = "",
-          nvim_lua = "",
-          luasnip = "",
-          buffer = "",
-          path = "",
-          emoji = "",
+          nvim_lsp = "[LSP]",
+          nvim_lua = "[Lua]",
+          luasnip = "[LuaSnip]",
+          buffer = "[Buffer]",
+          latex_symbols = "LaTeX",
+          path = "[PATH]",
         })[entry.source.name]
-
-        if entry.source.name == "emoji" then
-          vim_item.kind = icons.misc.Smiley
-          vim_item.kind_hl_group = "CmpItemKindEmoji"
-        end
-
-        if entry.source.name == "cmp_tabnine" then
-          vim_item.kind = icons.misc.Robot
-          vim_item.kind_hl_group = "CmpItemKindTabnine"
-        end
 
         return vim_item
       end,
@@ -152,7 +140,6 @@ function M.config()
       },
       { name = "luasnip" },
       { name = "nvim_lua" },
-      -- { name = "buffer" },
       { name = "path" },
       { name = "calc" },
       { name = "treesitter" },
@@ -168,7 +155,7 @@ function M.config()
         selection_order = "top_down",
       },
       docs = {
-        auto_open = false,
+        auto_open = true,
       },
     },
     window = {

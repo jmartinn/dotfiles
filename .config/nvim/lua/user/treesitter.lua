@@ -1,11 +1,9 @@
 local M = {
   "nvim-treesitter/nvim-treesitter",
-  -- event = { "BufReadPost", "BufNewFile" },
-  -- build = ":TSUpdate",
+  build = ":TSUpdate",
   dependencies = {
     {
       "nvim-treesitter/nvim-treesitter-textobjects",
-      -- event = "VeryLazy",
     },
   },
 }
@@ -31,14 +29,12 @@ function M.config()
       "vim",
       "vimdoc",
     },
-    ignore_install = { "" },
     sync_install = false,
     highlight = {
       enable = true,
-      -- disable = { "markdown" },
       additional_vim_regex_highlighting = false,
     },
-    auto_install = true,
+    auto_install = false,
     modules = {},
     indent = {
       enable = true,

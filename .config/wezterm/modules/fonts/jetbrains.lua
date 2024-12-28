@@ -17,22 +17,22 @@ M.activate = function(config)
     {
       intensity = "Normal",
       italic = false,
-      font = wezterm.font("JetBrains Mono", { weight = "Regular" }),
+      font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Regular" }),
     },
     {
       intensity = "Normal",
       italic = true,
-      font = wezterm.font("JetBrains Mono", { weight = 325, style = "Italic" }),
+      font = wezterm.font("JetBrainsMono Nerd Font", { weight = 325, style = "Italic" }),
     },
     {
       intensity = "Bold",
       italic = false,
-      font = wezterm.font("JetBrains Mono", { weight = "ExtraBold" }),
+      font = wezterm.font("JetBrainsMono Nerd Font", { weight = "ExtraBold" }),
     },
     {
       intensity = "Bold",
       italic = true,
-      font = wezterm.font("JetBrains Mono", { weight = "Bold", style = "Italic" }),
+      font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold", style = "Italic" }),
     },
   }
 end

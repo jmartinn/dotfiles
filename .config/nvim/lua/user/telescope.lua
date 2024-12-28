@@ -43,6 +43,14 @@ function M.config()
       desc = "Find String",
     },
     {
+      "<leader>fn",
+      function()
+        require("telescope.builtin").find_files {
+          cwd = vim.fn.stdpath "config",
+        }
+      end,
+    },
+    {
       "<leader>fh",
       "<cmd>Telescope help_tags<cr>",
       desc = "Help",

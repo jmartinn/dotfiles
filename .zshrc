@@ -17,7 +17,7 @@ plugins=(git)
 export REPOS="$HOME/Developer/projects/"
 export DOTFILES="$HOME/dotfiles"
 export SCRIPTS="$HOME/scripts"
-export GITUSER="YOUR_GITHUB_USERNAME"
+export GITUSER="jmartinn"
 export GHREPOS="$REPOS/github.com/$GITUSER"
 export SECOND_BRAIN="$HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/personal"
 

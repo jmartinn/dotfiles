@@ -1,3 +1,5 @@
 homebrew
 .git
+.gitignore
 .DS_Store
+scripts

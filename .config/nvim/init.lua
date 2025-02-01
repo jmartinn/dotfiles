@@ -28,7 +28,7 @@ spec "user.nvimtree" -- File explorer
 spec "user.comment" -- Commenting utility
 spec "user.harpoon" -- Quick file navigation
 spec "user.neogit" -- Git interface
-spec"user.diffview"
+spec "user.diffview"
 spec "user.tmux" -- Tmux integration
 
 -- Text Enhancements and Other Utilities
@@ -54,7 +54,7 @@ spec "user.extras.bqf" -- Quickfix enhancements
 spec "user.extras.dressing" -- UI components
 spec "user.extras.eyeliner" -- Motion highlighting
 spec "user.extras.navbuddy" -- LSP code navigation
-spec "user.extras.surround" -- Surround text manipulation
+-- spec "user.extras.surround" -- Surround text manipulation
 spec "user.extras.oil" -- Floating terminal/file viewer
 spec "user.extras.neotab" -- Tab management
 spec "user.extras.lab" -- Laboratory for testing

@@ -46,9 +46,9 @@ function M.config()
     ---LHS of toggle mappings in NORMAL mode
     toggler = {
       ---Line-comment toggle keymap
-      line = "gcc",
+      -- line = "gcc",
       ---Block-comment toggle keymap
-      block = "gbc",
+      -- block = "gbc",
     },
     ---LHS of operator-pending mappings in NORMAL and VISUAL mode
     opleader = {
@@ -60,19 +60,19 @@ function M.config()
     ---LHS of extra mappings
     extra = {
       ---Add comment on the line above
-      above = "gcO",
+      -- above = "gcO",
       ---Add comment on the line below
-      below = "gco",
+      -- below = "gco",
       ---Add comment at the end of line
-      eol = "gcA",
+      -- eol = "gcA",
     },
     ---Enable keybindings
     ---NOTE: If given `false` then the plugin won't create any mappings
     mappings = {
       ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-      basic = true,
+      basic = false,
       ---Extra mapping; `gco`, `gcO`, `gcA`
-      extra = true,
+      extra = false,
     },
     ---Function to call before (un)comment
     pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),

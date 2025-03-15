@@ -33,7 +33,6 @@ function M.config()
 
   local config = {
     options = {
-      -- Disable sections and component separators
       component_separators = "",
       section_separators = "",
       theme = "tokyonight",
@@ -112,7 +111,6 @@ function M.config()
   }
 
   ins_left {
-    -- filesize component
     "filesize",
     cond = conditions.buffer_not_empty,
   }
@@ -138,35 +136,6 @@ function M.config()
     },
   }
 
-  -- Insert mid section. You can make any number of sections in neovim :)
-  -- for lualine it's any number greater then 2
-  ins_left {
-    function()
-      return "%="
-    end,
-  }
-
-  -- ins_left {
-  --   -- Lsp server name .
-  --   function()
-  --     local msg = "No Active Lsp"
-  --     local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
-  --     local clients = vim.lsp.get_clients()
-  --     if next(clients) == nil then
-  --       return msg
-  --     end
-  --     for _, client in ipairs(clients) do
-  --       local filetypes = client.config.filetypes
-  --       if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-  --         return client.name
-  --       end
-  --     end
-  --     return msg
-  --   end,
-  --   icon = " :",
-  --   color = { fg = "#ffffff", gui = "bold" },
-  -- }
-
   ins_right {
     function()
       local ok, pomo = pcall(require, "pomo")
@@ -185,18 +154,10 @@ function M.config()
     cond = conditions.hide_in_width,
   }
 
-  -- Add components to right sections
-  ins_right {
-    "o:encoding", -- option component same as &encoding in viml
-    fmt = string.upper, -- I'm not sure why it's upper case either ;)
-    cond = conditions.hide_in_width,
-    color = { fg = colors.green, gui = "bold" },
-  }
-
   ins_right {
     "fileformat",
     fmt = string.upper,
-    icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+    icons_enabled = true,
     color = { fg = colors.green, gui = "bold" },
   }
 
@@ -208,7 +169,6 @@ function M.config()
 
   ins_right {
     "diff",
-    -- Is it me or the symbol for modified us really weird
     symbols = { added = " ", modified = "󰝤 ", removed = " " },
     diff_color = {
       added = { fg = colors.green },

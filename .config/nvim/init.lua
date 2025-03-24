@@ -45,6 +45,7 @@ spec "user.lazydev" -- Lazy development utilities
 -- Extras
 spec "user.extras.colorizer" -- Color highlighter
 spec "user.extras.obsidian" -- Obsidian note integration
+spec "user.extras.present" -- Markdown presentations within Neovim (TeeJ)
 spec "user.extras.vimtex" -- LaTeX support
 spec "user.extras.pomo" -- Pomodoro timer
 spec "user.extras.modicator" -- Mode indicator

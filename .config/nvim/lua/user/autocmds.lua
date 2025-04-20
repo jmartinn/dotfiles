@@ -18,7 +18,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     "lir",
     "DressingSelect",
     "tsplayground",
-    "query",
     "",
   },
   callback = function()
@@ -42,17 +41,9 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 })
 
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-  pattern = { "*" },
+  pattern = { "!vim" },
   callback = function()
     vim.cmd "checktime"
-  end,
-})
-
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-  pattern = { "*" },
-  callback = function()
-    local dirname = vim.fn.getcwd():match "([^/]+)$"
-    vim.opt.titlestring = dirname
   end,
 })
 

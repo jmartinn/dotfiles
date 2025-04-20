@@ -74,8 +74,9 @@ automatically-unhide-macos-hidden-apps = false
     alt-8 = 'workspace 8'
     alt-9 = 'workspace 9'
     alt-d = 'workspace D'
-    alt-f = 'workspace F'
     alt-n = 'workspace N'
+    alt-t = 'workspace T'
+    alt-p = 'workspace P'
 
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
@@ -128,3 +129,7 @@ run = "move-node-to-workspace 2"
 [[on-window-detected]]
 if.app-id = 'com.tinyapp.TablePlus'
 run = "move-node-to-workspace T"
+
+[[on-window-detected]]
+if.app-id = 'com.apple.mail'
+run = "layout tiling"

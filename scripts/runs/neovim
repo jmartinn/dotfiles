@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# We should replace the hardcoded version with something more modular like an env variable
+git clone -b v0.10.1 https://github.com/neovim/neovim.git $HOME/personal/neovim
+brew install ninja cmake gettext curl
+
+cd $HOME/personal/neovim
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+sudo make install

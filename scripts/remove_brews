@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Remove all formulae
-brew remove --force $(brew list --formula)
-
-# Remove all casks
-brew remove --cask --force $(brew list)

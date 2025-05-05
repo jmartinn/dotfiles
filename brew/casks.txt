@@ -1,11 +1,21 @@
+execute brew list --cask
+aerospace
+claude
 discord
 firefox
 font-caskaydia-mono-nerd-font
 font-hack-nerd-font
 font-jetbrains-mono-nerd-font
 font-terminess-ttf-nerd-font
+ghostty
+microsoft-auto-update
+microsoft-teams
+mullvadvpn
 postman
 rectangle
 skim
 slack
-wezterm
+superwhisper
+telegram
+typora
+windows-app

@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+
+while [[ $# > 0 ]]; do
+  case "$1" in
+    --dry)
+      dry="1"
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--dry]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Installing Fonts ----------------"
+
+# Check if Homebrew is installed
+if ! command -v brew &>/dev/null; then
+  log "Homebrew is not installed. Please run the homebrew script first."
+  exit 1
+fi
+
+# Create fonts directory
+fonts_dir="$dotfiles_dir/fonts"
+if [ ! -d "$fonts_dir" ]; then
+  execute mkdir -p "$fonts_dir"
+fi
+
+# Install Homebrew's font cask
+execute brew tap homebrew/cask-fonts
+
+###############################################################################
+# Install Nerd Fonts
+###############################################################################
+
+log "Installing specified Nerd Fonts..."
+
+# Install Hack Nerd Font Mono
+log "Installing Hack Nerd Font Mono..."
+execute brew install --cask font-hack-nerd-font
+
+# Install JetBrainsMono Nerd Font Mono
+log "Installing JetBrainsMono Nerd Font Mono..."
+execute brew install --cask font-jetbrains-mono-nerd-font
+
+# Install CaskaydiaCove Nerd Font Mono (Cascadia Code)
+log "Installing CaskaydiaCove Nerd Font Mono..."
+execute brew install --cask font-caskaydia-cove-nerd-font
+
+###############################################################################
+# Manual Font Installation
+###############################################################################
+
+# Check if there are any manual fonts to install
+manual_fonts_dir="$fonts_dir/manual"
+if [ ! -d "$manual_fonts_dir" ]; then
+  execute mkdir -p "$manual_fonts_dir"
+  log "Created directory for manual font installation at $manual_fonts_dir"
+  log "You can place font files (.ttf, .otf) in this directory to install them manually"
+else
+  # Find all font files in the manual directory
+  font_files=$(find "$manual_fonts_dir" -type f \( -name "*.ttf" -o -name "*.otf" \))
+  
+  if [ -n "$font_files" ]; then
+    log "Installing manual fonts..."
+    
+    # Create user fonts directory if it doesn't exist
+    user_fonts_dir="$HOME/Library/Fonts"
+    if [ ! -d "$user_fonts_dir" ]; then
+      execute mkdir -p "$user_fonts_dir"
+    fi
+    
+    # Copy each font file to the user fonts directory
+    while IFS= read -r font_file; do
+      font_name=$(basename "$font_file")
+      log "Installing $font_name"
+      execute cp "$font_file" "$user_fonts_dir/"
+    done <<< "$font_files"
+    
+    log "Manual fonts installed"
+  else
+    log "No manual fonts found in $manual_fonts_dir"
+  fi
+fi
+
+log "Clearing font cache..."
+execute atsutil databases -remove
+
+log "Fonts installation complete"
+log "You may need to log out and log back in for all fonts to be available in all applications." 

@@ -64,7 +64,6 @@ alias dots="cd $DOTFILES"
 alias ls="eza"
 alias ll="eza -alh"
 alias tree="eza --tree"
-alias cat="bat"
 alias npm="pnpm"
 
 # Load NVM

@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+export_only="0"
+
+while [[ $# > 0 ]]; do
+  case "$1" in
+    --dry)
+      dry="1"
+      ;;
+    --export-only)
+      export_only="1"
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--dry] [--export-only]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Homebrew Packages Manager ----------------"
+
+# Check if Homebrew is installed
+if ! command -v brew &>/dev/null; then
+  log "Homebrew is not installed. Please run the homebrew script first."
+  exit 1
+fi
+
+# Create Brewfile directory if it doesn't exist
+brew_dir="$dotfiles_dir/brew"
+if [ ! -d "$brew_dir" ]; then
+  execute mkdir -p "$brew_dir"
+fi
+
+# Generate lists of installed formulae and casks from current machine
+export_current_brews() {
+  log "Exporting currently installed Homebrew packages"
+  execute brew leaves > "$brew_dir/formulae.txt"
+  execute brew list --cask > "$brew_dir/casks.txt"
+  log "Current Homebrew packages exported to $brew_dir/formulae.txt and $brew_dir/casks.txt"
+}
+
+# Default basic formulae and casks if no files exist
+create_default_lists() {
+  log "Creating default package lists"
+  
+  # Default basic formulae
+  if [ ! -f "$brew_dir/formulae.txt" ]; then
+    execute cat > "$brew_dir/formulae.txt" << 'EOF'
+git
+curl
+wget
+ripgrep
+jq
+tree
+tmux
+EOF
+  fi
+  
+  # Default basic casks
+  if [ ! -f "$brew_dir/casks.txt" ]; then
+    execute cat > "$brew_dir/casks.txt" << 'EOF'
+visual-studio-code
+google-chrome
+iterm2
+EOF
+  fi
+}
+
+# Create a Brewfile from the lists
+generate_brewfile() {
+  local brewfile="$brew_dir/Brewfile"
+  log "Generating Brewfile from package lists"
+  
+  # Start with an empty file
+  execute rm -f "$brewfile"
+  execute touch "$brewfile"
+  
+  # Add taps
+  execute echo '# Taps' >> "$brewfile"
+  execute echo 'tap "homebrew/bundle"' >> "$brewfile"
+  execute echo 'tap "homebrew/cask"' >> "$brewfile"
+  execute echo 'tap "homebrew/core"' >> "$brewfile"
+  
+  # Add formulae
+  log "Adding formulae to Brewfile"
+  execute echo '' >> "$brewfile"
+  execute echo '# Formulae' >> "$brewfile"
+  while IFS= read -r formula; do
+    if [ -n "$formula" ]; then
+      execute echo "brew \"$formula\"" >> "$brewfile"
+    fi
+  done < "$brew_dir/formulae.txt"
+  
+  # Add casks
+  log "Adding casks to Brewfile"
+  execute echo '' >> "$brewfile"
+  execute echo '# Casks' >> "$brewfile"
+  while IFS= read -r cask; do
+    if [ -n "$cask" ]; then
+      execute echo "cask \"$cask\"" >> "$brewfile"
+    fi
+  done < "$brew_dir/casks.txt"
+  
+  log "Brewfile generated at $brewfile"
+}
+
+# If export-only flag is set, just export and exit
+if [ "$export_only" == "1" ]; then
+  log "Export-only mode: exporting current Homebrew packages"
+  export_current_brews
+  generate_brewfile
+  log "Export complete. No packages will be installed."
+  exit 0
+fi
+
+# Ask to export current packages if files don't exist
+if [ ! -f "$brew_dir/formulae.txt" ] || [ ! -f "$brew_dir/casks.txt" ]; then
+  if [ "$dry" != "1" ]; then
+    log "No package lists found. Would you like to export your currently installed packages? (y/n)"
+    read -r export_current
+    
+    if [[ "$export_current" =~ ^[Yy]$ ]]; then
+      export_current_brews
+    else
+      create_default_lists
+    fi
+  else
+    create_default_lists
+  fi
+fi
+
+# Generate Brewfile
+generate_brewfile
+
+# Install from Brewfile
+log "Installing Homebrew packages from Brewfile"
+execute brew bundle --file="$brewfile"
+
+log "Homebrew packages installation complete"
+log ""
+log "Usage:"
+log "  $0                  # Install packages"
+log "  $0 --export-only    # Only export current packages"
+log "  $0 --dry            # Dry run" 

@@ -1,0 +1,304 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+
+while [[ $# > 0 ]]; do
+  case "$1" in
+    --dry)
+      dry="1"
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--dry]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Setting up Backup Solutions ----------------"
+
+# Create backup directory for configuration
+backup_dir="$dotfiles_dir/backup"
+if [ ! -d "$backup_dir" ]; then
+  execute mkdir -p "$backup_dir"
+fi
+
+###############################################################################
+# Time Machine Configuration
+###############################################################################
+
+configure_time_machine() {
+  log "Configuring Time Machine..."
+  
+  # Ask for configuration details if not in dry run mode
+  if [ "$dry" != "1" ]; then
+    log "Do you want to configure Time Machine? (y/n)"
+    read -r configure_tm
+    
+    if [[ "$configure_tm" =~ ^[Yy]$ ]]; then
+      # Enable Time Machine
+      execute sudo tmutil enable
+      
+      # Create standard exclusions list
+      tm_exclude="$backup_dir/time_machine_exclusions.txt"
+      if [ ! -f "$tm_exclude" ]; then
+        log "Creating standard Time Machine exclusions list"
+        execute cat > "$tm_exclude" << 'EOF'
+# Time Machine Exclusions List
+# Add one path per line
+
+# System and temporary files
+/private/var/vm
+/private/var/tmp
+/private/var/folders
+/Library/Caches
+~/Library/Caches
+~/Library/Logs
+
+# Developer directories
+~/Library/Developer/Xcode/DerivedData
+~/Library/Developer/Xcode/iOS DeviceSupport
+~/Library/Developer/Xcode/watchOS DeviceSupport
+~/Library/Developer/Xcode/tvOS DeviceSupport
+~/.gradle
+~/.npm
+~/.yarn
+~/.cargo
+~/.gem
+~/node_modules
+~/.android
+
+# Virtual Machines and Docker
+~/VirtualBox VMs
+~/VMs
+~/Parallels
+~/.docker
+
+# Application data
+~/Library/Application Support/Google/Chrome
+~/Library/Application Support/Firefox
+~/Library/Containers/com.docker.docker
+
+# Add your custom exclusions below
+EOF
+        log "Created Time Machine exclusions list at $tm_exclude"
+      fi
+      
+      # Apply exclusions
+      log "Applying Time Machine exclusions..."
+      while IFS= read -r line; do
+        # Skip comments and empty lines
+        if [[ ! "$line" =~ ^# ]] && [ -n "$line" ]; then
+          # Expand tilde to home directory
+          path="${line/#\~/$HOME}"
+          
+          if [ -e "$path" ]; then
+            execute sudo tmutil addexclusion "$path"
+            log "Excluded: $path"
+          else
+            log "Path does not exist, skipping: $path"
+          fi
+        fi
+      done < "$tm_exclude"
+      
+      # Set backup volume if needed
+      log "Do you want to set a Time Machine backup volume? (y/n)"
+      read -r set_volume
+      
+      if [[ "$set_volume" =~ ^[Yy]$ ]]; then
+        # List available volumes
+        log "Available volumes:"
+        execute diskutil list | grep -v disk0 | grep -v EFI
+        
+        log "Enter the disk identifier for your backup volume (e.g., disk2s1):"
+        read -r tm_volume
+        
+        if [ -n "$tm_volume" ]; then
+          execute sudo tmutil setdestination "/Volumes/$(diskutil info $tm_volume | grep 'Volume Name' | awk '{print $3}')"
+          log "Time Machine backup volume set"
+        else
+          log "No volume specified, skipping"
+        fi
+      fi
+      
+      # Configure backup frequency and retention
+      log "Setting Time Machine to back up automatically (default setting)"
+      execute defaults write com.apple.TimeMachine AutoBackup -bool true
+      
+      log "Time Machine configured"
+    else
+      log "Skipping Time Machine configuration"
+    fi
+  else
+    log "[DRY RUN] Would configure Time Machine with standard exclusions"
+    log "[DRY RUN] Would prompt for backup volume selection"
+  fi
+}
+
+###############################################################################
+# Third-Party Backup Tools
+###############################################################################
+
+configure_third_party_backup() {
+  log "Checking for third-party backup tools..."
+  
+  # Check for installed backup tools
+  backup_tools=()
+  
+  if brew list --cask | grep -q "arq"; then
+    backup_tools+=("arq")
+  fi
+  
+  if brew list --cask | grep -q "backblaze"; then
+    backup_tools+=("backblaze")
+  fi
+  
+  if brew list --cask | grep -q "carbon-copy-cloner"; then
+    backup_tools+=("carbon-copy-cloner")
+  fi
+  
+  # If tools found, offer to configure them
+  if [ "${#backup_tools[@]}" -gt 0 ]; then
+    log "Found the following backup tools: ${backup_tools[*]}"
+    
+    for tool in "${backup_tools[@]}"; do
+      case "$tool" in
+        arq)
+          log "Arq backup found. Please configure it manually through its interface."
+          log "Configuration guide: https://www.arqbackup.com/documentation/arq7/English.html"
+          ;;
+        backblaze)
+          log "Backblaze found. Please configure it manually through its interface."
+          log "Configuration guide: https://help.backblaze.com/hc/en-us/articles/217664608-Getting-Started-with-Backblaze-Backup"
+          ;;
+        carbon-copy-cloner)
+          log "Carbon Copy Cloner found. Please configure it manually through its interface."
+          log "Configuration guide: https://bombich.com/kb/ccc6/how-set-up-your-first-backup"
+          ;;
+      esac
+    done
+  else
+    log "No third-party backup tools found"
+    
+    # Offer to install backup tools
+    if [ "$dry" != "1" ]; then
+      log "Would you like to install a third-party backup tool? (y/n)"
+      read -r install_tool
+      
+      if [[ "$install_tool" =~ ^[Yy]$ ]]; then
+        log "Available tools:"
+        log "1. Arq Backup (paid, one-time purchase)"
+        log "2. Backblaze (paid, subscription)"
+        log "3. Carbon Copy Cloner (paid, one-time purchase)"
+        log "Enter the number of the tool to install (1-3), or 0 to skip:"
+        read -r tool_choice
+        
+        case "$tool_choice" in
+          1)
+            log "Installing Arq Backup..."
+            execute brew install --cask arq
+            log "Arq Backup installed. Please configure it manually."
+            ;;
+          2)
+            log "Installing Backblaze..."
+            execute brew install --cask backblaze
+            log "Backblaze installed. Please configure it manually."
+            ;;
+          3)
+            log "Installing Carbon Copy Cloner..."
+            execute brew install --cask carbon-copy-cloner
+            log "Carbon Copy Cloner installed. Please configure it manually."
+            ;;
+          *)
+            log "Skipping third-party backup tool installation"
+            ;;
+        esac
+      fi
+    else
+      log "[DRY RUN] Would offer to install third-party backup tools"
+    fi
+  fi
+}
+
+###############################################################################
+# Backup Paths Inventory
+###############################################################################
+
+create_backup_inventory() {
+  log "Creating backup paths inventory..."
+  
+  # Create inventory file
+  backup_inventory="$backup_dir/backup_inventory.txt"
+  if [ ! -f "$backup_inventory" ]; then
+    log "Creating backup inventory file"
+    execute cat > "$backup_inventory" << 'EOF'
+# Backup Paths Inventory
+# This file lists important paths that should be backed up
+# Add one path per line with a description after #
+
+# Personal files
+~/Documents       # Documents
+~/Desktop         # Desktop files
+~/Downloads       # Downloaded files
+~/Pictures        # Pictures and photos
+~/Music           # Music library
+~/Movies          # Videos
+
+# Development
+~/Projects        # All projects (adjust to your actual projects directory)
+~/.ssh            # SSH keys and configuration
+~/.gnupg          # GPG keys
+~/.config         # Configuration files
+~/.zshrc          # Zsh configuration
+~/.gitconfig      # Git configuration
+
+# Application data (add relevant ones)
+~/Library/Application Support/Firefox/Profiles   # Firefox profiles
+~/Library/Application Support/Sublime Text       # Sublime Text settings
+~/Library/Preferences                            # Application preferences
+
+# Add your custom paths below
+
+EOF
+    log "Created backup inventory at $backup_inventory"
+    log "Please review and customize this file for your needs"
+  else
+    log "Backup inventory already exists at $backup_inventory"
+  fi
+}
+
+###############################################################################
+# Execute Configurations
+###############################################################################
+
+# Configure Time Machine
+configure_time_machine
+
+# Configure third-party backup tools
+configure_third_party_backup
+
+# Create backup inventory
+create_backup_inventory
+
+log "Backup configuration complete"
+log "Remember to test your backups regularly!" 

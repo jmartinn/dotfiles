@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+
+while [[ $# > 0 ]]; do
+  if [[ $1 == "--dry" ]]; then
+    dry="1"
+  fi
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Setting up Shell Environment ----------------"
+
+# Ensure we're using ZSH
+current_shell=$(basename "$SHELL")
+if [ "$current_shell" != "zsh" ]; then
+  log "Current shell is $current_shell, setting to zsh..."
+  chsh_path=$(which zsh)
+  execute sudo chsh -s "$chsh_path" "$(whoami)"
+  log "Shell changed to zsh. You may need to log out and back in for the change to take effect."
+else
+  log "Already using zsh as default shell"
+fi
+
+# Create symlinks for dotfiles
+log "Creating symlinks for shell configuration files"
+
+# Symlink .zshrc if it exists in the dotfiles
+if [ -f "$dotfiles_dir/.zshrc" ]; then
+  if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
+    log "Backing up existing .zshrc"
+    execute mv "$HOME/.zshrc" "$HOME/.zshrc.backup.$(date +%Y%m%d%H%M%S)"
+  fi
+  log "Linking .zshrc"
+  execute ln -sf "$dotfiles_dir/.zshrc" "$HOME/.zshrc"
+fi
+
+# Install oh-my-zsh if requested
+install_oh_my_zsh=false # Change to true if you want to install oh-my-zsh
+if $install_oh_my_zsh && [ ! -d "$HOME/.oh-my-zsh" ]; then
+  log "Installing oh-my-zsh..."
+  execute sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+log "Shell setup complete" 

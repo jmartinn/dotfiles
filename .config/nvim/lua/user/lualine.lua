@@ -79,12 +79,13 @@ function M.config()
   ins_left {
     -- mode component
     function()
-      return "𝝺"
+      -- return "  "
+      return " ✝ "
     end,
     color = function()
       -- auto change color according to neovims mode
       local mode_color = {
-        n = colors.red,
+        n = colors.blue,
         i = colors.green,
         v = colors.blue,
         [""] = colors.blue,

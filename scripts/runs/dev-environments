@@ -1,0 +1,412 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+
+while [[ $# > 0 ]]; do
+  case "$1" in
+    --dry)
+      dry="1"
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--dry]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Setting up Development Environments ----------------"
+
+# Check if Homebrew is installed first
+if ! command -v brew &>/dev/null; then
+  log "Homebrew is not installed. Please run the homebrew script first."
+  exit 1
+fi
+
+# Create configurations directory
+dev_dir="$dotfiles_dir/dev"
+if [ ! -d "$dev_dir" ]; then
+  execute mkdir -p "$dev_dir"
+fi
+
+###############################################################################
+# Node.js Setup
+###############################################################################
+
+setup_node() {
+  log "Setting up Node.js environment..."
+  
+  # Install nvm (Node Version Manager)
+  if [ ! -d "$HOME/.nvm" ]; then
+    log "Installing nvm..."
+    execute curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    
+    # Set up NVM environment for the current script
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    
+    log "nvm installed"
+  else
+    log "nvm is already installed"
+    
+    # Set up NVM environment for the current script
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  fi
+  
+  # Install latest LTS version of Node.js
+  log "Installing latest LTS version of Node.js..."
+  execute nvm install node
+  
+  # Install pnpm
+  log "Installing pnpm..."
+  execute curl -fsSL https://get.pnpm.io/install.sh | sh -
+  
+  # Set up pnpm environment for the current script
+  export PNPM_HOME="$HOME/Library/pnpm"
+  export PATH="$PNPM_HOME:$PATH"
+  
+  # Create package list file if it doesn't exist
+  node_packages="$dev_dir/pnpm-packages.txt"
+  if [ ! -f "$node_packages" ]; then
+    log "Creating default pnpm global packages list"
+    execute cat > "$node_packages" << 'EOF'
+@anthropic-ai/claude-code
+@prisma/language-server
+neovim
+turbo
+vercel
+EOF
+    log "Default pnpm packages list created at $node_packages"
+  fi
+  
+  # Install global packages
+  log "Installing pnpm global packages..."
+  while IFS= read -r package; do
+    if [ -n "$package" ]; then
+      execute pnpm add -g "$package"
+    fi
+  done < "$node_packages"
+  
+  log "Node.js and pnpm setup complete"
+}
+
+###############################################################################
+# Python Setup
+###############################################################################
+
+setup_python() {
+  log "Setting up Python environment..."
+  
+  # Install pyenv for Python version management
+  if ! command -v pyenv &>/dev/null; then
+    log "Installing pyenv..."
+    execute brew install pyenv
+    
+    # Set up pyenv in shell
+    execute echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    execute echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    execute echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+    
+    # Set up for the current session
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    
+    log "pyenv installed"
+  else
+    log "pyenv is already installed"
+  fi
+  
+  # Install latest stable Python
+  log "Installing latest stable Python..."
+  # Get the latest stable Python version
+  latest_python=$(pyenv install --list | grep -v - | grep -v a | grep -v b | grep -v rc | tail -1 | tr -d '[:space:]')
+  execute pyenv install "$latest_python"
+  execute pyenv global "$latest_python"
+  
+  # Create Python packages list file if it doesn't exist
+  python_packages="$dev_dir/python-packages.txt"
+  if [ ! -f "$python_packages" ]; then
+    log "Creating default Python packages list"
+    execute cat > "$python_packages" << 'EOF'
+pip
+pipenv
+black
+pylint
+flake8
+pytest
+jupyter
+requests
+python-dotenv
+EOF
+    log "Default Python packages list created at $python_packages"
+  fi
+  
+  # Upgrade pip and install packages
+  log "Upgrading pip and installing packages..."
+  execute pip install --upgrade pip
+  while IFS= read -r package; do
+    if [ -n "$package" ]; then
+      execute pip install "$package"
+    fi
+  done < "$python_packages"
+  
+  log "Python setup complete"
+}
+
+###############################################################################
+# Ruby Setup
+###############################################################################
+
+setup_ruby() {
+  log "Setting up Ruby environment..."
+  
+  # Install rbenv for Ruby version management
+  if ! command -v rbenv &>/dev/null; then
+    log "Installing rbenv..."
+    execute brew install rbenv
+    
+    # Set up rbenv in shell
+    execute echo 'eval "$(rbenv init -)"' >> ~/.zshrc
+    
+    # Initialize rbenv for the current session
+    eval "$(rbenv init -)"
+    
+    log "rbenv installed"
+  else
+    log "rbenv is already installed"
+    eval "$(rbenv init -)"
+  fi
+  
+  # Install latest stable Ruby
+  log "Installing latest stable Ruby..."
+  latest_ruby=$(rbenv install -l | grep -v - | grep -v dev | tail -1 | tr -d '[:space:]')
+  execute rbenv install "$latest_ruby"
+  execute rbenv global "$latest_ruby"
+  
+  # Create Ruby gems list file if it doesn't exist
+  ruby_gems="$dev_dir/ruby-gems.txt"
+  if [ ! -f "$ruby_gems" ]; then
+    log "Creating default Ruby gems list"
+    execute cat > "$ruby_gems" << 'EOF'
+bundler
+rails
+sinatra
+rubocop
+pry
+rspec
+EOF
+    log "Default Ruby gems list created at $ruby_gems"
+  fi
+  
+  # Install gems
+  log "Installing Ruby gems..."
+  execute gem update --system
+  while IFS= read -r gem; do
+    if [ -n "$gem" ]; then
+      execute gem install "$gem"
+    fi
+  done < "$ruby_gems"
+  
+  log "Ruby setup complete"
+}
+
+###############################################################################
+# Go Setup
+###############################################################################
+
+setup_go() {
+  log "Setting up Go environment..."
+  
+  # Install Go
+  if ! command -v go &>/dev/null; then
+    log "Installing Go..."
+    execute brew install go
+    
+    # Set up Go environment variables
+    execute mkdir -p "$HOME/go/{bin,src,pkg}"
+    execute echo 'export GOPATH=$HOME/go' >> ~/.zshrc
+    execute echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.zshrc
+    
+    # Set up for current session
+    export GOPATH=$HOME/go
+    export PATH=$PATH:$GOPATH/bin
+    
+    log "Go installed"
+  else
+    log "Go is already installed"
+  fi
+  
+  # Create Go packages list file if it doesn't exist
+  go_packages="$dev_dir/go-packages.txt"
+  if [ ! -f "$go_packages" ]; then
+    log "Creating default Go packages list"
+    execute cat > "$go_packages" << 'EOF'
+github.com/go-delve/delve/cmd/dlv
+golang.org/x/tools/gopls
+golang.org/x/tools/cmd/goimports
+github.com/golangci/golangci-lint/cmd/golangci-lint
+github.com/cosmtrek/air
+EOF
+    log "Default Go packages list created at $go_packages"
+  fi
+  
+  # Install Go packages
+  log "Installing Go packages..."
+  while IFS= read -r package; do
+    if [ -n "$package" ]; then
+      execute go install "$package@latest"
+    fi
+  done < "$go_packages"
+  
+  log "Go setup complete"
+}
+
+###############################################################################
+# Rust Setup
+###############################################################################
+
+setup_rust() {
+  log "Setting up Rust environment..."
+  
+  # Install Rust using rustup
+  if ! command -v rustc &>/dev/null; then
+    log "Installing Rust..."
+    execute curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    
+    # Set up for current session
+    source "$HOME/.cargo/env"
+    
+    log "Rust installed"
+  else
+    log "Rust is already installed"
+    source "$HOME/.cargo/env"
+  fi
+  
+  # Create Rust crates list file if it doesn't exist
+  rust_crates="$dev_dir/rust-crates.txt"
+  if [ ! -f "$rust_crates" ]; then
+    log "Creating default Rust crates list"
+    execute cat > "$rust_crates" << 'EOF'
+cargo-edit
+cargo-watch
+cargo-expand
+rustfmt
+clippy
+EOF
+    log "Default Rust crates list created at $rust_crates"
+  fi
+  
+  # Install Rust components and crates
+  log "Installing Rust components and crates..."
+  execute rustup component add rustfmt
+  execute rustup component add clippy
+  
+  while IFS= read -r crate; do
+    if [ -n "$crate" ] && [ "$crate" != "rustfmt" ] && [ "$crate" != "clippy" ]; then
+      execute cargo install "$crate"
+    fi
+  done < "$rust_crates"
+  
+  log "Rust setup complete"
+}
+
+###############################################################################
+# Docker Setup
+###############################################################################
+
+setup_docker() {
+  log "Setting up Docker environment..."
+  
+  # Check if Docker is installed
+  if ! command -v docker &>/dev/null; then
+    log "Docker not found. Installing Docker..."
+    execute brew install --cask docker
+    log "Docker installed. Please open the Docker.app to complete setup."
+  else
+    log "Docker is already installed"
+  fi
+  
+  # Install Docker Compose if needed
+  if ! command -v docker-compose &>/dev/null; then
+    log "Installing docker-compose..."
+    execute brew install docker-compose
+    log "docker-compose installed"
+  else
+    log "docker-compose is already installed"
+  fi
+  
+  log "Docker setup complete"
+}
+
+###############################################################################
+# Choose Environments to Install
+###############################################################################
+
+# Ask which environments to set up
+if [ "$dry" != "1" ]; then
+  log "Which development environments would you like to set up?"
+  
+  read -p "Set up Node.js? (y/n): " setup_node_env
+  if [[ "$setup_node_env" =~ ^[Yy]$ ]]; then
+    setup_node
+  fi
+  
+  read -p "Set up Python? (y/n): " setup_python_env
+  if [[ "$setup_python_env" =~ ^[Yy]$ ]]; then
+    setup_python
+  fi
+  
+  read -p "Set up Ruby? (y/n): " setup_ruby_env
+  if [[ "$setup_ruby_env" =~ ^[Yy]$ ]]; then
+    setup_ruby
+  fi
+  
+  read -p "Set up Go? (y/n): " setup_go_env
+  if [[ "$setup_go_env" =~ ^[Yy]$ ]]; then
+    setup_go
+  fi
+  
+  read -p "Set up Rust? (y/n): " setup_rust_env
+  if [[ "$setup_rust_env" =~ ^[Yy]$ ]]; then
+    setup_rust
+  fi
+  
+  read -p "Set up Docker? (y/n): " setup_docker_env
+  if [[ "$setup_docker_env" =~ ^[Yy]$ ]]; then
+    setup_docker
+  fi
+else
+  # In dry run, just show what would be set up
+  log "[DRY RUN] Would prompt for development environments to set up"
+  log "[DRY RUN] Node.js setup would include nvm and global packages"
+  log "[DRY RUN] Python setup would include pyenv and pip packages"
+  log "[DRY RUN] Ruby setup would include rbenv and gems"
+  log "[DRY RUN] Go setup would include Go installation and packages"
+  log "[DRY RUN] Rust setup would include rustup and crates"
+  log "[DRY RUN] Docker setup would include Docker and Docker Compose"
+fi
+
+log "Development environments setup complete"
+log "Note: You may need to restart your shell to apply environment changes" 

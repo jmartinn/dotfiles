@@ -1,0 +1,208 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+export_only="0"
+
+while [[ $# > 0 ]]; do
+  case "$1" in
+    --dry)
+      dry="1"
+      ;;
+    --export-only)
+      export_only="1"
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--dry] [--export-only]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Mac App Store Apps Manager ----------------"
+
+# Create App Store directory
+mas_dir="$dotfiles_dir/mas"
+if [ ! -d "$mas_dir" ]; then
+  execute mkdir -p "$mas_dir"
+fi
+
+###############################################################################
+# mas-cli Installation
+###############################################################################
+
+install_mas() {
+  log "Checking if mas-cli is installed..."
+  
+  if ! command -v mas &>/dev/null; then
+    log "mas-cli is not installed. Installing..."
+    execute brew install mas
+    log "mas-cli installed"
+  else
+    log "mas-cli is already installed"
+  fi
+}
+
+###############################################################################
+# Generate App List
+###############################################################################
+
+export_apps() {
+  log "Exporting Mac App Store apps..."
+  
+  # Check if user is signed into App Store
+  if ! mas account &>/dev/null; then
+    log "You are not signed into the Mac App Store. Please sign in and try again."
+    log "To sign in, open the Mac App Store app and sign in manually, or use:"
+    log "  mas signin your.email@example.com \"password\""
+    
+    if [ "$dry" != "1" ]; then
+      read -p "Would you like to sign in now? (y/n): " sign_in
+      
+      if [[ "$sign_in" =~ ^[Yy]$ ]]; then
+        read -p "Email: " mas_email
+        
+        if [ -n "$mas_email" ]; then
+          execute mas signin "$mas_email"
+        else
+          log "Email not provided. Please sign in manually using the Mac App Store app."
+          return 1
+        fi
+      else
+        log "Skipping sign in. You'll need to be signed in to export or install apps."
+        return 1
+      fi
+    fi
+  fi
+  
+  # Get list of installed apps
+  mas_list="$mas_dir/apps.txt"
+  log "Exporting installed Mac App Store apps to $mas_list"
+  execute mas list | tee "$mas_list"
+  
+  # Create a formatted list for easier installation
+  mas_install="$mas_dir/install.sh"
+  log "Creating installation script at $mas_install"
+  
+  execute cat > "$mas_install" << 'EOF'
+#!/usr/bin/env bash
+
+# This script installs Mac App Store apps using mas-cli
+# Usage: ./install.sh
+
+# Check if mas-cli is installed
+if ! command -v mas &>/dev/null; then
+  echo "mas-cli is not installed. Please install it with 'brew install mas'."
+  exit 1
+fi
+
+# Check if user is signed into App Store
+if ! mas account &>/dev/null; then
+  echo "You are not signed into the Mac App Store. Please sign in and try again."
+  echo "To sign in, open the Mac App Store app and sign in manually."
+  exit 1
+fi
+
+echo "Installing Mac App Store apps..."
+
+EOF
+  
+  execute mas list | awk '{print "mas install", $1, "# " substr($0, index($0,$2))}' >> "$mas_install"
+  execute chmod +x "$mas_install"
+  
+  log "Mac App Store apps exported to $mas_list"
+  log "Installation script created at $mas_install"
+  
+  return 0
+}
+
+###############################################################################
+# Install Apps
+###############################################################################
+
+install_apps() {
+  log "Installing Mac App Store apps..."
+  
+  # Check if installation script exists
+  mas_install="$mas_dir/install.sh"
+  if [ ! -f "$mas_install" ]; then
+    log "Installation script not found. Generating..."
+    export_apps || return 1
+  fi
+  
+  # Run installation script
+  execute "$mas_install"
+  
+  log "Mac App Store apps installation complete"
+  
+  return 0
+}
+
+###############################################################################
+# Main Script
+###############################################################################
+
+# Install mas-cli
+install_mas
+
+# If export-only flag is set, just export and exit
+if [ "$export_only" == "1" ]; then
+  log "Export-only mode: exporting Mac App Store apps"
+  export_apps
+  log "Export complete. No apps will be installed."
+  exit 0
+fi
+
+# If in normal mode, ask if user wants to export or install
+if [ "$dry" != "1" ]; then
+  read -p "Would you like to [e]xport installed apps, [i]nstall from list, or [b]oth? (e/i/b): " action
+  
+  case "$action" in
+    e|E)
+      export_apps
+      ;;
+    i|I)
+      install_apps
+      ;;
+    b|B)
+      export_apps && install_apps
+      ;;
+    *)
+      log "Invalid option selected. Exiting."
+      exit 1
+      ;;
+  esac
+else
+  # In dry run, show what would happen
+  log "[DRY RUN] Would check if mas-cli is installed"
+  log "[DRY RUN] Would export currently installed Mac App Store apps"
+  log "[DRY RUN] Would generate an installation script"
+  log "[DRY RUN] Would install apps from the list if requested"
+fi
+
+log "Mac App Store script complete"
+log ""
+log "Usage:"
+log "  $0                 # Interactive mode"
+log "  $0 --export-only   # Only export current apps"
+log "  $0 --dry           # Dry run" 

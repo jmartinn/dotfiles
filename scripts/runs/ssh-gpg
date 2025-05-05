@@ -1,0 +1,383 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+export_keys="0"
+import_keys="0"
+
+# Define secure keys directory (outside of git repo)
+secure_dir="$HOME/.secure_dotfiles"
+ssh_dir="$HOME/.ssh"
+
+while [[ $# > 0 ]]; do
+  case "$1" in
+    --dry)
+      dry="1"
+      ;;
+    --export-keys)
+      export_keys="1"
+      ;;
+    --import-keys)
+      import_keys="1"
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--dry] [--export-keys] [--import-keys]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Setting up SSH and GPG Keys ----------------"
+
+# Create SSH directory with proper permissions if it doesn't exist
+if [ ! -d "$ssh_dir" ]; then
+  log "Creating SSH directory"
+  execute mkdir -p "$ssh_dir"
+  execute chmod 700 "$ssh_dir"
+fi
+
+# Create secure directory if it doesn't exist
+if [ ! -d "$secure_dir" ]; then
+  log "Creating secure storage directory at $secure_dir"
+  execute mkdir -p "$secure_dir"
+  execute chmod 700 "$secure_dir"
+fi
+
+# Function to export SSH and GPG keys
+export_ssh_gpg_keys() {
+  log "Exporting SSH and GPG keys to $secure_dir"
+  
+  # Create export directories
+  execute mkdir -p "$secure_dir/ssh"
+  execute mkdir -p "$secure_dir/gpg"
+  execute chmod 700 "$secure_dir/ssh"
+  execute chmod 700 "$secure_dir/gpg"
+  
+  # SSH keys
+  if [ -d "$ssh_dir" ]; then
+    log "Exporting SSH keys and config"
+    execute find "$ssh_dir" -type f -name "id_*" -exec cp {} "$secure_dir/ssh/" \;
+    
+    # Export SSH config to template
+    if [ -f "$ssh_dir/config" ]; then
+      log "Exporting SSH config as template"
+      execute cp "$ssh_dir/config" "$secure_dir/ssh/config.template"
+    fi
+    
+    # Set proper permissions
+    execute chmod 600 "$secure_dir/ssh/"*
+    log "SSH keys exported to $secure_dir/ssh/"
+  fi
+  
+  # GPG keys
+  if command -v gpg &>/dev/null; then
+    log "Exporting GPG keys"
+    
+    # Get GPG key IDs
+    gpg_secret_keys=$(gpg --list-secret-keys --keyid-format LONG | grep sec | awk '{print $2}' | cut -d'/' -f2)
+    
+    if [ -n "$gpg_secret_keys" ]; then
+      # Export secret keys
+      for keyid in $gpg_secret_keys; do
+        log "Exporting GPG key: $keyid"
+        gpg_export_file="$secure_dir/gpg/$keyid.asc"
+        execute gpg --export-secret-keys --armor "$keyid" > "$gpg_export_file"
+        execute chmod 600 "$gpg_export_file"
+      done
+      
+      # Export public keys
+      execute gpg --export --armor > "$secure_dir/gpg/public_keys.asc"
+      
+      # Create instructions file
+      cat > "$secure_dir/gpg/README.txt" << 'EOF'
+# GPG Keys Import Instructions
+
+To import these GPG keys on a new machine:
+
+1. Import secret keys:
+   gpg --import /path/to/keyid.asc
+
+2. Import public keys:
+   gpg --import /path/to/public_keys.asc
+
+3. Trust the keys:
+   gpg --edit-key <keyid>
+   > trust
+   > 5 (ultimate trust)
+   > quit
+EOF
+      
+      log "GPG keys exported to $secure_dir/gpg/"
+      log "⚠️  IMPORTANT: These exported keys are sensitive. Keep the $secure_dir directory secure!"
+      log "Consider encrypting this directory or storing it in a secure location like a password manager."
+    else
+      log "No GPG secret keys found to export"
+    fi
+  else
+    log "GPG is not installed. Skipping GPG export."
+  fi
+  
+  # Create encryption option
+  log "Would you like to encrypt the exported keys directory? (y/n)"
+  read -r encrypt_keys
+  
+  if [[ "$encrypt_keys" =~ ^[Yy]$ ]]; then
+    log "Please enter a strong password to encrypt your keys:"
+    tar -czf - -C "$(dirname "$secure_dir")" "$(basename "$secure_dir")" | \
+    openssl enc -aes-256-cbc -salt -out "$HOME/secure_dotfiles_backup.tar.gz.enc"
+    
+    execute chmod 600 "$HOME/secure_dotfiles_backup.tar.gz.enc"
+    log "Keys encrypted to $HOME/secure_dotfiles_backup.tar.gz.enc"
+    log "⚠️  IMPORTANT: Store this file and your password securely!"
+    log "To decrypt: openssl enc -d -aes-256-cbc -in secure_dotfiles_backup.tar.gz.enc | tar xz"
+  fi
+}
+
+# Function to import SSH and GPG keys
+import_ssh_gpg_keys() {
+  log "Importing SSH and GPG keys from $secure_dir"
+  
+  # Ask for encrypted backup
+  log "Do you have an encrypted backup to import? (y/n)"
+  read -r use_encrypted
+  
+  if [[ "$use_encrypted" =~ ^[Yy]$ ]]; then
+    log "Enter the path to your encrypted backup file:"
+    read -r backup_path
+    
+    if [ -f "$backup_path" ]; then
+      log "Decrypting backup..."
+      execute openssl enc -d -aes-256-cbc -in "$backup_path" | tar xz -C "$HOME"
+      log "Backup decrypted to $secure_dir"
+    else
+      log "Backup file not found: $backup_path"
+      return 1
+    fi
+  fi
+  
+  # Import SSH keys
+  if [ -d "$secure_dir/ssh" ]; then
+    log "Importing SSH keys"
+    
+    # Copy keys
+    execute find "$secure_dir/ssh" -type f -name "id_*" -not -name "*.pub" | while read -r key_file; do
+      key_name=$(basename "$key_file")
+      log "Importing SSH key: $key_name"
+      execute cp "$key_file" "$ssh_dir/"
+      
+      # Generate public key if it doesn't exist
+      if [ ! -f "$secure_dir/ssh/$key_name.pub" ] && [ ! -f "$ssh_dir/$key_name.pub" ]; then
+        log "Generating public key for $key_name"
+        execute ssh-keygen -y -f "$ssh_dir/$key_name" > "$ssh_dir/$key_name.pub"
+      elif [ -f "$secure_dir/ssh/$key_name.pub" ]; then
+        log "Copying public key for $key_name"
+        execute cp "$secure_dir/ssh/$key_name.pub" "$ssh_dir/"
+      fi
+      
+      # Set proper permissions
+      execute chmod 600 "$ssh_dir/$key_name"
+      execute chmod 644 "$ssh_dir/$key_name.pub"
+    done
+    
+    # Import SSH config
+    if [ -f "$secure_dir/ssh/config.template" ]; then
+      log "Found SSH config template. Installing..."
+      execute cp "$secure_dir/ssh/config.template" "$ssh_dir/config"
+      execute chmod 600 "$ssh_dir/config"
+    fi
+    
+    # Start ssh-agent and add keys
+    execute eval "$(ssh-agent -s)"
+    
+    # Add keys to agent
+    execute find "$ssh_dir" -type f -name "id_*" -not -name "*.pub" | while read -r key_file; do
+      log "Adding key to agent: $key_file"
+      # Use keychain on macOS
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        execute ssh-add --apple-use-keychain "$key_file"
+      else
+        execute ssh-add "$key_file"
+      fi
+    done
+    
+    log "SSH keys imported"
+  else
+    log "No SSH keys found to import"
+  fi
+  
+  # Import GPG keys
+  if [ -d "$secure_dir/gpg" ]; then
+    if command -v gpg &>/dev/null; then
+      log "Importing GPG keys"
+      
+      # Import secret keys
+      execute find "$secure_dir/gpg" -name "*.asc" -not -name "public_keys.asc" | while read -r key_file; do
+        log "Importing GPG secret key: $key_file"
+        execute gpg --import "$key_file"
+      done
+      
+      # Import public keys if they exist
+      if [ -f "$secure_dir/gpg/public_keys.asc" ]; then
+        log "Importing GPG public keys"
+        execute gpg --import "$secure_dir/gpg/public_keys.asc"
+      fi
+      
+      log "GPG keys imported"
+      log "Don't forget to set trust levels for your imported keys:"
+      log "  gpg --edit-key <keyid>"
+      log "  > trust"
+      log "  > 5"
+      log "  > quit"
+    else
+      log "GPG is not installed. Install it with 'brew install gnupg' first."
+    fi
+  else
+    log "No GPG keys found to import"
+  fi
+}
+
+# Function to set up a basic SSH config template if none exists
+create_ssh_config_template() {
+  ssh_config="$ssh_dir/config"
+  if [ ! -f "$ssh_config" ]; then
+    log "Creating SSH config template"
+    execute cat > "$ssh_config" << 'EOF'
+# Global settings
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  ServerAliveInterval 60
+
+# Example GitHub configuration (customize as needed)
+Host github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519
+
+# Example for accessing a server (customize as needed)
+# Host example-server
+#   HostName server.example.com
+#   User username
+#   Port 22
+#   IdentityFile ~/.ssh/id_ed25519_server
+EOF
+    execute chmod 600 "$ssh_config"
+    log "Basic SSH config created at $ssh_config"
+    log "⚠️  Remember to customize this template with your actual hosts and settings"
+  fi
+}
+
+# Check for export/import flags
+if [ "$export_keys" == "1" ]; then
+  export_ssh_gpg_keys
+  exit 0
+elif [ "$import_keys" == "1" ]; then
+  import_ssh_gpg_keys
+  exit 0
+fi
+
+# If not exporting/importing, run the normal setup
+create_ssh_config_template
+
+# Generate SSH key if it doesn't exist and not in dry run mode
+if [ ! -f "$ssh_dir/id_ed25519" ] && [ "$dry" != "1" ]; then
+  log "No SSH key found. Do you want to generate a new SSH key? (y/n)"
+  read -r generate_ssh
+  
+  if [[ "$generate_ssh" =~ ^[Yy]$ ]]; then
+    log "Please enter your email for the SSH key:"
+    read -r ssh_email
+    
+    if [ -n "$ssh_email" ]; then
+      execute ssh-keygen -t ed25519 -C "$ssh_email" -f "$ssh_dir/id_ed25519"
+      execute chmod 600 "$ssh_dir/id_ed25519"
+      execute chmod 644 "$ssh_dir/id_ed25519.pub"
+      
+      # Start ssh-agent and add key
+      execute eval "$(ssh-agent -s)"
+      
+      # Add to keychain on macOS
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        execute ssh-add --apple-use-keychain "$ssh_dir/id_ed25519"
+      else
+        execute ssh-add "$ssh_dir/id_ed25519"
+      fi
+      
+      log "SSH key generated and added to agent"
+      log "Your public key is:"
+      execute cat "$ssh_dir/id_ed25519.pub"
+      log "Add this key to your GitHub/GitLab account"
+    else
+      log "SSH key generation skipped due to missing email"
+    fi
+  else
+    log "SSH key generation skipped"
+  fi
+elif [ -f "$ssh_dir/id_ed25519" ]; then
+  log "Existing SSH key found"
+fi
+
+# Check if GPG is installed
+if command -v gpg &>/dev/null; then
+  log "GPG is installed"
+  
+  # Check if GPG key exists
+  if ! gpg --list-secret-keys | grep -q "sec"; then
+    if [ "$dry" != "1" ]; then
+      log "No GPG key found. Do you want to generate a new GPG key? (y/n)"
+      read -r generate_gpg
+      
+      if [[ "$generate_gpg" =~ ^[Yy]$ ]]; then
+        log "Generating GPG key (follow the interactive prompts)..."
+        execute gpg --full-generate-key
+        
+        # Get the key ID
+        gpg_key_id=$(gpg --list-secret-keys --keyid-format=long | grep sec | awk '{print $2}' | cut -d'/' -f2)
+        
+        if [ -n "$gpg_key_id" ]; then
+          # Configure Git to use GPG key
+          execute git config --global user.signingkey "$gpg_key_id"
+          execute git config --global commit.gpgsign true
+          
+          log "GPG key generated and configured with Git"
+          log "Your GPG public key is:"
+          execute gpg --armor --export "$gpg_key_id"
+          log "Add this key to your GitHub/GitLab account"
+        fi
+      else
+        log "GPG key generation skipped"
+      fi
+    fi
+  else
+    log "Existing GPG key found"
+  fi
+else
+  log "GPG is not installed. Install it via Homebrew with 'brew install gnupg'"
+fi
+
+log "SSH and GPG setup complete"
+log ""
+log "To export keys for backup/transfer:"
+log "  $0 --export-keys"
+log ""
+log "To import keys on a new machine:"
+log "  $0 --import-keys" 

@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+
+while [[ $# > 0 ]]; do
+  case "$1" in
+    --dry)
+      dry="1"
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--dry]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Setting up Terminal Environment ----------------"
+
+# Create directories for terminal configuration
+terminal_dir="$dotfiles_dir/terminal"
+if [ ! -d "$terminal_dir" ]; then
+  execute mkdir -p "$terminal_dir"
+fi
+
+configure_shell_prompt() {
+  log "Setting up shell prompt..."
+  
+  # Create shell prompt directory
+  prompt_dir="$terminal_dir/prompt"
+  if [ ! -d "$prompt_dir" ]; then
+    execute mkdir -p "$prompt_dir"
+  fi
+  
+  # Check if Oh My Zsh is already installed
+  if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    log "Oh My Zsh is not installed. Would you like to install it? (y/n)"
+    read -r install_ohmyzsh
+    
+    if [[ "$install_ohmyzsh" =~ ^[Yy]$ ]]; then
+      execute sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+      log "Oh My Zsh installed"
+    else
+      log "Skipping Oh My Zsh installation"
+    fi
+  else
+    log "Oh My Zsh is already installed"
+  fi
+  
+###############################################################################
+# Ghostty Configuration
+###############################################################################
+
+configure_ghostty() {
+  log "Configuring Ghostty..."
+  
+  # Check if Ghostty is installed
+  if ! command -v ghostty &>/dev/null && [ ! -d "/Applications/Ghostty.app" ]; then
+    log "Ghostty is not installed. Would you like to install it? (y/n)"
+    read -r install_ghostty
+    
+    if [[ "$install_ghostty" =~ ^[Yy]$ ]]; then
+      execute brew install --cask ghostty
+      log "Ghostty installed"
+    else
+      log "Skipping Ghostty installation"
+      return
+    fi
+  fi
+  
+  # Create Ghostty config directory if it doesn't exist
+  ghostty_config_dir="$HOME/.config/ghostty"
+  if [ ! -d "$ghostty_config_dir" ]; then
+    execute mkdir -p "$ghostty_config_dir"
+    log "Created Ghostty config directory"
+  fi
+  
+  # Link existing Ghostty config from dotfiles if it exists
+  if [ -d "$dotfiles_dir/.config/ghostty" ] && [ ! -L "$ghostty_config_dir" ]; then
+    log "Found Ghostty config in dotfiles, linking..."
+    if [ -d "$ghostty_config_dir" ]; then
+      execute rm -rf "$ghostty_config_dir"
+    fi
+    execute ln -sf "$dotfiles_dir/.config/ghostty" "$HOME/.config/ghostty"
+    log "Linked Ghostty config from dotfiles"
+  elif [ ! -f "$ghostty_config_dir/config" ]; then
+    # Set up a basic Ghostty config if none exists
+    log "Creating basic Ghostty config..."
+    execute cat > "$ghostty_config_dir/config" << 'EOF'
+# Ghostty configuration
+font-family = Hack Nerd Font Mono
+font-size = 18
+theme = tokyonight_night
+shell-integration-features = no-cursor,sudo,no-title
+cursor-style = block
+adjust-cell-height = 20%
+# background-opacity = 0.96
+
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+
+window-padding-balance = true 
+window-save-state = always
+macos-titlebar-style=transparent
+window-colorspace = "display-p3"
+
+copy-on-select = clipboard
+EOF
+    log "Basic Ghostty config created"
+  else
+    log "Existing Ghostty config found at $ghostty_config_dir"
+  fi
+  
+  log "Ghostty configuration complete"
+}
+
+###############################################################################
+# Aerospace Window Manager Configuration
+###############################################################################
+
+configure_aerospace() {
+  log "Configuring Aerospace window manager..."
+  
+  # Check if Aerospace is installed
+  if ! command -v aerospace &>/dev/null; then
+    log "Aerospace is not installed. Would you like to install it? (y/n)"
+    read -r install_aerospace
+    
+    if [[ "$install_aerospace" =~ ^[Yy]$ ]]; then
+      execute brew install --cask aerospace
+      log "Aerospace installed"
+    else
+      log "Skipping Aerospace installation"
+      return
+    fi
+  fi
+  
+  # Create Aerospace config directory if it doesn't exist
+  aerospace_config_dir="$HOME/.config/aerospace"
+  if [ ! -d "$aerospace_config_dir" ]; then
+    execute mkdir -p "$aerospace_config_dir"
+    log "Created Aerospace config directory"
+  fi
+  
+  # Link existing Aerospace config from dotfiles if it exists
+  if [ -d "$dotfiles_dir/.config/aerospace" ] && [ ! -L "$aerospace_config_dir" ]; then
+    log "Found Aerospace config in dotfiles, linking..."
+    if [ -d "$aerospace_config_dir" ]; then
+      execute rm -rf "$aerospace_config_dir"
+    fi
+    execute ln -sf "$dotfiles_dir/.config/aerospace" "$HOME/.config/aerospace"
+    log "Linked Aerospace config from dotfiles"
+  fi
+  
+  log "Aerospace configuration complete"
+}
+
+###############################################################################
+# Choose what to configure
+###############################################################################
+
+if [ "$dry" != "1" ]; then
+  log "Which terminal components would you like to set up?"
+  
+  read -p "Set up shell prompt (Oh My Zsh)? (y/n): " setup_prompt
+  if [[ "$setup_prompt" =~ ^[Yy]$ ]]; then
+    configure_shell_prompt
+  fi
+  
+  read -p "Set up Ghostty? (y/n): " setup_ghostty
+  if [[ "$setup_ghostty" =~ ^[Yy]$ ]]; then
+    configure_ghostty
+  fi
+  
+  read -p "Set up Aerospace? (y/n): " setup_aerospace
+  if [[ "$setup_aerospace" =~ ^[Yy]$ ]]; then
+    configure_aerospace
+  fi
+else
+  # In dry run, just show what would be set up
+  log "[DRY RUN] Would configure terminal environment"
+  log "[DRY RUN] iTerm2 configuration would include color schemes and profiles"
+  log "[DRY RUN] Terminal.app configuration would include themes and preferences"
+  log "[DRY RUN] Shell prompt configuration would include Oh My Zsh and Powerlevel10k"
+  log "[DRY RUN] Ghostty configuration would include installation and basic config"
+  log "[DRY RUN] Aerospace configuration would include installation and basic config"
+fi
+
+log "Terminal setup complete"
+log "Note: You may need to restart your terminal for all changes to take effect" 

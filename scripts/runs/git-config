@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dotfiles_dir=$(cd "$script_dir/../.." && pwd)
+dry="0"
+
+while [[ $# > 0 ]]; do
+  if [[ $1 == "--dry" ]]; then
+    dry="1"
+  fi
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Setting up Git Configuration ----------------"
+
+# Check if .gitconfig exists in dotfiles, if so, link it
+if [ -f "$dotfiles_dir/.gitconfig" ]; then
+  if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ]; then
+    log "Backing up existing .gitconfig"
+    execute mv "$HOME/.gitconfig" "$HOME/.gitconfig.backup.$(date +%Y%m%d%H%M%S)"
+  fi
+  log "Linking .gitconfig"
+  execute ln -sf "$dotfiles_dir/.gitconfig" "$HOME/.gitconfig"
+else
+  # Set up basic Git configuration interactively if no config file exists
+  if [ ! -f "$HOME/.gitconfig" ]; then
+    log "No Git configuration found. Setting up basic configuration..."
+    
+    # Prompt for user information
+    log "Please enter your Git user information:"
+    read -p "Name: " git_name
+    read -p "Email: " git_email
+    
+    if [ -n "$git_name" ] && [ -n "$git_email" ]; then
+      execute git config --global user.name "$git_name"
+      execute git config --global user.email "$git_email"
+      execute git config --global init.defaultBranch main
+      execute git config --global color.ui auto
+      
+      # Add some helpful aliases
+      execute git config --global alias.co checkout
+      execute git config --global alias.br branch
+      execute git config --global alias.ci commit
+      execute git config --global alias.st status
+      execute git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+      
+      # Save to dotfiles
+      if [ ! -f "$dotfiles_dir/.gitconfig" ]; then
+        execute cp "$HOME/.gitconfig" "$dotfiles_dir/.gitconfig"
+        log "Saved Git configuration to dotfiles"
+      fi
+    else
+      log "Git configuration skipped due to missing information"
+    fi
+  else
+    log "Existing Git configuration found at $HOME/.gitconfig"
+  fi
+fi
+
+# Configure global gitignore
+gitignore_global="$dotfiles_dir/.gitignore_global"
+if [ ! -f "$gitignore_global" ]; then
+  log "Creating global gitignore file"
+  execute cat > "$gitignore_global" << 'EOF'
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+EOF
+
+  execute git config --global core.excludesfile "$gitignore_global"
+  log "Global gitignore file created and configured"
+fi
+
+log "Git configuration complete" 

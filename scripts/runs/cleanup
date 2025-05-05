@@ -12,6 +12,10 @@ COLOR_RESET="\033[0m"
 # Cleanup function to remove all node_modules directories
 cleanup() {
   find "$REPOS" -name 'node_modules' -type d -prune -exec du -sh {} + | tee /dev/tty | xargs rm -rf
+  if [ -d "$dotfiles_dir/.config/wezterm" ]; then
+    log "Removing unused wezterm configuration"
+    execute rm -rf "$dotfiles_dir/.config/wezterm"
+  fi
 }
 
 # Utility function to show the help message

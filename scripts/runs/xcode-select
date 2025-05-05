@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+dry="0"
+
+while [[ $# > 0 ]]; do
+  if [[ $1 == "--dry" ]]; then
+    dry="1"
+  fi
+  shift
+done
+
+log() {
+  if [[ $dry == "1" ]]; then
+    echo "[DRY_RUN]: $@"
+  else 
+    echo "$@"
+  fi
+}
+
+execute() {
+  log "execute $@"
+  if [[ $dry == "1" ]]; then
+    return
+  fi
+
+  "$@"
+}
+
+log "---------------- Installing Xcode Command Line Tools ----------------"
+
+# Check if already installed
+if xcode-select -p &>/dev/null; then
+  log "Xcode Command Line Tools are already installed"
+else
+  log "Installing Xcode Command Line Tools..."
+  execute xcode-select --install
+  
+  # Wait for xcode-select to complete - it's interactive
+  log "Please complete the installation prompt that appears"
+  log "Press any key when installation is complete..."
+  read -n 1
+fi 

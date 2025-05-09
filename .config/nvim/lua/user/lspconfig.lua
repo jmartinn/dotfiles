@@ -69,6 +69,7 @@ function M.config()
     "cssls",
     "html",
     "ts_ls",
+    "gopls",
     "eslint",
     "pyright",
     "prismals",

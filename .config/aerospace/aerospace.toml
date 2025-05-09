@@ -41,12 +41,8 @@ automatically-unhide-macos-hidden-apps = false
     #                   backspace, tab
     # All possible modifiers: cmd, alt, ctrl, shift
 
-    alt-enter = '''exec-and-forget osascript -e '
-    tell application "com.mitchellh.ghostty"
-        do script
-        activate
-    end tell'
-    '''
+    # Open Ghostty (Terminal) with alt + enter
+    alt-enter = 'exec-and-forget open -n /Applications/Ghostty.app'
 
     alt-slash = 'layout tiles horizontal vertical'
     alt-comma = 'layout accordion horizontal vertical'

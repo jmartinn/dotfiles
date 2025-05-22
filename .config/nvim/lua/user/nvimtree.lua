@@ -21,7 +21,7 @@ function M.config()
       },
     },
     filters = {
-      custom = { ".git", "node_modules", ".vscode" },
+      custom = {"node_modules", ".vscode" },
       dotfiles = true,
     },
     renderer = {

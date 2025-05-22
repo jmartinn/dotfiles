@@ -1,5 +1,6 @@
 local M = {
   "nvim-telescope/telescope.nvim",
+  tag = "0.1.8",
   dependencies = { { "nvim-telescope/telescope-fzf-native.nvim", build = "make", lazy = true } },
 }
 
@@ -163,6 +164,8 @@ function M.config()
       selection_strategy = "reset",
       path_display = { "smart" },
       color_devicons = true,
+      hidden = true,
+      file_ignore_patterns = { "%.git/", "%.git$" },
       set_env = { ["COLORTERM"] = "truecolor" },
       sorting_strategy = nil,
       layout_strategy = nil,
@@ -175,7 +178,7 @@ function M.config()
         "--line-number",
         "--column",
         "--smart-case",
-        -- "--hidden",
+        "--hidden",
         "--glob=!.git/",
       },
 
@@ -208,6 +211,7 @@ function M.config()
         theme = "dropdown",
         previewer = false,
         path_display = filenameFirst,
+        hidden = true,
       },
 
       buffers = {

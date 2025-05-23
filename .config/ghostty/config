@@ -1,9 +1,9 @@
-font-family = Hack Nerd Font Mono
+font-family = JetBrains Mono NL
 font-size = 18
 theme = tokyonight_night
 shell-integration-features = no-cursor,sudo,no-title
 cursor-style = block
-adjust-cell-height = 20%
+adjust-cell-height = 10%
 # background-opacity = 0.96
 
 mouse-hide-while-typing = true

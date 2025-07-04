@@ -131,3 +131,11 @@ run = "move-node-to-workspace T"
 [[on-window-detected]]
 if.app-id = 'com.apple.mail'
 run = ["layout tiling", "move-node-to-workspace M"]
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Music'
+run = ["layout tiling", "move-node-to-workspace M"]
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = "move-node-to-workspace 2"

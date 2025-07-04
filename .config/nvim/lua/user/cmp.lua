@@ -41,8 +41,6 @@ function M.config()
   local luasnip = require "luasnip"
   require("luasnip/loaders/from_vscode").lazy_load()
 
-  vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
-
   local check_backspace = function()
     local col = vim.fn.col "." - 1
     return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
@@ -140,6 +138,7 @@ function M.config()
       },
       { name = "luasnip" },
       { name = "nvim_lua" },
+      { name = "buffer" },
       { name = "path" },
       { name = "calc" },
       { name = "treesitter" },
@@ -159,18 +158,8 @@ function M.config()
       },
     },
     window = {
-      completion = {
-        border = "rounded",
-        -- winhighlight = "Normal:Pmenu,CursorLine:PmenuSel,FloatBorder:FloatBorder,Search:None",
-        col_offset = -3,
-        side_padding = 1,
-        scrollbar = false,
-        scrolloff = 8,
-      },
-      documentation = {
-        border = "rounded",
-        -- winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,Search:None",
-      },
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
     },
     experimental = {
       ghost_text = false,

@@ -1,17 +1,50 @@
-font-family = JetBrains Mono NL
-font-size = 18
+# Ghostty theme
 theme = tokyonight_night
+
+# Shell integrations
 shell-integration-features = no-cursor,sudo,no-title
+quit-after-last-window-closed = true
+
+# Font family
+font-family = JetBrains Mono NL
+font-style = Regular
+font-style-italic = Regular Italic
+font-style-bold = Bold
+font-style-bold-italic = Bolt Italic
+
+# Font size
+font-size = 18
+
+# Opacity of split windows
+unfocused-split-opacity = 0.97
+
+# Background opacity fully opaque
+background-opacity = 1
+
+# Cursor style
 cursor-style = block
-adjust-cell-height = 10%
-# background-opacity = 0.96
+cursor-style-blink = true
 
-mouse-hide-while-typing = true
-mouse-scroll-multiplier = 2
+# Clipboard settings
+clipboard-read = allow
+clipboard-write = allow
 
+# macOS options
+macos-option-as-alt = true
+macos-titlebar-style=transparent
+macos-titlebar-proxy-icon = hidden
+
+# Always show 'ghostty' as the title
+title = ghostty
+
+# Window settings
 window-padding-balance = true 
 window-save-state = always
-macos-titlebar-style=transparent
 window-colorspace = "display-p3"
 
-copy-on-select = clipboard
+# Cell height
+adjust-cell-height = 10%
+
+# Mouse settings
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2

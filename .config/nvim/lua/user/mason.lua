@@ -1,7 +1,7 @@
 local M = {
-  "williamboman/mason-lspconfig.nvim",
+  "mason-org/mason-lspconfig.nvim",
   dependencies = {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     "nvim-lua/plenary.nvim",
   },
 }
@@ -17,6 +17,7 @@ M.execs = {
   "jsonls",
   "yamlls",
   "tailwindcss",
+  "marksman",
 }
 
 function M.config()
@@ -27,7 +28,7 @@ function M.config()
   }
 
   require("mason-lspconfig").setup {
-    ensure_installed = M.execs
+    ensure_installed = M.execs,
   }
 end
 

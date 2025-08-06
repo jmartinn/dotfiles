@@ -1,6 +1,5 @@
 ANTHROPIC_HOST: https://api.anthropic.com/
-GOOSE_MODEL: gpt-4o
-GOOSE_PROVIDER: openai
+GOOSE_PROVIDER: anthropic
 extensions:
   computercontroller:
     bundled: true
@@ -37,3 +36,4 @@ extensions:
     name: tutorial
     timeout: 300
     type: builtin
+GOOSE_MODEL: claude-3-7-sonnet-latest

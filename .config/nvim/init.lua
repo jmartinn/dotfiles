@@ -67,6 +67,6 @@ spec "user.extras.ufo"                 -- Code folding
 spec "user.extras.cellular-automaton"  -- Cellular Automaton simulation
 spec "user.extras.discord"             -- Discord presence integration
 spec "user.extras.llm"                 -- AI integration
-spec "user.extras.avante"              -- Avante theme or extension
+-- spec "user.extras.avante"              -- Avante theme or extension
 
 require "user.lazy"            -- Plugin manager

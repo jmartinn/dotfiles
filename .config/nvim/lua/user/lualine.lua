@@ -4,17 +4,14 @@ local M = {
 
 function M.config()
   local colors = {
-    bg = "#202328",
-    fg = "#bbc2cf",
-    yellow = "#ECBE7B",
-    cyan = "#008080",
-    darkblue = "#081633",
+    blue = "#51afef",
     green = "#98be65",
-    orange = "#FF8800",
     violet = "#a9a1e1",
     magenta = "#c678dd",
-    blue = "#51afef",
+    yellow = "#ECBE7B",
+    orange = "#FF8800",
     red = "#ec5f67",
+    cyan = "#008080",
   }
 
   local conditions = {
@@ -24,31 +21,23 @@ function M.config()
     hide_in_width = function()
       return vim.fn.winwidth(0) > 80
     end,
-    check_git_workspace = function()
-      local filepath = vim.fn.expand "%:p:h"
-      local gitdir = vim.fn.finddir(".git", filepath .. ";")
-      return gitdir and #gitdir > 0 and #gitdir < #filepath
-    end,
   }
 
   local config = {
     options = {
+      theme = "tokyonight",
       component_separators = "",
       section_separators = "",
-      theme = "tokyonight",
     },
     sections = {
-      -- these are to remove the defaults
       lualine_a = {},
       lualine_b = {},
       lualine_y = {},
       lualine_z = {},
-      -- These will be filled later
       lualine_c = {},
       lualine_x = {},
     },
     inactive_sections = {
-      -- these are to remove the defaults
       lualine_a = {},
       lualine_b = {},
       lualine_y = {},
@@ -58,32 +47,28 @@ function M.config()
     },
   }
 
-  -- Inserts a component in lualine_c at left section
   local function ins_left(component)
     table.insert(config.sections.lualine_c, component)
   end
 
-  -- Inserts a component in lualine_x at right section
   local function ins_right(component)
     table.insert(config.sections.lualine_x, component)
   end
 
+  -- Left side
   ins_left {
     function()
       return "▊"
     end,
-    color = { fg = colors.blue }, -- Sets highlighting of component
-    padding = { left = 0, right = 1 }, -- We don't need space before this
+    color = { fg = colors.blue },
+    padding = { left = 0, right = 1 },
   }
 
   ins_left {
-    -- mode component
     function()
-      -- return "  "
       return " ✝ "
     end,
     color = function()
-      -- auto change color according to neovims mode
       local mode_color = {
         n = colors.blue,
         i = colors.green,
@@ -112,19 +97,17 @@ function M.config()
   }
 
   ins_left {
-    "filesize",
-    cond = conditions.buffer_not_empty,
-  }
-
-  ins_left {
     "filename",
     cond = conditions.buffer_not_empty,
-    color = { fg = colors.magenta, gui = "bold" },
+    color = { gui = "bold" },
   }
 
   ins_left { "location" }
 
-  ins_left { "progress", color = { fg = colors.fg, gui = "bold" } }
+  ins_left {
+    "progress",
+    color = { gui = "bold" },
+  }
 
   ins_left {
     "diagnostics",
@@ -137,35 +120,25 @@ function M.config()
     },
   }
 
+  -- Right side
   ins_right {
     function()
       local ok, pomo = pcall(require, "pomo")
       if not ok then
         return ""
       end
-
       local timer = pomo.get_first_to_finish()
-      if timer == nil then
-        return ""
-      end
-
-      return "󰄉 " .. tostring(timer)
+      return timer and ("󰄉 " .. tostring(timer)) or ""
     end,
     color = { fg = colors.yellow, gui = "bold" },
     cond = conditions.hide_in_width,
   }
 
   ins_right {
-    "fileformat",
-    fmt = string.upper,
-    icons_enabled = true,
-    color = { fg = colors.green, gui = "bold" },
-  }
-
-  ins_right {
     "branch",
     icon = "",
     color = { fg = colors.violet, gui = "bold" },
+    cond = conditions.hide_in_width,
   }
 
   ins_right {
@@ -179,9 +152,7 @@ function M.config()
     cond = conditions.hide_in_width,
   }
 
-  ins_right {
-    "filetype",
-  }
+  ins_right { "filetype", cond = conditions.hide_in_width }
 
   ins_right {
     function()

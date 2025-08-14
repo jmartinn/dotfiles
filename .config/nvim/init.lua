@@ -30,6 +30,7 @@ spec "user.harpoon"             -- Quick file navigation
 spec "user.neogit"              -- Git interface
 spec "user.diffview"            -- Git diff viewer
 spec "user.tmux"                -- Tmux integration
+spec "user.snacks"
 
 -- Text Enhancements and Other Utilities
 spec "user.autopairs"           -- Auto close brackets and quotes

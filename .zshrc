@@ -32,7 +32,6 @@ typeset -U path
 path=(
     /opt/homebrew/bin
     /opt/homebrew/sbin
-    $HOME/Library/Python/3.9/bin
     /opt/homebrew/opt/libpq/bin
     $SCRIPTS
     $BUN_INSTALL/bin

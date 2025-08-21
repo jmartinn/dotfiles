@@ -37,6 +37,7 @@ path=(
     $SCRIPTS
     $BUN_INSTALL/bin
     $HOME/bin
+    $HOME/.local/bin
     /usr/local/bin
     /opt/homebrew/opt/openjdk@17/bin
     $path
@@ -84,3 +85,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# bun completions
+[ -s "/Users/jmartinn/.bun/_bun" ] && source "/Users/jmartinn/.bun/_bun"

@@ -40,8 +40,7 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
   end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-  pattern = { "!vim" },
+vim.api.nvim_create_autocmd({ "BufWinEnter", "FocusGained" }, {
   callback = function()
     vim.cmd "checktime"
   end,
@@ -49,7 +48,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
 
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function()
-    vim.highlight.on_yank { higroup = "Visual", timeout = 40 }
+    vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
   end,
 })
 

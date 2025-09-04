@@ -1,6 +1,6 @@
 local M = {
   "lewis6991/gitsigns.nvim",
-  event = "BufEnter",
+  event = { "BufReadPre", "BufNewFile" },
   cmd = "Gitsigns",
 }
 
@@ -59,36 +59,11 @@ M.config = function()
 
   require("gitsigns").setup {
     signs = {
-      add = {
-        -- hl = "GitSignsAdd",
-        text = icons.ui.BoldLineMiddle,
-        -- numhl = "GitSignsAddNr",
-        -- linehl = "GitSignsAddLn",
-      },
-      change = {
-        -- hl = "GitSignsChange",
-        text = icons.ui.BoldLineDashedMiddle,
-        -- numhl = "GitSignsChangeNr",
-        -- linehl = "GitSignsChangeLn",
-      },
-      delete = {
-        -- hl = "GitSignsDelete",
-        text = icons.ui.TriangleShortArrowRight,
-        -- numhl = "GitSignsDeleteNr",
-        -- linehl = "GitSignsDeleteLn",
-      },
-      topdelete = {
-        -- hl = "GitSignsDelete",
-        text = icons.ui.TriangleShortArrowRight,
-        -- numhl = "GitSignsTopDeleteNr",
-        -- linehl = "GitSignsDeleteLn",
-      },
-      changedelete = {
-        -- hl = "GitSignsChange",
-        text = icons.ui.BoldLineMiddle,
-        -- numhl = "GitSignsChangeNr",
-        -- linehl = "GitSignsChangeLn",
-      },
+      add = { text = icons.ui.BoldLineMiddle },
+      change = { text = icons.ui.BoldLineDashedMiddle },
+      delete = { text = icons.ui.TriangleShortArrowRight },
+      topdelete = { text = icons.ui.TriangleShortArrowRight },
+      changedelete = { text = icons.ui.BoldLineMiddle },
     },
     watch_gitdir = {
       interval = 1000,
@@ -96,7 +71,7 @@ M.config = function()
     },
     attach_to_untracked = true,
     current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
-    update_debounce = 200,
+    update_debounce = 250,
     max_file_length = 40000,
     preview_config = {
       border = "rounded",

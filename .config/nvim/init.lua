@@ -54,9 +54,7 @@ spec "user.extras.rainbow"             -- Rainbow parentheses
 spec "user.extras.zen"                 -- Distraction-free mode
 spec "user.extras.bqf"                 -- Quickfix enhancements
 spec "user.extras.dressing"            -- UI components
--- spec "user.extras.eyeliner"            -- Motion highlighting
 spec "user.extras.navbuddy"            -- LSP code navigation
--- spec "user.extras.surround"         -- Surround text manipulation
 spec "user.extras.oil"                 -- Floating terminal/file viewer
 spec "user.extras.neotab"              -- Tab management
 spec "user.extras.lab"                 -- Laboratory for testing
@@ -68,7 +66,5 @@ spec "user.extras.ufo"                 -- Code folding
 spec "user.extras.cellular-automaton"  -- Cellular Automaton simulation
 spec "user.extras.discord"             -- Discord presence integration
 spec "user.extras.llm"                 -- AI integration
-spec "user.extras.copilot"             -- Copilot Integration
--- spec "user.extras.avante"              -- Avante theme or extension
 
 require "user.lazy"            -- Plugin manager

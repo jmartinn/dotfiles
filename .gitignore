@@ -3,3 +3,7 @@
 .lazy-lock.json
 **/tmux/plugins
 .config/github-copilot/
+
+# Zed - ignore everything except settings
+.config/zed/*
+!.config/zed/settings.json

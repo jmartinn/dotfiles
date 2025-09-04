@@ -35,9 +35,9 @@ return {
       copilot_node_command = "node",
     }
 
-    local opts = { noremap = true, silent = true }
-    vim.api.nvim_set_keymap("n", "<c-s>", ":lua require('copilot.suggestion').toggle_auto_trigger()<CR>", opts)
+    vim.keymap.set("n", "<c-s>", function()
+      require('copilot.suggestion').toggle_auto_trigger()
+    end, { noremap = true, silent = true, desc = "Toggle Copilot" })
 
-    -- require("copilot_cmp").setup()
   end,
 }

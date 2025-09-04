@@ -27,9 +27,9 @@ function M.config()
     },
   }
 
-  -- require("mason-lspconfig").setup {
-  --   ensure_installed = M.execs,
-  -- }
+  require("mason-lspconfig").setup {
+    ensure_installed = M.execs,
+  }
 end
 
 return M

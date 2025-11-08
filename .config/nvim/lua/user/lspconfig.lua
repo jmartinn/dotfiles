@@ -23,7 +23,6 @@ end
 
 M.on_attach = function(client, bufnr)
   lsp_keymaps(bufnr)
-
 end
 
 function M.common_capabilities()
@@ -44,32 +43,30 @@ function M.common_capabilities()
   return capabilities
 end
 
-
 function M.config()
   local wk = require "which-key"
+
+  -- Combine all which-key mappings into one block
   wk.add {
-    { "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", desc = "Code Action" },
+    { "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>",   desc = "Code Action",    mode = { "n", "v" } },
     {
       "<leader>lf",
       "<cmd>lua vim.lsp.buf.format({async = true, filter = function(client) return client.name ~= 'typescript-tools' end})<cr>",
       desc = "Format",
     },
-    { "<leader>li", "<cmd>LspInfo<cr>", desc = "Info" },
-    { "<leader>lj", "<cmd>lua vim.diagnostic.goto_next()<cr>", desc = "Next Diagnostic" },
-    { "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev()<cr>", desc = "Prev Diagnostic" },
-    { "<leader>ll", "<cmd>lua vim.lsp.codelens.run()<cr>", desc = "CodeLens Action" },
+    { "<leader>li", "<cmd>LspInfo<cr>",                         desc = "Info" },
+    { "<leader>lj", "<cmd>lua vim.diagnostic.goto_next()<cr>",  desc = "Next Diagnostic" },
+    { "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev()<cr>",  desc = "Prev Diagnostic" },
+    { "<leader>ll", "<cmd>lua vim.lsp.codelens.run()<cr>",      desc = "CodeLens Action" },
     { "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", desc = "Quickfix" },
-    { "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", desc = "Rename" },
-  }
-
-  wk.add {
-    { "<leader>la", group = "LSP" },
-    { "<leader>laa", "<cmd>lua vim.lsp.buf.code_action()<cr>", desc = "Code Action", mode = "v" },
+    { "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>",        desc = "Rename" },
   }
 
   local lspconfig = require "lspconfig"
   local icons = require "user.icons"
 
+  -- NOTE: If you want better TypeScript/JavaScript support, consider replacing
+  -- "ts_ls" with "vtsls". Install with: npm install -g @vtsls/language-server
   local servers = {
     "lua_ls",
     "cssls",
@@ -88,12 +85,11 @@ function M.config()
 
   local default_diagnostic_config = {
     signs = {
-      active = true,
-      values = {
-        { name = "DiagnosticSignError", text = icons.diagnostics.Error },
-        { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
-        { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
-        { name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
+      text = {
+        [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
+        [vim.diagnostic.severity.WARN] = icons.diagnostics.Warning,
+        [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
+        [vim.diagnostic.severity.INFO] = icons.diagnostics.Information,
       },
     },
     virtual_text = true,
@@ -112,30 +108,80 @@ function M.config()
 
   vim.diagnostic.config(default_diagnostic_config)
 
-  for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config(), "signs", "values") or {}) do
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
+  if vim.fn.has "nvim-0.11" == 1 then
+    vim.lsp.config("*", {
+      float = {
+        border = "rounded",
+      },
+    })
+  else
+    -- Legacy API for Neovim < 0.11
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+    vim.lsp.handlers["textDocument/signatureHelp"] =
+        vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+
+    pcall(function()
+      require("lspconfig.ui.windows").default_options.border = "rounded"
+    end)
   end
 
-  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
-  require("lspconfig.ui.windows").default_options.border = "rounded"
-
+  -- Setup each language server with error handling
   for _, server in pairs(servers) do
+    -- Skip lua_ls as it's auto-configured by lazydev (see lazydev.lua)
+    if server == "lua_ls" then
+      goto continue
+    end
+
     local opts = {
       on_attach = M.on_attach,
       capabilities = M.common_capabilities(),
     }
 
+    -- Try to load server-specific settings
     local require_ok, settings = pcall(require, "user.lspsettings." .. server)
     if require_ok then
       opts = vim.tbl_deep_extend("force", settings, opts)
     end
 
-    if server == "lua_ls" then
-      require("lazydev").setup {}
+    -- Setup the server using the modern approach
+    local setup_ok, err = pcall(function()
+      if vim.lsp.enable and type(vim.lsp.enable) == "function" and vim.fn.has "nvim-0.11" == 1 then
+        local configs = require "lspconfig.configs"
+        local default_config = configs[server] and configs[server].default_config or {}
+
+        local final_opts = vim.tbl_deep_extend("force", default_config, opts)
+
+        vim.lsp.config(server, final_opts)
+        vim.lsp.enable(server)
+
+        -- Set up FileType autocmds to actually start the LSP on matching files
+        local filetypes = final_opts.filetypes or {}
+        if #filetypes > 0 then
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = filetypes,
+            callback = function(args)
+              vim.lsp.start({
+                name = server,
+                cmd = final_opts.cmd,
+                root_dir = final_opts.root_dir and final_opts.root_dir(args.file) or vim.fs.root(args.buf, {".git"}),
+              })
+            end,
+          })
+        end
+      else
+        lspconfig[server].setup(opts)
+      end
+    end)
+
+    if not setup_ok then
+      vim.notify(
+        string.format("Failed to setup LSP server '%s': %s", server, tostring(err)),
+        vim.log.levels.WARN,
+        { title = "LSP Config" }
+      )
     end
 
-    lspconfig[server].setup(opts)
+    ::continue::
   end
 end
 

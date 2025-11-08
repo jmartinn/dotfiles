@@ -50,7 +50,7 @@ spec "user.extras.present"             -- Markdown presentations within Neovim (
 spec "user.extras.vimtex"              -- LaTeX support
 spec "user.extras.pomo"                -- Pomodoro timer
 spec "user.extras.modicator"           -- Mode indicator
-spec "user.extras.rainbow"             -- Rainbow parentheses
+-- spec "user.extras.rainbow"             -- Rainbow parentheses
 spec "user.extras.zen"                 -- Distraction-free mode
 spec "user.extras.bqf"                 -- Quickfix enhancements
 spec "user.extras.dressing"            -- UI components

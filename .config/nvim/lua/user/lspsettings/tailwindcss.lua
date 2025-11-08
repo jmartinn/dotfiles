@@ -1,9 +1,10 @@
 local util = require "lspconfig.util"
 return {
   cmd = { "tailwindcss-language-server", "--stdio" },
-  -- filetypes copied and adjusted from tailwindcss-intellisense
   filetypes = {
     "typescriptreact",
+    "javascriptreact",
+    "html",
   },
   settings = {
     tailwindcss = {
@@ -54,7 +55,8 @@ return {
       "postcss.config.cjs",
       "postcss.config.mjs",
       "postcss.config.ts"
-    )(fname) or util.find_package_json_ancestor(fname) or util.find_node_modules_ancestor(fname) or util.find_git_ancestor(
+    )(fname) or util.find_package_json_ancestor(fname) or util.find_node_modules_ancestor(fname) or
+    util.find_git_ancestor(
       fname
     )
   end,

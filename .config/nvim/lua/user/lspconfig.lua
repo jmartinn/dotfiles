@@ -81,6 +81,7 @@ function M.config()
     "yamlls",
     "marksman",
     "tailwindcss",
+    "intelephense",
   }
 
   local default_diagnostic_config = {

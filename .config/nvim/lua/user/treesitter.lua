@@ -53,6 +53,8 @@ function M.config()
       "toml",
       "regex",
       "comment",
+      "php",
+      "phpdoc",
     },
     ignore_install = {},
     sync_install = false,

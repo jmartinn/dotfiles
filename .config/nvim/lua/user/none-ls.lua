@@ -15,6 +15,7 @@ function M.config()
       formatting.black,
       formatting.shfmt,
       formatting.sql_formatter,
+      formatting.phpcsfixer,
       formatting.prettier.with {
         disabled_filetypes = {
           "markdown",

@@ -18,6 +18,7 @@ M.execs = {
   "yamlls",
   "tailwindcss",
   "marksman",
+  "intelephense",
 }
 
 function M.config()

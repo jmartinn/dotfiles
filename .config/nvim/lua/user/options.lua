@@ -17,6 +17,7 @@ vim.opt.splitbelow = true -- force all horizontal splits to go below current win
 vim.opt.splitright = true -- force all vertical splits to go to the right of current window
 vim.opt.spelllang = "es,en"
 vim.opt.swapfile = false -- creates a swapfile
+vim.opt.spelllang = "en,es" -- sets spelling language to support both English and Spanish
 vim.opt.termguicolors = true -- set term gui colors (most terminals support this)
 vim.opt.timeoutlen = 1000 -- time to wait for a mapped sequence to complete (in milliseconds)
 vim.opt.undofile = true -- enable persistent undo

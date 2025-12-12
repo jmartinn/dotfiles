@@ -75,6 +75,8 @@ automatically-unhide-macos-hidden-apps = false
     alt-t = 'workspace T'
     alt-p = 'workspace P'
     alt-m = 'workspace M'
+    alt-w = 'workspace W'
+    alt-s = 'workspace S'
 
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
@@ -91,6 +93,8 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-t = 'move-node-to-workspace T'
     alt-shift-p = 'move-node-to-workspace P'
     alt-shift-m = 'move-node-to-workspace M'
+    alt-shift-w = 'move-node-to-workspace W'
+    alt-shift-s = 'move-node-to-workspace S'
 
     alt-shift-f = 'fullscreen'
 

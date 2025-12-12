@@ -37,6 +37,7 @@ path=(
     $BUN_INSTALL/bin
     $HOME/bin
     $HOME/.local/bin
+    $HOME/go/bin
     /usr/local/bin
     /opt/homebrew/opt/openjdk@17/bin
     $path

@@ -17,7 +17,7 @@ function M.config()
     view = {
       relativenumber = false,
       float = {
-        enable = true,
+        enable = false,
       },
     },
     filters = {

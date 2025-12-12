@@ -1,19 +1,20 @@
 # Ghostty theme
-theme = tokyonight_night
+theme = dark:TokyoNight Night,light:Rose Pine Dawn
+# theme = Catppuccin Mocha
 
 # Shell integrations
 shell-integration-features = no-cursor,sudo,no-title
 quit-after-last-window-closed = true
 
 # Font family
-font-family = JetBrains Mono NL
+font-family = JetBrainsMonoNL Nerd Font
 font-style = Regular
 font-style-italic = Regular Italic
 font-style-bold = Bold
 font-style-bold-italic = Bolt Italic
 
 # Font size
-font-size = 18
+font-size = 16
 
 # Opacity of split windows
 unfocused-split-opacity = 0.97
@@ -48,3 +49,4 @@ adjust-cell-height = 10%
 # Mouse settings
 mouse-hide-while-typing = true
 mouse-scroll-multiplier = 2
+keybind = shift+enter=text:\x1b\r

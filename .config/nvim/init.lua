@@ -50,6 +50,7 @@ spec "user.extras.present"             -- Markdown presentations within Neovim (
 spec "user.extras.vimtex"              -- LaTeX support
 spec "user.extras.pomo"                -- Pomodoro timer
 spec "user.extras.modicator"           -- Mode indicator
+-- DISABLED: rainbow-delimiters has breaking API changes in recent versions
 -- spec "user.extras.rainbow"             -- Rainbow parentheses
 spec "user.extras.zen"                 -- Distraction-free mode
 spec "user.extras.bqf"                 -- Quickfix enhancements
@@ -57,7 +58,8 @@ spec "user.extras.dressing"            -- UI components
 spec "user.extras.navbuddy"            -- LSP code navigation
 spec "user.extras.oil"                 -- Floating terminal/file viewer
 spec "user.extras.neotab"              -- Tab management
-spec "user.extras.lab"                 -- Laboratory for testing
+-- DISABLED: lab.nvim requires npm build step and is rarely used
+-- spec "user.extras.lab"                 -- Laboratory for testing
 spec "user.extras.tabby"               -- Tabline plugin
 spec "user.extras.tsc"                 -- TypeScript support
 spec "user.extras.gitlinker"           -- Git link generator

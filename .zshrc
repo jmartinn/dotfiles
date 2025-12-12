@@ -6,10 +6,10 @@ HIST_STAMPS="dd.mm.yyyy"
 
 # Oh-My-Zsh
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"  # Disabled - using Starship prompt
 zstyle ':omz:update' mode auto
 zstyle ':omz:update' frequency 7
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="true"
 plugins=(git)
 
@@ -87,3 +87,6 @@ esac
 
 # bun completions
 [ -s "/Users/jmartinn/.bun/_bun" ] && source "/Users/jmartinn/.bun/_bun"
+
+# Starship prompt
+eval "$(starship init zsh)"

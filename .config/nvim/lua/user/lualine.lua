@@ -1,5 +1,8 @@
 local M = {
   "nvim-lualine/lualine.nvim",
+  dependencies = {
+    "AndreM222/copilot-lualine"
+  }
 }
 
 function M.config()
@@ -18,7 +21,7 @@ function M.config()
           path = 1,
         }
       },
-      lualine_x = { "diff", "filetype" },
+      lualine_x = { "copilot", "diff", "filetype" },
       lualine_y = { "progress" },
       lualine_z = { "location" },
     },

@@ -33,10 +33,10 @@ return {
       inlayHints = {
         includeInlayEnumMemberValueHints = true,
         includeInlayFunctionLikeReturnTypeHints = false,
-        includeInlayFunctionParameterTypeHints = true,
+        includeInlayFunctionParameterTypeHints = false,
         includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
         includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = false,
         includeInlayVariableTypeHints = false,
         includeInlayVariableTypeHintsWhenTypeMatchesName = false,
       },
@@ -77,10 +77,10 @@ return {
       inlayHints = {
         includeInlayEnumMemberValueHints = true,
         includeInlayFunctionLikeReturnTypeHints = false,
-        includeInlayFunctionParameterTypeHints = true,
+        includeInlayFunctionParameterTypeHints = false,
         includeInlayParameterNameHints = "all",
         includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = false,
         includeInlayVariableTypeHints = false,
       },
       suggest = {

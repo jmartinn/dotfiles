@@ -69,5 +69,6 @@ spec "user.extras.cellular-automaton"  -- Cellular Automaton simulation
 spec "user.extras.discord"             -- Discord presence integration
 spec "user.extras.llm"                 -- AI integration
 spec "user.extras.copilot"            -- GitHub Copilot
+spec "user.extras.neogen"             -- Documentation generator (JSDoc, etc.)
 
 require "user.lazy"            -- Plugin manager

@@ -14,7 +14,10 @@ function M.config()
     { "<leader>f", group = "Find" },
     { "<leader>g", group = "Git" },
     { "<leader>l", group = "LSP" },
+    { "<leader>n", group = "Notifications" },
+    { "<leader>o", group = "Obsidian" },
     { "<leader>s", group = "Split" },
+    { "<leader>t", group = "Toggle" },
     { "<leader>x", group = "Trouble" },
   })
 end

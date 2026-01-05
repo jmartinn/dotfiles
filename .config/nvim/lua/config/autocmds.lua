@@ -6,7 +6,7 @@ local autocmd = vim.api.nvim_create_autocmd
 autocmd("TextYankPost", {
   group = augroup("highlight_yank", { clear = true }),
   callback = function()
-    vim.highlight.on_yank({ timeout = 200 })
+    vim.highlight.on_yank { timeout = 200 }
   end,
 })
 
@@ -21,7 +21,7 @@ autocmd("BufWritePre", {
 autocmd("VimResized", {
   group = augroup("resize_splits", { clear = true }),
   callback = function()
-    vim.cmd("tabdo wincmd =")
+    vim.cmd "tabdo wincmd ="
   end,
 })
 

@@ -13,6 +13,18 @@ function M.config()
   -- LSP keymaps (only when LSP attaches)
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(event)
+      local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+      -- Disable semantic tokens for servers where treesitter highlighting is better
+      local disable_semantic_tokens_for = {
+        ts_ls = true,
+        -- Add other servers here if needed (e.g., gopls = true)
+      }
+
+      if client and disable_semantic_tokens_for[client.name] then
+        client.server_capabilities.semanticTokensProvider = nil
+      end
+
       local map = function(keys, func, desc)
         vim.keymap.set("n", keys, func, { buffer = event.buf, desc = desc })
       end
@@ -22,14 +34,18 @@ function M.config()
       map("gr", vim.lsp.buf.references, "Go to references")
       map("gI", vim.lsp.buf.implementation, "Go to implementation")
       map("K", function()
-        vim.lsp.buf.hover({ border = "rounded" })
+        vim.lsp.buf.hover { border = "rounded" }
       end, "Hover documentation")
       map("<leader>la", vim.lsp.buf.code_action, "Code action")
       map("<leader>lr", vim.lsp.buf.rename, "Rename")
       map("gl", vim.diagnostic.open_float, "Line diagnostics")
       map("<leader>ld", vim.diagnostic.open_float, "Line diagnostics")
-      map("[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, "Previous diagnostic")
-      map("]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, "Next diagnostic")
+      map("[d", function()
+        vim.diagnostic.jump { count = -1, float = true }
+      end, "Previous diagnostic")
+      map("]d", function()
+        vim.diagnostic.jump { count = 1, float = true }
+      end, "Next diagnostic")
     end,
   })
 
@@ -106,7 +122,7 @@ function M.config()
           opts = vim.tbl_deep_extend("force", opts, server_opts)
         end
 
-        require("lspconfig")[server_name].setup(opts)
+        -- require("lspconfig")[server_name].setup(opts)
       end,
     },
   }

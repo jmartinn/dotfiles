@@ -29,10 +29,8 @@ function M.config()
       python = { "black" },
       go = { "gofmt" },
     },
-    format_on_save = {
-      timeout_ms = 500,
-      lsp_fallback = true,
-    },
+    -- format_on_save disabled - use <leader>lf to manually format
+    format_on_save = nil,
   })
 end
 

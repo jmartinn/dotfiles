@@ -46,6 +46,13 @@ function M.config()
       map("]d", function()
         vim.diagnostic.jump { count = 1, float = true }
       end, "Next diagnostic")
+      map("<leader>lj", function()
+        vim.diagnostic.jump { count = 1, float = true }
+      end, "Next diagnostic")
+      map("<leader>lk", function()
+        vim.diagnostic.jump { count = -1, float = true }
+      end, "Previous diagnostic")
+      map("<leader>lq", vim.diagnostic.setloclist, "Diagnostics quickfix")
     end,
   })
 

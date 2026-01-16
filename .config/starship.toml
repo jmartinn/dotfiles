@@ -1,5 +1,9 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+[character]
+success_symbol = "[τ](bold green)"
+error_symbol   = "[τ](bold red)"
+
 [aws]
 symbol = " "
 
@@ -33,6 +37,9 @@ symbol = " "
 [directory]
 read_only = " 󰌾"
 
+[dotnet]
+detect_files = ["global.json", "Directory.Build.props", "Directory.Build.targets", "Packages.props"]
+
 [docker_context]
 symbol = " "
 
@@ -56,9 +63,15 @@ symbol = " "
 
 [git_branch]
 symbol = " "
+truncation_length = 18
 
 [git_commit]
 tag_symbol = '  '
+
+[custom.scm]
+detect_folders = [".git", ".hg", ".svn", ".bzr", ".fossil"]
+shell = ["sh"]
+format = "$output "
 
 [golang]
 symbol = " "

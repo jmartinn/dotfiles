@@ -53,31 +53,18 @@ function gclone() {
 }
 
 # Lazy-load NVM (loads only when nvm/node/npm/npx is called)
-_nvm_lazy_load() {
-    unset -f nvm node npm npx
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-}
-
-nvm() {
-    _nvm_lazy_load
-    nvm "$@"
-}
-
-node() {
-    _nvm_lazy_load
-    node "$@"
-}
-
-npm() {
-    _nvm_lazy_load
-    npm "$@"
-}
-
-npx() {
-    _nvm_lazy_load
-    npx "$@"
-}
+if [ -s "$NVM_DIR/nvm.sh" ] && ! type _nvm_loaded &>/dev/null; then
+    _nvm_loaded=1
+    _nvm_lazy_load() {
+        unset -f nvm node npm npx _nvm_lazy_load
+        \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    }
+    nvm() { _nvm_lazy_load; nvm "$@"; }
+    node() { _nvm_lazy_load; node "$@"; }
+    npm() { _nvm_lazy_load; npm "$@"; }
+    npx() { _nvm_lazy_load; npx "$@"; }
+fi
 
 # Aliases
 alias zshconfig="nvim ~/.zshrc"

@@ -4,15 +4,6 @@
 HISTFILE=~/.zsh_history
 HIST_STAMPS="dd.mm.yyyy"
 
-# Oh-My-Zsh
-export ZSH="$HOME/.oh-my-zsh"
-# ZSH_THEME="robbyrussell"  # Disabled - using Starship prompt
-zstyle ':omz:update' mode auto
-zstyle ':omz:update' frequency 7
-ENABLE_CORRECTION="false"
-COMPLETION_WAITING_DOTS="true"
-plugins=(git)
-
 # Directories
 export REPOS="$HOME/Developer/projects/"
 export DOTFILES="$HOME/dotfiles"
@@ -26,69 +17,83 @@ export NVM_DIR="$HOME/.nvm"
 export BUN_INSTALL="$HOME/.bun"
 export GPG_TTY=$(tty)
 export EDITOR='nvim'
+export PNPM_HOME="$HOME/Library/pnpm"
+
+# Homebrew prefix (hardcoded for performance - Apple Silicon is always /opt/homebrew)
+HOMEBREW_PREFIX="/opt/homebrew"
 
 # PATH management
 typeset -U path
 path=(
-    /opt/homebrew/bin
-    /opt/homebrew/sbin
-    /opt/homebrew/opt/libpq/bin
+    $HOMEBREW_PREFIX/bin
+    $HOMEBREW_PREFIX/sbin
+    $HOMEBREW_PREFIX/opt/libpq/bin
+    $HOMEBREW_PREFIX/opt/openjdk@17/bin
     $SCRIPTS
     $BUN_INSTALL/bin
+    $PNPM_HOME
     $HOME/bin
     $HOME/.local/bin
     $HOME/.cargo/bin
     $HOME/go/bin
+    $HOME/.opencode/bin
     /usr/local/bin
-    /opt/homebrew/opt/openjdk@17/bin
     $path
 )
 
-# Homebrew
-FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
-# Source Oh-My-Zsh
-source $ZSH/oh-my-zsh.sh
+# Homebrew completions (using cached prefix)
+FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 
 # Functions
 function gclone() {
     git clone git@github.com:$GITUSER/$1.git
 }
 
+# Lazy-load NVM (loads only when nvm/node/npm/npx is called)
+_nvm_lazy_load() {
+    unset -f nvm node npm npx
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+
+nvm() {
+    _nvm_lazy_load
+    nvm "$@"
+}
+
+node() {
+    _nvm_lazy_load
+    node "$@"
+}
+
+npm() {
+    _nvm_lazy_load
+    npm "$@"
+}
+
+npx() {
+    _nvm_lazy_load
+    npx "$@"
+}
+
 # Aliases
 alias zshconfig="nvim ~/.zshrc"
-alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias cl="clear"
 alias sb="cd $SECOND_BRAIN"
 alias vim="nvim"
 alias repos="cd $REPOS"
 alias dots="cd $DOTFILES"
 alias ls="eza"
+alias l="ls"
 alias ll="eza -alh"
 alias tree="eza --tree"
-alias npm="pnpm"
-
-# Load NVM
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+alias pn="pnpm"
 
 # Bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
-# Performance-intensive operations (consider lazy-loading or caching)
+# fzf integration
 eval "$(fzf --zsh)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-# bun completions
-[ -s "/Users/jmartinn/.bun/_bun" ] && source "/Users/jmartinn/.bun/_bun"
-
-# Starship prompt
+# Starship prompt (must be last)
 eval "$(starship init zsh)"

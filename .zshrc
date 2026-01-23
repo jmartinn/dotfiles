@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+# Use emacs keybindings (Ctrl+A/E/B/F, etc.) regardless of $EDITOR
+bindkey -e
+
 # History
 HISTFILE=~/.zsh_history
 HIST_STAMPS="dd.mm.yyyy"

@@ -1,6 +1,9 @@
 local M = {
   "lewis6991/gitsigns.nvim",
   event = { "BufReadPre", "BufNewFile" },
+  keys = {
+    { "<leader>bl", "<cmd>Gitsigns blame_line<cr>", desc = "Blame line" },
+  },
 }
 
 function M.config()
@@ -19,7 +22,6 @@ function M.config()
       follow_files = true,
     },
     attach_to_untracked = true,
-    current_line_blame = true,
     current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
     update_debounce = 250,
     max_file_length = 40000,

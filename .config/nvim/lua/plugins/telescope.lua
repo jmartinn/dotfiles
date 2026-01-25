@@ -11,7 +11,7 @@ local M = {
   },
   keys = {
     -- Buffers
-    { "<leader>bb", "<cmd>Telescope buffers previewer=false<cr>", desc = "Find" },
+    { "<leader>bb", "<cmd>Telescope buffers previewer=false<cr>", desc = "Buffers" },
     -- Find
     { "<leader>fb", "<cmd>Telescope git_branches<cr>", desc = "Checkout branch" },
     { "<leader>fc", "<cmd>Telescope colorscheme<cr>", desc = "Colorscheme" },
@@ -45,7 +45,6 @@ local M = {
     -- LSP
     { "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>", desc = "Document Symbols" },
     { "<leader>lS", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", desc = "Workspace Symbols" },
-    { "<leader>le", "<cmd>Telescope quickfix<cr>", desc = "Telescope Quickfix" },
   },
 }
 
@@ -63,7 +62,7 @@ function M.config()
       selection_strategy = "reset",
       path_display = { "smart" },
       color_devicons = true,
-      hiddlen = true,
+      hidden = true,
       file_ignore_patterns = { "%.git/", "%.git$" },
       set_env = { ["COLORTERM"] = "truecolor" },
       sorting_strategy = "ascending",

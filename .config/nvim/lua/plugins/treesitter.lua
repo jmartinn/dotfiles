@@ -6,7 +6,16 @@ local M = {
 
 function M.config()
   require("nvim-treesitter").setup {}
-  require("nvim-treesitter").install { "javascript", "typescript", "lua", "html" }
+  require("nvim-treesitter").install {
+    "javascript",
+    "typescript",
+    "lua",
+    "html",
+    "markdown",
+    "bash",
+    "gitcommit",
+    "gitignore",
+  }
 
   -- Enable treesitter highlighting and disable vim syntax (required in nvim-treesitter 1.0+)
   vim.api.nvim_create_autocmd("FileType", {

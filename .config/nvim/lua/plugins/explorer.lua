@@ -91,9 +91,6 @@ function M.config()
         error = icons.diagnostics.BoldError,
       },
     },
-    git = {
-      ignore = false,
-    },
   }
 end
 

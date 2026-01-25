@@ -73,7 +73,7 @@ function M.config()
         vim_item.menu = ({
           nvim_lsp = "[LSP]",
           nvim_lua = "[Lua]",
-          luasnip = "[Snippet]",
+          luasnip = "[LuaSnip]",
           buffer = "[Buffer]",
           latex_symbols = "LaTeX",
           path = "[Path]",

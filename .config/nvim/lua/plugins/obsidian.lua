@@ -14,6 +14,30 @@ local M = {
     { "<leader>ol", "<cmd>ObsidianLinks<cr>", desc = "Show Links" },
     { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = "Open Current Buffer" },
     { "<leader>ot", "<cmd>ObsidianToday<cr>", desc = "Open/Create Today's Note" },
+    -- Work log keybindings
+    { "<leader>owt", function()
+      local home = os.getenv("HOME")
+      local today = os.date("%Y-%m-%d")
+      local path = home .. "/Documents/svalbard/2-Areas/Work/Logs/" .. today .. "-worklog.md"
+      vim.cmd("edit " .. path)
+    end, desc = "Today's Work Log" },
+    { "<leader>owy", function()
+      local home = os.getenv("HOME")
+      local yesterday = os.date("%Y-%m-%d", os.time() - 86400)
+      local path = home .. "/Documents/svalbard/2-Areas/Work/Logs/" .. yesterday .. "-worklog.md"
+      vim.cmd("edit " .. path)
+    end, desc = "Yesterday's Work Log" },
+    { "<leader>owq", function()
+      local home = os.getenv("HOME")
+      local today = os.date("%Y-%m-%d")
+      local path = home .. "/Documents/svalbard/2-Areas/Work/Logs/" .. today .. "-worklog.md"
+      vim.cmd("edit " .. path)
+      vim.defer_fn(function()
+        vim.fn.search("## Captura Rapida")
+        vim.cmd("normal! 2jo")
+        vim.cmd("startinsert")
+      end, 50)
+    end, desc = "Quick Capture" },
   },
 }
 
@@ -22,8 +46,8 @@ function M.config()
   require("obsidian").setup({
     workspaces = {
       {
-        name = "personal",
-        path = home .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/personal",
+        name = "svalbard",
+        path = home .. "/Documents/svalbard/",
       },
     },
 

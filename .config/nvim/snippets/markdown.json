@@ -1,0 +1,22 @@
+{
+  "Work Task": {
+    "prefix": "wt",
+    "body": ["- [ ] **${1:PROJ-000}**: ${2:descripcion} (~${3:1}h)", "$0"],
+    "description": "Tarea rapida"
+  },
+  "Work Blocker": {
+    "prefix": "wb",
+    "body": ["- **BLOQUEADOR** [${1:PROJ-000}]: ${2:descripcion}", "  - Necesito: ${3:que}", "$0"],
+    "description": "Bloqueador"
+  },
+  "Work JIRA Row": {
+    "prefix": "wj",
+    "body": ["| ${1:PROJ-000} | ${2:descripcion} | ${3:1} |", "$0"],
+    "description": "Fila de tabla JIRA"
+  },
+  "Standup Summary": {
+    "prefix": "wstand",
+    "body": ["**Ayer:** ${1:completado}", "**Hoy:** ${2:planeado}", "**Bloqueadores:** ${3:ninguno}", "$0"],
+    "description": "Resumen para standup"
+  }
+}

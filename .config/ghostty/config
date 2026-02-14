@@ -7,20 +7,20 @@ shell-integration-features = no-cursor,sudo,no-title
 quit-after-last-window-closed = true
 
 # Font family
-font-family = JetBrainsMonoNL Nerd Font
+font-family = Berkeley Mono
 font-style = Regular
-font-style-italic = Regular Italic
+font-style-italic = Oblique
 font-style-bold = Bold
-font-style-bold-italic = Bolt Italic
+font-style-bold-italic = Bold Oblique
 
 # Font size
-font-size = 16
+font-size = 17
 
 # Opacity of split windows
 unfocused-split-opacity = 0.97
 
 # Background opacity fully opaque
-background-opacity = 0.92
+background-opacity = 0.90
 
 # Cursor style
 cursor-style = block
@@ -39,12 +39,12 @@ macos-titlebar-proxy-icon = hidden
 title = ghostty
 
 # Window settings
-window-padding-balance = true 
+window-padding-balance = true
 window-save-state = always
 window-colorspace = "display-p3"
 
 # Cell height
-adjust-cell-height = 10%
+adjust-cell-height = 12%
 
 # Mouse settings
 mouse-hide-while-typing = true

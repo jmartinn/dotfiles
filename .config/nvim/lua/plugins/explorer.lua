@@ -14,7 +14,7 @@ function M.config()
     sync_root_with_cwd = true,
     filters = {
       custom = { "node_modules", ".vscode" },
-      dotfiles = true,
+      dotfiles = false,
     },
     view = {
       width = 35,

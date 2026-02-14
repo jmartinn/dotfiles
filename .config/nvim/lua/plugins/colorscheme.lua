@@ -7,6 +7,10 @@ local M = {
 function M.config()
   require("tokyonight").setup {
     style = "night",
+    styles = {
+      functions = { italic = true },
+      comments = { italic = true },
+    },
   }
   vim.cmd.colorscheme "tokyonight"
 end

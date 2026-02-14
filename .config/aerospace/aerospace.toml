@@ -131,6 +131,10 @@ if.app-id = 'org.mozilla.firefox'
 run = "move-node-to-workspace 2"
 
 [[on-window-detected]]
+if.app-id = 'com.brave.Browser'
+run = "move-node-to-workspace 2"
+
+[[on-window-detected]]
 if.app-id = 'com.tinyapp.TablePlus'
 run = "move-node-to-workspace T"
 
@@ -143,12 +147,16 @@ if.app-id = 'com.apple.mail'
 run = ["layout tiling", "move-node-to-workspace M"]
 
 [[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = "move-node-to-workspace M"
+
+[[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
 run = ["layout tiling", "move-node-to-workspace D"]
 
 [[on-window-detected]]
 if.app-id = 'com.obsproject.obs-studio'
-run = ["layout tiling", "move-node-to-workspace 9"]
+run = ["layout tiling", "move-node-to-workspace O"]
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Music'

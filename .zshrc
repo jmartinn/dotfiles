@@ -39,7 +39,6 @@ path=(
     $HOME/.local/bin
     $HOME/.cargo/bin
     $HOME/go/bin
-    $HOME/.opencode/bin
     /usr/local/bin
     $path
 )
@@ -47,24 +46,8 @@ path=(
 # Homebrew completions (using cached prefix)
 FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 
-# Functions
-function gclone() {
-    git clone git@github.com:$GITUSER/$1.git
-}
-
-# Lazy-load NVM (loads only when nvm/node/npm/npx is called)
-if [ -s "$NVM_DIR/nvm.sh" ] && ! type _nvm_loaded &>/dev/null; then
-    _nvm_loaded=1
-    _nvm_lazy_load() {
-        unset -f nvm node npm npx _nvm_lazy_load
-        \. "$NVM_DIR/nvm.sh"
-        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-    }
-    nvm() { _nvm_lazy_load; nvm "$@"; }
-    node() { _nvm_lazy_load; node "$@"; }
-    npm() { _nvm_lazy_load; npm "$@"; }
-    npx() { _nvm_lazy_load; npx "$@"; }
-fi
+# Load NVM
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Aliases
 alias zshconfig="nvim ~/.zshrc"
@@ -74,8 +57,8 @@ alias vim="nvim"
 alias repos="cd $REPOS"
 alias dots="cd $DOTFILES"
 alias ls="eza"
-alias l="ls"
 alias ll="eza -alh"
+alias l="ll"
 alias tree="eza --tree"
 alias pn="pnpm"
 

@@ -14,11 +14,35 @@ map("n", "<C-Down>", ":resize +2<CR>", opts)
 map("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 map("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
+-- Close buffer without destroying window layout
+local function bufdelete(force)
+  local buf = vim.api.nvim_get_current_buf()
+  if not force and vim.bo[buf].modified then
+    vim.notify("Buffer has unsaved changes", vim.log.levels.WARN)
+    return
+  end
+  for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+    vim.api.nvim_win_call(win, function()
+      if not vim.api.nvim_win_is_valid(win) then return end
+      local alt = vim.fn.bufnr "#"
+      if alt > 0 and alt ~= buf and vim.fn.buflisted(alt) == 1 then
+        vim.api.nvim_win_set_buf(win, alt)
+      else
+        vim.cmd "bprevious"
+      end
+      if vim.api.nvim_win_get_buf(win) == buf then
+        vim.cmd "enew"
+      end
+    end)
+  end
+  vim.api.nvim_buf_delete(buf, { force = force })
+end
+
 -- Buffer navigation
 map("n", "<S-l>", ":bnext<CR>", opts)
 map("n", "<S-h>", ":bprevious<CR>", opts)
-map("n", "<leader>bd", ":bdelete<CR>", { desc = "Delete buffer" })
-map("n", "Q", ":bdelete<CR>", opts) -- Close buffer with Shift+q
+map("n", "<leader>bd", function() bufdelete(false) end, { desc = "Delete buffer" })
+map("n", "Q", function() bufdelete(false) end, opts)
 
 -- Clear search highlight
 map("n", "<Esc>", ":nohlsearch<CR>", opts)

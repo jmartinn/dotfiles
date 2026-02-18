@@ -109,7 +109,6 @@ function M.config()
     pattern = "AlphaClosed",
     callback = function()
       vim.opt_local.laststatus = 3
-      vim.opt_local.showtabline = 2
     end,
   })
 end

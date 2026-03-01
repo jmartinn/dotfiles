@@ -129,7 +129,7 @@ function M.config()
           opts = vim.tbl_deep_extend("force", opts, server_opts)
         end
 
-        -- require("lspconfig")[server_name].setup(opts)
+        require("lspconfig")[server_name].setup(opts)
       end,
     },
   }

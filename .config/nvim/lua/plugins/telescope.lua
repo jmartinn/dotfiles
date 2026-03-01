@@ -1,4 +1,3 @@
-local layout_strategies = require "telescope.pickers.layout_strategies"
 local M = {
   "nvim-telescope/telescope.nvim",
   cmd = "Telescope",
@@ -63,7 +62,7 @@ function M.config()
       path_display = { "smart" },
       color_devicons = true,
       hidden = true,
-      file_ignore_patterns = { "%.git/", "%.git$" },
+      file_ignore_patterns = { "%.git/", "%.git$", "^node_modules/" },
       set_env = { ["COLORTERM"] = "truecolor" },
       sorting_strategy = "ascending",
       layout_strategies = nil,

@@ -1,8 +1,5 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Increase command timeout to prevent version detection timeouts on cold start
-command_timeout = 1000
-
 [character]
 success_symbol = "[τ](bold green)"
 error_symbol   = "[τ](bold red)"

@@ -14,13 +14,13 @@ font-style-bold = Bold
 font-style-bold-italic = Bold Oblique
 
 # Font size
-font-size = 17
+font-size = 18
 
 # Opacity of split windows
 unfocused-split-opacity = 0.97
 
-# Background opacity fully opaque
-background-opacity = 0.90
+# Background opacity
+background-opacity = 1
 
 # Cursor style
 cursor-style = block
@@ -44,7 +44,7 @@ window-save-state = always
 window-colorspace = "display-p3"
 
 # Cell height
-adjust-cell-height = 12%
+adjust-cell-height = 11%
 
 # Mouse settings
 mouse-hide-while-typing = true

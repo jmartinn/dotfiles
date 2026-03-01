@@ -1,6 +1,5 @@
 # Ghostty theme
-# theme = dark:TokyoNight Night,light:Rose Pine Dawn
-theme =  TokyoNight Night
+theme = TokyoNight Night
 
 # Shell integrations
 shell-integration-features = no-cursor,sudo,no-title
@@ -44,7 +43,7 @@ window-save-state = always
 window-colorspace = "display-p3"
 
 # Cell height
-adjust-cell-height = 11%
+adjust-cell-height = 30%
 
 # Mouse settings
 mouse-hide-while-typing = true

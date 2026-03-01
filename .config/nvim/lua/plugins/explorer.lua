@@ -13,20 +13,20 @@ function M.config()
     hijack_netrw = false,
     sync_root_with_cwd = true,
     filters = {
-      custom = { "node_modules", ".vscode" },
-      dotfiles = false,
+      custom = { ".vscode" },
+      dotfiles = true,
     },
     view = {
       width = 35,
       relativenumber = false,
       float = {
-        enable = false,
+        enable = true,
       },
     },
     renderer = {
       add_trailing = false,
       group_empty = true,
-      highlight_git = 'all',
+      highlight_git = "name",
       full_name = false,
       highlight_opened_files = "none",
       root_folder_label = ":t",

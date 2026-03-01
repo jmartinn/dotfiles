@@ -9,7 +9,7 @@ local M = {
 function M.config()
   require("oil").setup {
     view_options = {
-      show_hidden = true,
+      show_hidden = false,
     },
     float = {
       max_height = 20,

@@ -13,10 +13,9 @@ export DOTFILES="$HOME/dotfiles"
 export SCRIPTS="$HOME/scripts"
 export GITUSER="jmartinn"
 export GHREPOS="$REPOS/github.com/$GITUSER"
-export SECOND_BRAIN="$HOME/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/personal"
+export SECOND_BRAIN="$HOME/Documents/svalbard/"
 
 # Environment variables
-export NVM_DIR="$HOME/.nvm"
 export BUN_INSTALL="$HOME/.bun"
 export GPG_TTY=$(tty)
 export EDITOR='nvim'
@@ -46,8 +45,8 @@ path=(
 # Homebrew completions (using cached prefix)
 FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 
-# Load NVM
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# Load fnm
+eval "$(fnm env --use-on-cd)"
 
 # Aliases
 alias zshconfig="nvim ~/.zshrc"
@@ -60,6 +59,7 @@ alias ls="eza"
 alias ll="eza -alh"
 alias l="ll"
 alias tree="eza --tree"
+alias t="tmux"
 alias pn="pnpm"
 
 # Bun completions

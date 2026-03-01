@@ -8,7 +8,7 @@ opt.numberwidth = 4
 opt.signcolumn = "yes"
 
 -- UI
-opt.cmdheight = 1
+opt.cmdheight = 0
 opt.pumblend = 0
 opt.showtabline = 0
 opt.showcmd = false
@@ -31,7 +31,7 @@ opt.wrap = false
 -- Search
 opt.ignorecase = true
 opt.smartcase = true
-opt.hlsearch = true
+opt.hlsearch = false
 
 -- Appearance
 opt.termguicolors = true

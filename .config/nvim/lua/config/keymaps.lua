@@ -38,9 +38,10 @@ local function bufdelete(force)
   vim.api.nvim_buf_delete(buf, { force = force })
 end
 
--- Buffer navigation
-map("n", "<S-l>", ":bnext<CR>", opts)
-map("n", "<S-h>", ":bprevious<CR>", opts)
+-- Buffer navigation (bufferline)
+map("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", opts)
+map("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", opts)
+map("n", "<S-Tab>", "<cmd>BufferLineCycleNext<CR>", opts)
 map("n", "<leader>bd", function() bufdelete(false) end, { desc = "Delete buffer" })
 map("n", "Q", function() bufdelete(false) end, opts)
 

@@ -10,7 +10,7 @@ opt.signcolumn = "yes"
 -- UI
 opt.cmdheight = 1
 opt.pumblend = 0
-opt.showtabline = 1
+opt.showtabline = 0
 opt.showcmd = false
 opt.ruler = false
 opt.title = true

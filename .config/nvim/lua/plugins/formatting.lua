@@ -28,6 +28,7 @@ function M.config()
       lua = { "stylua" },
       python = { "black" },
       go = { "gofmt" },
+      php = { "php_cs_fixer" },
     },
     -- format_on_save disabled - use <leader>lf to manually format
     format_on_save = nil,

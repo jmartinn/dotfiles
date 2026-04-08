@@ -15,6 +15,7 @@ function M.config()
     "bash",
     "gitcommit",
     "gitignore",
+    "php",
   }
 
   -- Enable treesitter highlighting and disable vim syntax (required in nvim-treesitter 1.0+)

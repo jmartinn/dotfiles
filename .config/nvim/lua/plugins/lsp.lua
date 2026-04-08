@@ -115,6 +115,7 @@ function M.config()
       "tailwindcss",
       "pyright",
       "gopls",
+      "intelephense",
     },
     handlers = {
       -- Default handler - tries to load custom settings from config/lspsettings/

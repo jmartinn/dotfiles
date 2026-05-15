@@ -1,17 +1,13 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Two-line, contextual dev-rich format.
-# Left:  directory + git branch + git status + git state, then prompt on next line.
-# Right: language version (in matching projects), command duration (>2s), time.
+# Two-line format: all context on line 1, prompt char alone on line 2.
+# Language modules and cmd_duration are conditional — they only render in
+# matching projects or after slow commands, so line 1 stays quiet otherwise.
 format = """
 $directory\
 $git_branch\
 $git_status\
 $git_state\
-$line_break\
-$character"""
-
-right_format = """
 $nodejs\
 $bun\
 $python\
@@ -21,7 +17,8 @@ $lua\
 $php\
 $java\
 $cmd_duration\
-$time"""
+$line_break\
+$character"""
 
 add_newline = true
 
@@ -113,12 +110,6 @@ deleted = "✘"
 min_time = 2_000
 format = "[⏱ $duration]($style) "
 style = "yellow"
-
-[time]
-disabled = false
-format = "[$time]($style)"
-style = "dim white"
-time_format = "%R"
 
 [git_commit]
 tag_symbol = '  '

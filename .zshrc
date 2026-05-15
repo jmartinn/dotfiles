@@ -47,6 +47,7 @@ FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 
 # Load fnm
 eval "$(fnm env --use-on-cd)"
+path=("$(npm prefix -g)/bin" $path)
 
 # Aliases
 alias zshconfig="nvim ~/.zshrc"
@@ -70,3 +71,5 @@ eval "$(fzf --zsh)"
 
 # Starship prompt (must be last)
 eval "$(starship init zsh)"
+export PATH="/Users/jmartinn/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/Users/jmartinn/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"

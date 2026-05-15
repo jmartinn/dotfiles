@@ -20,6 +20,7 @@ export BUN_INSTALL="$HOME/.bun"
 export GPG_TTY=$(tty)
 export EDITOR='nvim'
 export PNPM_HOME="$HOME/Library/pnpm"
+export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
 
 # Homebrew prefix (hardcoded for performance - Apple Silicon is always /opt/homebrew)
 HOMEBREW_PREFIX="/opt/homebrew"
@@ -34,6 +35,7 @@ path=(
     $SCRIPTS
     $BUN_INSTALL/bin
     $PNPM_HOME
+    $HOME/.config/herd-lite/bin
     $HOME/bin
     $HOME/.local/bin
     $HOME/.cargo/bin
@@ -45,9 +47,8 @@ path=(
 # Homebrew completions (using cached prefix)
 FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 
-# Load fnm
+# Load fnm (injects active Node version's bin into PATH on cd)
 eval "$(fnm env --use-on-cd)"
-path=("$(npm prefix -g)/bin" $path)
 
 # Aliases
 alias zshconfig="nvim ~/.zshrc"
@@ -71,5 +72,3 @@ eval "$(fzf --zsh)"
 
 # Starship prompt (must be last)
 eval "$(starship init zsh)"
-export PATH="/Users/jmartinn/.config/herd-lite/bin:$PATH"
-export PHP_INI_SCAN_DIR="/Users/jmartinn/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"

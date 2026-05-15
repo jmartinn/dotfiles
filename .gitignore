@@ -7,3 +7,13 @@
 # Zed - ignore everything except settings
 .config/zed/*
 !.config/zed/settings.json
+
+# Tool-managed dirs (auto-generated runtime/cache, not real dotfiles)
+.config/composer/
+.config/gh/
+.config/herd-lite/
+.config/intelephense/
+.config/mole/
+.config/opencode/
+.config/psysh/
+.config/vercel-plugin/

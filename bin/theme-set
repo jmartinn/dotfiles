@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# theme-set — synchronize the active Tokyo Night variant across all apps.
+# Usage: theme-set <variant>
+#        theme-set --list
+
+set -euo pipefail
+
+DOTFILES="${DOTFILES:-$HOME/dotfiles}"
+
+usage() {
+    cat <<EOF
+Usage: theme-set <variant>
+       theme-set --list
+
+Variants:
+  night    Dark blue (default)
+  storm    Dark slate
+  moon     Dark with purple tint
+  day      Light
+
+Updates: Ghostty, tmux, Neovim (tokyonight.nvim), Zed.
+After switching, reload: tmux source-file ~/.config/tmux/tmux.conf,
+ghostty cmd+shift+,, nvim :Lazy reload, Zed reopens automatically.
+EOF
+}
+
+[[ $# -eq 0 ]] && { usage; exit 1; }
+
+case "$1" in
+    -h|--help)  usage; exit 0 ;;
+    --list)     echo "night storm moon day"; exit 0 ;;
+esac
+
+variant="$1"
+case "$variant" in
+    night|storm|moon|day) ;;
+    *) echo "Unknown variant: $variant"; usage; exit 1 ;;
+esac
+
+# Per-app identifiers for the chosen variant.
+case "$variant" in
+    night) ghostty="TokyoNight Night"; zed="Tokyo Night" ;;
+    storm) ghostty="TokyoNight Storm"; zed="Tokyo Night Storm" ;;
+    moon)  ghostty="TokyoNight Moon";  zed="Tokyo Night Moon" ;;
+    day)   ghostty="TokyoNight Day";   zed="Tokyo Night Day" ;;
+esac
+
+# Ghostty: `theme = ...`
+sed -i '' -E "s|^theme = .*|theme = ${ghostty}|" "$DOTFILES/.config/ghostty/config"
+
+# tmux: `set -g @tokyo-night-tmux_theme <variant>`
+sed -i '' -E "s|^(set -g @tokyo-night-tmux_theme )[a-z]+|\1${variant}|" "$DOTFILES/.config/tmux/tmux.conf"
+
+# Neovim: `style = "<variant>"` inside tokyonight setup
+sed -i '' -E "s|(style = )\"[a-z]+\"|\1\"${variant}\"|" "$DOTFILES/.config/nvim/lua/plugins/colorscheme.lua"
+
+# Zed: `"dark": "<zed identifier>"` — only swap the dark slot
+sed -i '' -E "s|(\"dark\": )\"[^\"]+\"|\1\"${zed}\"|" "$DOTFILES/.config/zed/settings.json"
+
+echo "Switched to tokyo-night/${variant}."
+echo "Reload tmux:   tmux source-file ~/.config/tmux/tmux.conf"
+echo "Reload nvim:   :colorscheme tokyonight-${variant}"
+echo "Ghostty/Zed reload from their UIs."

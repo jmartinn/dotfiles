@@ -81,6 +81,8 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-p = 'workspace P'   # preview
     alt-t = 'workspace T'   # Telegram
     alt-v = 'workspace V'   # VS Code
+    alt-w = 'workspace W'   # Word
+    alt-y = 'workspace Y'   # Yaak (API client)
 
     # --- Move focused window to workspace ---
     alt-shift-1 = 'move-node-to-workspace 1'
@@ -96,6 +98,8 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-shift-p = 'move-node-to-workspace P'
     alt-shift-t = 'move-node-to-workspace T'
     alt-shift-v = 'move-node-to-workspace V'
+    alt-shift-w = 'move-node-to-workspace W'
+    alt-shift-y = 'move-node-to-workspace Y'
 
     # --- Window state ---
     alt-shift-f = 'fullscreen'
@@ -205,3 +209,13 @@ run = 'move-node-to-workspace T'
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'
 run = 'move-node-to-workspace V'
+
+# W — Word
+[[on-window-detected]]
+if.app-id = 'com.microsoft.Word'
+run = 'move-node-to-workspace W'
+
+# Y — Yaak (API client)
+[[on-window-detected]]
+if.app-id = 'app.yaak.desktop'
+run = 'move-node-to-workspace Y'

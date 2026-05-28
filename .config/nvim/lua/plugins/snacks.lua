@@ -106,6 +106,21 @@ local M = {
       end,
       desc = "Toggle Inlay Hints",
     },
+    {
+      "<leader>tb",
+      function()
+        Snacks.toggle({
+          name = "Git Blame Line",
+          get = function()
+            return require("gitsigns.config").config.current_line_blame
+          end,
+          set = function(state)
+            require("gitsigns").toggle_current_line_blame(state)
+          end,
+        }):toggle()
+      end,
+      desc = "Toggle Git Blame Line",
+    },
   },
 }
 

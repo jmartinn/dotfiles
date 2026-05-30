@@ -35,6 +35,7 @@ path=(
     $SCRIPTS
     $BUN_INSTALL/bin
     $PNPM_HOME
+    $HOME/.config/composer/vendor/bin
     $HOME/.config/herd-lite/bin
     $HOME/bin
     $HOME/.local/bin

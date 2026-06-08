@@ -70,6 +70,10 @@ execute brew install --cask font-jetbrains-mono-nerd-font
 log "Installing CaskaydiaCove Nerd Font Mono..."
 execute brew install --cask font-caskaydia-cove-nerd-font
 
+# Install Noto Sans Symbols 2 (Legacy Computing glyphs, e.g. tokyo-night-tmux digits)
+log "Installing Noto Sans Symbols 2..."
+execute brew install --cask font-noto-sans-symbols-2
+
 ###############################################################################
 # Manual Font Installation
 ###############################################################################

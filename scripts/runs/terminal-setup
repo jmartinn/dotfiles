@@ -88,6 +88,13 @@ configure_ghostty() {
     fi
   fi
   
+  # Install Ghostty's terminfo so tmux/SSH render correctly. Direct-download
+  # installs don't always register xterm-ghostty in the system terminfo DB.
+  if ! infocmp xterm-ghostty &>/dev/null && [ -d "/Applications/Ghostty.app" ]; then
+    log "Installing xterm-ghostty terminfo..."
+    execute sh -c 'TERMINFO=/Applications/Ghostty.app/Contents/Resources/terminfo infocmp -x xterm-ghostty | tic -x -o "$HOME/.terminfo" -'
+  fi
+
   # Create Ghostty config directory if it doesn't exist
   ghostty_config_dir="$HOME/.config/ghostty"
   if [ ! -d "$ghostty_config_dir" ]; then

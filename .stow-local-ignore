@@ -3,3 +3,8 @@ homebrew
 .gitignore
 .DS_Store
 scripts
+brew
+terminal
+CLAUDE.md
+README.md
+Justfile

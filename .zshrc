@@ -34,6 +34,7 @@ path=(
     $HOMEBREW_PREFIX/opt/openjdk@17/bin
     $SCRIPTS
     $BUN_INSTALL/bin
+    $PNPM_HOME
     $PNPM_HOME/bin
     $HOME/.config/composer/vendor/bin
     $HOME/.config/herd-lite/bin

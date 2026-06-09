@@ -58,9 +58,12 @@ symbol = " "
 
 [directory]
 read_only = " 󰌾"
-truncation_length = 3
-truncation_symbol = "…/"
+# Anchor at the repo root and show the full path within it, no "…/" truncation.
+truncate_to_repo = true
+truncation_length = 0
 style = "bold blue"
+repo_root_style = "bold blue"
+repo_root_format = "[$before_root_path]($style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
 [dotnet]
 detect_files = ["global.json", "Directory.Build.props", "Directory.Build.targets", "Packages.props"]
@@ -88,7 +91,8 @@ symbol = " "
 
 [git_branch]
 symbol = " "
-truncation_length = 18
+# Show the full branch name; only trim pathologically long ones.
+truncation_length = 40
 format = "[$symbol$branch]($style) "
 style = "purple"
 

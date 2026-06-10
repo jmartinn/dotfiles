@@ -2,8 +2,9 @@ local M = {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason.nvim",
+    "mason-org/mason-lspconfig.nvim",
+    "saghen/blink.cmp",
   },
 }
 
@@ -17,7 +18,7 @@ function M.config()
 
       -- Disable semantic tokens for servers where treesitter highlighting is better
       local disable_semantic_tokens_for = {
-        ts_ls = true,
+        vtsls = true,
         -- Add other servers here if needed (e.g., gopls = true)
       }
 
@@ -56,25 +57,16 @@ function M.config()
     end,
   })
 
-  -- Diagnostic signs
-  local signs = {
-    { name = "DiagnosticSignError", text = icons.diagnostics.Error },
-    { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
-    { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
-    { name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
-  }
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-  end
-
-  -- LspInfo window border
-  require("lspconfig.ui.windows").default_options.border = "rounded"
-
   -- Diagnostic config
   vim.diagnostic.config {
     virtual_text = true,
     signs = {
-      active = signs,
+      text = {
+        [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
+        [vim.diagnostic.severity.WARN] = icons.diagnostics.Warning,
+        [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
+        [vim.diagnostic.severity.INFO] = icons.diagnostics.Information,
+      },
     },
     underline = true,
     update_in_insert = false,
@@ -83,31 +75,39 @@ function M.config()
       focusable = true,
       style = "minimal",
       border = "rounded",
-      source = "always",
+      source = true,
       header = "",
       prefix = "",
     },
   }
 
-  -- LSP capabilities for completion
+  -- Completion capabilities for every server
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   local ok, blink = pcall(require, "blink.cmp")
   if ok then
     capabilities = blink.get_lsp_capabilities(capabilities)
   end
+  vim.lsp.config("*", { capabilities = capabilities })
 
-  -- Mason setup
+  -- Per-server overrides: drop a <server>.lua in config/lspsettings/ and it
+  -- extends the nvim-lspconfig defaults via vim.lsp.config()
+  local settings_dir = vim.fn.stdpath("config") .. "/lua/config/lspsettings"
+  for file in vim.fs.dir(settings_dir) do
+    local server = file:gsub("%.lua$", "")
+    vim.lsp.config(server, require("config.lspsettings." .. server))
+  end
+
+  -- Mason installs servers; mason-lspconfig auto-enables them (vim.lsp.enable)
   require("mason").setup {
     ui = {
       border = "rounded",
     },
   }
 
-  -- Mason-lspconfig setup
   require("mason-lspconfig").setup {
     ensure_installed = {
       "lua_ls",
-      "ts_ls",
+      "vtsls",
       "eslint",
       "jsonls",
       "cssls",
@@ -116,22 +116,7 @@ function M.config()
       "pyright",
       "gopls",
       "intelephense",
-    },
-    handlers = {
-      -- Default handler - tries to load custom settings from config/lspsettings/
-      function(server_name)
-        local opts = {
-          capabilities = capabilities,
-        }
-
-        -- Try to load server-specific settings
-        local has_custom_opts, server_opts = pcall(require, "config.lspsettings." .. server_name)
-        if has_custom_opts then
-          opts = vim.tbl_deep_extend("force", opts, server_opts)
-        end
-
-        require("lspconfig")[server_name].setup(opts)
-      end,
+      "yamlls",
     },
   }
 end

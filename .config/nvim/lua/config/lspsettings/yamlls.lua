@@ -1,16 +1,12 @@
 return {
   settings = {
     yaml = {
-      schemas = require("schemastore").yaml.schemas(),
-    },
-  },
-  setup = {
-    commands = {
-      Format = {
-        function()
-          vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line "$", 0 })
-        end,
+      schemaStore = {
+        -- schemastore.nvim provides the catalog; disable the built-in one
+        enable = false,
+        url = "",
       },
+      schemas = require("schemastore").yaml.schemas(),
     },
   },
 }

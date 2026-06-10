@@ -40,6 +40,7 @@ path=(
     $HOME/.config/herd-lite/bin
     $HOME/bin
     $HOME/.local/bin
+    $HOME/.opencode/bin
     $HOME/.cargo/bin
     $HOME/go/bin
     /usr/local/bin

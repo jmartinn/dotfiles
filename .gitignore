@@ -9,7 +9,10 @@
 !.config/zed/settings.json
 
 # Tool-managed dirs (auto-generated runtime/cache, not real dotfiles)
+.config/btop/
 .config/composer/
+.config/fish/
+.config/htop/
 .config/gh/
 .config/herd-lite/
 .config/intelephense/

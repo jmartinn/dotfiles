@@ -73,11 +73,20 @@ alias pn="pnpm"
 # fzf integration
 eval "$(fzf --zsh)"
 
-# Starship prompt (must be last)
-eval "$(starship init zsh)"
-
 # >>> grok installer >>>
 export PATH="$HOME/.grok/bin:$PATH"
 fpath=(~/.grok/completions/zsh $fpath)
 autoload -Uz compinit && compinit -C
 # <<< grok installer <<<
+
+# zoxide (smarter cd: z <dir>, zi for interactive)
+eval "$(zoxide init zsh)"
+
+# atuin (searchable shell history on Ctrl+R, keeps native up-arrow)
+eval "$(atuin init zsh --disable-up-arrow)"
+
+# direnv (per-project env via .envrc)
+eval "$(direnv hook zsh)"
+
+# Starship prompt (must be last)
+eval "$(starship init zsh)"

@@ -12,7 +12,7 @@ local M = {
       "<leader>cs",
       "<cmd>ClaudeCodeTreeAdd<CR>",
       desc = "Add file from explorer",
-      ft = { "oil", "NvimTree" },
+      ft = { "oil" },
     },
     { "<leader>ca", "<cmd>ClaudeCodeDiffAccept<CR>", desc = "Accept diff" },
     { "<leader>cd", "<cmd>ClaudeCodeDiffDeny<CR>", desc = "Deny diff" },

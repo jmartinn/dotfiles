@@ -4,6 +4,13 @@ local M = {
   lazy = false,
   keys = {
     {
+      "<leader>e",
+      function()
+        Snacks.explorer()
+      end,
+      desc = "File explorer",
+    },
+    {
       "<leader>bd",
       function()
         Snacks.bufdelete()
@@ -82,6 +89,21 @@ local M = {
       desc = "Toggle Diagnostics",
     },
     {
+      "<leader>tf",
+      function()
+        Snacks.toggle({
+          name = "Format on Save",
+          get = function()
+            return vim.g.autoformat ~= false
+          end,
+          set = function(state)
+            vim.g.autoformat = state
+          end,
+        }):toggle()
+      end,
+      desc = "Toggle Format on Save",
+    },
+    {
       "<leader>tx",
       function()
         local tsc = require "treesitter-context"
@@ -125,17 +147,51 @@ local M = {
 }
 
 function M.config()
+  local icons = require "config.icons"
+
   require("snacks").setup {
     bigfile = { enabled = false }, -- Disabled: was killing treesitter highlighting
     bufdelete = { enabled = true },
+    dashboard = {
+      enabled = true,
+      preset = {
+        header = [[
+███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+        keys = {
+          { icon = icons.ui.FindFile, key = "f", desc = "Find File", action = ":Telescope find_files" },
+          { icon = icons.ui.FindText, key = "t", desc = "Find Text", action = ":Telescope live_grep" },
+          { icon = icons.ui.History, key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
+          { icon = icons.ui.NewFile, key = "n", desc = "New File", action = ":ene" },
+          { icon = icons.git.Repo, key = "g", desc = "Git", action = ":Neogit" },
+          { icon = icons.ui.Gear, key = "c", desc = "Config", action = ":edit $MYVIMRC" },
+          { icon = icons.ui.Package, key = "l", desc = "Lazy", action = ":Lazy" },
+          { icon = icons.ui.SignOut, key = "q", desc = "Quit", action = ":qa" },
+        },
+      },
+      sections = {
+        { section = "header", padding = 2 },
+        { section = "keys", gap = 1, padding = 2 },
+        { section = "startup" },
+      },
+    },
     dim = { enabled = true },
+    explorer = { enabled = true },
     gitbrowse = { enabled = true },
     indent = { enabled = true }, -- Using indent-blankline
-    input = { enabled = false }, -- Using dressing.nvim
+    input = { enabled = true },
     notifier = {
       enabled = true,
       timeout = 3000,
       style = "fancy",
+    },
+    picker = {
+      enabled = true,
+      ui_select = true, -- vim.ui.select (code actions, etc.)
     },
     scratch = { enabled = true },
     statuscolumn = { enabled = true },

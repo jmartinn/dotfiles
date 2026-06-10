@@ -1,0 +1,13 @@
+[user]
+	name = Juan Pedro Martin
+	email = juamp_m@hotmail.com
+[init]
+	defaultBranch = main
+[color]
+	ui = auto
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative

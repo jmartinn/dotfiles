@@ -10,6 +10,7 @@ function M.config()
   })
   wk.add({
     { "<leader>b", group = "Buffer" },
+    { "<leader>c", group = "Claude" },
     { "<leader>d", group = "Debug" },
     { "<leader>f", group = "Find" },
     { "<leader>g", group = "Git" },

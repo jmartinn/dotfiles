@@ -56,27 +56,21 @@ fi
 setup_node() {
   log "Setting up Node.js environment..."
   
-  # Install nvm (Node Version Manager)
-  if [ ! -d "$HOME/.nvm" ]; then
-    log "Installing nvm..."
-    execute curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    
-    # Set up NVM environment for the current script
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    
-    log "nvm installed"
+  # Ensure fnm (Fast Node Manager) is available — installed via Homebrew
+  if ! command -v fnm &>/dev/null; then
+    log "Installing fnm..."
+    execute brew install fnm
   else
-    log "nvm is already installed"
-    
-    # Set up NVM environment for the current script
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    log "fnm is already installed"
   fi
-  
-  # Install latest LTS version of Node.js
+
+  # Load fnm into the current script's environment
+  eval "$(fnm env)"
+
+  # Install latest LTS version of Node.js and set it as default
   log "Installing latest LTS version of Node.js..."
-  execute nvm install node
+  execute fnm install --lts
+  execute fnm default lts-latest
   
   # Install pnpm
   log "Installing pnpm..."
@@ -84,7 +78,7 @@ setup_node() {
   
   # Set up pnpm environment for the current script
   export PNPM_HOME="$HOME/Library/pnpm"
-  export PATH="$PNPM_HOME:$PATH"
+  export PATH="$PNPM_HOME:$PNPM_HOME/bin:$PATH"
   
   # Create package list file if it doesn't exist
   node_packages="$dev_dir/pnpm-packages.txt"
@@ -400,7 +394,7 @@ if [ "$dry" != "1" ]; then
 else
   # In dry run, just show what would be set up
   log "[DRY RUN] Would prompt for development environments to set up"
-  log "[DRY RUN] Node.js setup would include nvm and global packages"
+  log "[DRY RUN] Node.js setup would include fnm and global packages"
   log "[DRY RUN] Python setup would include pyenv and pip packages"
   log "[DRY RUN] Ruby setup would include rbenv and gems"
   log "[DRY RUN] Go setup would include Go installation and packages"

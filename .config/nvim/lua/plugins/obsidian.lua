@@ -59,7 +59,8 @@ function M.config()
     },
 
     completion = {
-      nvim_cmp = true,
+      -- archived epwalsh plugin only supports nvim-cmp; disabled after blink.cmp migration
+      nvim_cmp = false,
       min_chars = 2,
     },
 

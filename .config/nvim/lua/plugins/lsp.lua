@@ -91,9 +91,9 @@ function M.config()
 
   -- LSP capabilities for completion
   local capabilities = vim.lsp.protocol.make_client_capabilities()
-  local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+  local ok, blink = pcall(require, "blink.cmp")
   if ok then
-    capabilities = vim.tbl_deep_extend("force", capabilities, cmp_lsp.default_capabilities())
+    capabilities = blink.get_lsp_capabilities(capabilities)
   end
 
   -- Mason setup

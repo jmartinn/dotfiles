@@ -1,13 +1,28 @@
-local util = require "lspconfig.util"
 return {
-  cmd = { "tailwindcss-language-server", "--stdio" },
   filetypes = {
     "typescriptreact",
     "javascriptreact",
     "html",
   },
+  -- broader than the default (which requires a tailwind config): attach in any node project
+  root_markers = {
+    "tailwind.config.js",
+    "tailwind.config.cjs",
+    "tailwind.config.mjs",
+    "tailwind.config.ts",
+    "postcss.config.js",
+    "postcss.config.cjs",
+    "postcss.config.mjs",
+    "postcss.config.ts",
+    "package.json",
+    "node_modules",
+    ".git",
+  },
   settings = {
-    tailwindcss = {
+    editor = {
+      tabSize = 2, -- hover preview indentation
+    },
+    tailwindCSS = {
       validate = true,
       lint = {
         cssConflict = "warning",
@@ -33,31 +48,4 @@ return {
       },
     },
   },
-  on_new_config = function(new_config)
-    if not new_config.settings then
-      new_config.settings = {}
-    end
-    if not new_config.settings.editor then
-      new_config.settings.editor = {}
-    end
-    if not new_config.settings.editor.tabSize then
-      -- set tab size for hover
-      new_config.settings.editor.tabSize = vim.lsp.util.get_effective_tabstop()
-    end
-  end,
-  root_dir = function(fname)
-    return util.root_pattern(
-      "tailwind.config.js",
-      "tailwind.config.cjs",
-      "tailwind.config.mjs",
-      "tailwind.config.ts",
-      "postcss.config.js",
-      "postcss.config.cjs",
-      "postcss.config.mjs",
-      "postcss.config.ts"
-    )(fname) or util.find_package_json_ancestor(fname) or util.find_node_modules_ancestor(fname) or
-    util.find_git_ancestor(
-      fname
-    )
-  end,
 }

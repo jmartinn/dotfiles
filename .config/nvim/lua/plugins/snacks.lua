@@ -4,13 +4,6 @@ local M = {
   lazy = false,
   keys = {
     {
-      "<leader>e",
-      function()
-        Snacks.explorer()
-      end,
-      desc = "File explorer",
-    },
-    {
       "<leader>bd",
       function()
         Snacks.bufdelete()
@@ -173,13 +166,13 @@ function M.config()
         },
       },
       sections = {
-        { section = "header", padding = 2 },
+        { section = "header", padding = 4 },
         { section = "keys", gap = 1, padding = 2 },
         { section = "startup" },
       },
     },
     dim = { enabled = true },
-    explorer = { enabled = true },
+    explorer = { enabled = false }, -- using nvim-tree instead
     gitbrowse = { enabled = true },
     image = { enabled = true }, -- inline images in Ghostty; needed for xcodebuild SwiftUI previews
     indent = { enabled = true },
@@ -189,23 +182,7 @@ function M.config()
       timeout = 3000,
       style = "fancy",
     },
-    picker = {
-      -- engine stays on only to back snacks.explorer; Telescope is the picker.
-      enabled = true,
-      ui_select = false, -- vim.ui.select goes through telescope-ui-select instead
-      layout = { cycle = false }, -- stop at the list edges instead of wrapping around
-      sources = {
-        explorer = {
-          win = {
-            list = {
-              keys = {
-                ["o"] = "confirm", -- open file / toggle folder, like nvim-tree (was: open in Finder)
-              },
-            },
-          },
-        },
-      },
-    },
+    picker = { enabled = false }, -- retired: Telescope is the picker, nvim-tree the explorer
     scratch = { enabled = true },
     statuscolumn = { enabled = true },
     toggle = { enabled = true },

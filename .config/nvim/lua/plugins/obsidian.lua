@@ -1,19 +1,21 @@
+-- maintained fork of the archived epwalsh/obsidian.nvim
 local M = {
-  "epwalsh/obsidian.nvim",
+  "obsidian-nvim/obsidian.nvim",
   ft = { "markdown" },
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
   keys = {
-    { "<leader>oT", "<cmd>ObsidianTags<cr>", desc = "Search By Tag" },
-    { "<leader>ob", "<cmd>ObsidianBacklinks<cr>", desc = "Show Backlinks" },
-    { "<leader>oc", "<cmd>ObsidianNew<cr>", desc = "Create New Note" },
-    { "<leader>od", function() require("obsidian").util.toggle_checkbox() end, desc = "Toggle Check-Box" },
-    { "<leader>of", "<cmd>ObsidianSearch<cr>", desc = "Search Note" },
-    { "<leader>ok", "<cmd>ObsidianTemplate<cr>", desc = "Template Palette" },
-    { "<leader>ol", "<cmd>ObsidianLinks<cr>", desc = "Show Links" },
-    { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = "Open Current Buffer" },
-    { "<leader>ot", "<cmd>ObsidianToday<cr>", desc = "Open/Create Today's Note" },
+    { "<leader>oT", "<cmd>Obsidian tags<cr>", desc = "Search By Tag" },
+    { "<leader>ob", "<cmd>Obsidian backlinks<cr>", desc = "Show Backlinks" },
+    { "<leader>oc", "<cmd>Obsidian new<cr>", desc = "Create New Note" },
+    { "<leader>od", "<cmd>Obsidian toggle_checkbox<cr>", desc = "Toggle Check-Box" },
+    { "<leader>of", "<cmd>Obsidian search<cr>", desc = "Search Note" },
+    { "<leader>ok", "<cmd>Obsidian template<cr>", desc = "Template Palette" },
+    { "<leader>ol", "<cmd>Obsidian links<cr>", desc = "Show Links" },
+    { "<leader>oo", "<cmd>Obsidian open<cr>", desc = "Open Current Buffer" },
+    { "<leader>ot", "<cmd>Obsidian today<cr>", desc = "Open/Create Today's Note" },
+    { "gf", "<cmd>Obsidian follow_link<cr>", ft = "markdown", desc = "Follow Link" },
     -- Work log keybindings
     { "<leader>owt", function()
       local home = os.getenv("HOME")
@@ -44,6 +46,8 @@ local M = {
 function M.config()
   local home = os.getenv("HOME")
   require("obsidian").setup({
+    legacy_commands = false,
+
     workspaces = {
       {
         name = "svalbard",
@@ -58,25 +62,9 @@ function M.config()
       template = "Daily Notes.md",
     },
 
+    -- served by the plugin's in-process LSP; blink.cmp picks it up via its lsp source
     completion = {
-      -- archived epwalsh plugin only supports nvim-cmp; disabled after blink.cmp migration
-      nvim_cmp = false,
       min_chars = 2,
-    },
-
-    mappings = {
-      ["gf"] = {
-        action = function()
-          return require("obsidian").util.gf_passthrough()
-        end,
-        opts = { noremap = false, expr = true, buffer = true },
-      },
-      ["<leader>od"] = {
-        action = function()
-          return require("obsidian").util.toggle_checkbox()
-        end,
-        opts = { buffer = true },
-      },
     },
 
     new_notes_location = "notes_subdir",
@@ -102,78 +90,42 @@ function M.config()
       return path:with_suffix(".md")
     end,
 
-    wiki_link_func = function(opts)
-      return require("obsidian.util").wiki_link_id_prefix(opts)
-    end,
-
-    markdown_link_func = function(opts)
-      return require("obsidian.util").markdown_link(opts)
-    end,
-
-    preferred_link_style = "wiki",
-
-    ---@return string
-    image_name_func = function()
-      return string.format("%s-", os.time())
-    end,
-
-    disable_frontmatter = false,
-
-    ---@return table
-    note_frontmatter_func = function(note)
-      local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-
-      if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
-        for k, v in pairs(note.metadata) do
-          out[k] = v
-        end
-      end
-
-      return out
-    end,
-
-    templates = {
-      subdir = "Templates",
-      date_format = "%Y-%m-%d-%a",
-      time_format = "%H:%M",
+    link = {
+      style = "wiki",
     },
 
-    ---@param url string
-    follow_url_func = function(url)
-      vim.fn.jobstart({ "open", url })
-    end,
+    frontmatter = {
+      enabled = true,
+      ---@return table
+      func = function(note)
+        local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+
+        if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
+          for k, v in pairs(note.metadata) do
+            out[k] = v
+          end
+        end
+
+        return out
+      end,
+    },
+
+    templates = {
+      folder = "Templates",
+      date_format = "YYYY-MM-DD-ddd",
+      time_format = "HH:mm",
+    },
 
     picker = {
       name = "telescope.nvim",
-      note_mappings = {},
-      tag_mappings = {},
     },
 
-    sort_by = "modified",
-    sort_reversed = true,
+    search = {
+      sort_by = "modified",
+      sort_reversed = true,
+    },
 
     open_notes_in = "current",
-
-    callbacks = {
-      ---@param client obsidian.Client
-      post_setup = function(client) end,
-
-      ---@param client obsidian.Client
-      ---@param note obsidian.Note
-      enter_note = function(client, note) end,
-
-      ---@param client obsidian.Client
-      ---@param note obsidian.Note
-      leave_note = function(client, note) end,
-
-      ---@param client obsidian.Client
-      ---@param note obsidian.Note
-      pre_write_note = function(client, note) end,
-
-      ---@param client obsidian.Client
-      ---@param workspace obsidian.Workspace
-      post_set_workspace = function(client, workspace) end,
-    },
 
     ui = {
       enable = true,
@@ -205,21 +157,11 @@ function M.config()
     },
 
     attachments = {
-      img_folder = "assets/imgs",
+      folder = "assets/imgs",
       confirm_img_paste = true,
-      ---@param client obsidian.Client
-      ---@param path obsidian.Path
       ---@return string
-      img_text_func = function(client, path)
-        local link_path
-        local vault_relative_path = client:vault_relative_path(path)
-        if vault_relative_path ~= nil then
-          link_path = vault_relative_path
-        else
-          link_path = tostring(path)
-        end
-        local display_name = vim.fs.basename(link_path)
-        return string.format("![%s](%s)", display_name, link_path)
+      img_name_func = function()
+        return string.format("%s-", os.time())
       end,
     },
   })

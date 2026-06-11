@@ -7,6 +7,7 @@ local M = {
       "nvim-telescope/telescope-fzf-native.nvim",
       build = "make",
     },
+    "nvim-telescope/telescope-ui-select.nvim",
   },
   keys = {
     -- Buffers
@@ -46,6 +47,16 @@ local M = {
     { "<leader>lS", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", desc = "Workspace Symbols" },
   },
 }
+
+-- Route vim.ui.select (code actions, etc.) through Telescope. Telescope is lazy
+-- (cmd/keys), so override vim.ui.select with a shim that loads it on first use;
+-- telescope-ui-select then replaces this with the real handler.
+function M.init()
+  vim.ui.select = function(...)
+    require("lazy").load { plugins = { "telescope.nvim" } }
+    return vim.ui.select(...)
+  end
+end
 
 function M.config()
   local icons = require "config.icons"
@@ -149,8 +160,14 @@ function M.config()
         initial_mode = "normal",
       },
     },
+    extensions = {
+      ["ui-select"] = {
+        require("telescope.themes").get_dropdown {},
+      },
+    },
   }
   pcall(telescope.load_extension, "fzf")
+  pcall(telescope.load_extension, "ui-select")
 end
 
 return M

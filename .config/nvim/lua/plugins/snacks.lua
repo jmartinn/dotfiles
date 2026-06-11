@@ -190,8 +190,9 @@ function M.config()
       style = "fancy",
     },
     picker = {
+      -- engine stays on only to back snacks.explorer; Telescope is the picker.
       enabled = true,
-      ui_select = true, -- vim.ui.select (code actions, etc.)
+      ui_select = false, -- vim.ui.select goes through telescope-ui-select instead
       layout = { cycle = false }, -- stop at the list edges instead of wrapping around
       sources = {
         explorer = {

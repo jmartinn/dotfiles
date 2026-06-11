@@ -192,7 +192,7 @@ function M.config()
     picker = {
       enabled = true,
       ui_select = true, -- vim.ui.select (code actions, etc.)
-      cycle = false, -- stop at the list edges instead of wrapping around
+      layout = { cycle = false }, -- stop at the list edges instead of wrapping around
       sources = {
         explorer = {
           win = {

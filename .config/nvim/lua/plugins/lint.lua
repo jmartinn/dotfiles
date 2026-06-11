@@ -10,6 +10,7 @@ function M.config()
     python = { "ruff" },
     sh = { "shellcheck" },
     bash = { "shellcheck" },
+    swift = { "swiftlint" },
   }
 
   vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {

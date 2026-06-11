@@ -20,6 +20,7 @@ function M.config()
     { "<leader>s", group = "Split" },
     { "<leader>t", group = "Toggle" },
     { "<leader>x", group = "Trouble" },
+    { "<leader>X", group = "Xcode" },
   })
 end
 

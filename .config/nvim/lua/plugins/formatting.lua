@@ -29,6 +29,7 @@ function M.config()
       python = { "ruff_format" },
       go = { "gofmt" },
       php = { "php_cs_fixer" },
+      swift = { "swiftformat" },
     },
     -- on by default; suspend per session with <leader>tf (or per buffer via vim.b.autoformat)
     format_on_save = function(bufnr)

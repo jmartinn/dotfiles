@@ -119,6 +119,9 @@ function M.config()
       "yamlls",
     },
   }
+
+  -- Servers outside Mason: sourcekit-lsp ships with the Xcode toolchain
+  vim.lsp.enable("sourcekit")
 end
 
 return M

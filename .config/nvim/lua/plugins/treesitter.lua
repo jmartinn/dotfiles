@@ -15,6 +15,7 @@ local ensure_installed = {
   "gitcommit",
   "gitignore",
   "php",
+  "swift",
 }
 
 function M.config()

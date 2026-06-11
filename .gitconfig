@@ -2,7 +2,7 @@
 	name = Juan Pedro Martin
 	email = juamp_m@hotmail.com
 [init]
-	defaultBranch = main
+	defaultBranch = master
 [color]
 	ui = auto
 [alias]

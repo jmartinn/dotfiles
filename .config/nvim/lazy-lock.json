@@ -51,5 +51,6 @@
   "tsc.nvim": { "branch": "main", "commit": "e083bcf1e54bc3af7df92b33235efb334e8c782c" },
   "vim-tmux-navigator": { "branch": "master", "commit": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432" },
   "vimtex": { "branch": "master", "commit": "24e229914182ff301496a3e2c4214b28c4928d3f" },
-  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" }
+  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" },
+  "xcodebuild.nvim": { "branch": "main", "commit": "0c195e4ab249582b3712adbb664ea4bab9ff7ffe" }
 }

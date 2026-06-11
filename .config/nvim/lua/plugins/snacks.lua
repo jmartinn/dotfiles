@@ -183,6 +183,7 @@ function M.config()
     dim = { enabled = true },
     explorer = { enabled = true },
     gitbrowse = { enabled = true },
+    image = { enabled = true }, -- inline images in Ghostty; needed for xcodebuild SwiftUI previews
     indent = { enabled = true },
     input = { enabled = true },
     notifier = {

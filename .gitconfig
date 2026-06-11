@@ -1,10 +1,51 @@
 [user]
-	name = Juan Pedro Martin
 	email = juamp_m@hotmail.com
+	name = Juan Pedro Martín
+	signingkey = A0BE821DFF422AAE
+
+[branch]
+	sort = "-committerdate"
+
+[column]
+	ui = "auto"
+
+[commit]
+	gpgsign = true
+
+[tag]
+	gpgsign = true
+
+[core]
+	editor = "nvim"
+
+[fetch]
+	prune = true
+	writeCommitGraph = true
+
+[pull]
+	rebase = true
+
+[rebase]
+	updateRefs = true
+
+[rerere]
+	enabled = true
+
+[gpg]
+	program = /opt/homebrew/bin/gpg
+
 [init]
 	defaultBranch = master
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
 [color]
 	ui = auto
+
 [alias]
 	co = checkout
 	br = branch

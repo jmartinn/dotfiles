@@ -194,6 +194,18 @@ function M.config()
     picker = {
       enabled = true,
       ui_select = true, -- vim.ui.select (code actions, etc.)
+      cycle = false, -- stop at the list edges instead of wrapping around
+      sources = {
+        explorer = {
+          win = {
+            list = {
+              keys = {
+                ["o"] = "confirm", -- open file / toggle folder, like nvim-tree (was: open in Finder)
+              },
+            },
+          },
+        },
+      },
     },
     scratch = { enabled = true },
     statuscolumn = { enabled = true },

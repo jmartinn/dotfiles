@@ -1,6 +1,7 @@
 local M = {
   "SmiteshP/nvim-navbuddy",
   dependencies = {
+    -- navbuddy requires nvim-navic internally; no winbar breadcrumbs are set up
     "SmiteshP/nvim-navic",
     "MunifTanjim/nui.nvim",
   },

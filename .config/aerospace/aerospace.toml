@@ -82,6 +82,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-t = 'workspace T'   # Telegram
     alt-v = 'workspace V'   # VS Code
     alt-w = 'workspace W'   # Word
+    alt-x = 'workspace X'   # Xcode
     alt-y = 'workspace Y'   # Yaak (API client)
 
     # --- Move focused window to workspace ---
@@ -99,6 +100,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-shift-t = 'move-node-to-workspace T'
     alt-shift-v = 'move-node-to-workspace V'
     alt-shift-w = 'move-node-to-workspace W'
+    alt-shift-x = 'move-node-to-workspace X'
     alt-shift-y = 'move-node-to-workspace Y'
 
     # --- Window state ---
@@ -214,6 +216,11 @@ run = 'move-node-to-workspace V'
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Word'
 run = 'move-node-to-workspace W'
+
+# X — Xcode (force tiling: Xcode opens floating and ignores resize otherwise)
+[[on-window-detected]]
+if.app-id = 'com.apple.dt.Xcode'
+run = ['layout tiling', 'move-node-to-workspace X']
 
 # Y — Yaak (API client)
 [[on-window-detected]]

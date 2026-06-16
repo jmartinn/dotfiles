@@ -1,4 +1,6 @@
 -- maintained fork of the archived epwalsh/obsidian.nvim
+local VAULT = os.getenv("HOME") .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/svalbard"
+
 local M = {
   "obsidian-nvim/obsidian.nvim",
   ft = { "markdown" },
@@ -18,21 +20,18 @@ local M = {
     { "gf", "<cmd>Obsidian follow_link<cr>", ft = "markdown", desc = "Follow Link" },
     -- Work log keybindings
     { "<leader>owt", function()
-      local home = os.getenv("HOME")
       local today = os.date("%Y-%m-%d")
-      local path = home .. "/Documents/svalbard/2-Areas/Work/Logs/" .. today .. "-worklog.md"
+      local path = VAULT .. "/2-Areas/Work/Logs/" .. today .. "-worklog.md"
       vim.cmd("edit " .. path)
     end, desc = "Today's Work Log" },
     { "<leader>owy", function()
-      local home = os.getenv("HOME")
       local yesterday = os.date("%Y-%m-%d", os.time() - 86400)
-      local path = home .. "/Documents/svalbard/2-Areas/Work/Logs/" .. yesterday .. "-worklog.md"
+      local path = VAULT .. "/2-Areas/Work/Logs/" .. yesterday .. "-worklog.md"
       vim.cmd("edit " .. path)
     end, desc = "Yesterday's Work Log" },
     { "<leader>owq", function()
-      local home = os.getenv("HOME")
       local today = os.date("%Y-%m-%d")
-      local path = home .. "/Documents/svalbard/2-Areas/Work/Logs/" .. today .. "-worklog.md"
+      local path = VAULT .. "/2-Areas/Work/Logs/" .. today .. "-worklog.md"
       vim.cmd("edit " .. path)
       vim.defer_fn(function()
         vim.fn.search("## Captura Rapida")
@@ -44,14 +43,13 @@ local M = {
 }
 
 function M.config()
-  local home = os.getenv("HOME")
   require("obsidian").setup({
     legacy_commands = false,
 
     workspaces = {
       {
         name = "svalbard",
-        path = home .. "/Documents/svalbard/",
+        path = VAULT .. "/",
       },
     },
 

@@ -158,6 +158,7 @@ function M.config()
         keys = {
           { icon = icons.ui.FindFile, key = "f", desc = "Find File", action = ":Telescope find_files" },
           { icon = icons.ui.FindText, key = "t", desc = "Find Text", action = ":Telescope live_grep" },
+          { icon = icons.ui.History, key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
           { icon = icons.ui.NewFile, key = "n", desc = "New File", action = ":ene" },
           { icon = icons.git.Repo, key = "g", desc = "Git", action = ":Neogit" },
           { icon = icons.ui.Gear, key = "c", desc = "Config", action = ":edit $MYVIMRC" },
@@ -166,8 +167,9 @@ function M.config()
         },
       },
       sections = {
-        { section = "header", padding = 4 },
+        { section = "header", padding = 2 },
         { section = "keys", gap = 1, padding = 2 },
+        { icon = " ", title = "Recent Files", section = "recent_files", limit = 5, indent = 2, padding = 2 },
         { section = "startup" },
       },
     },

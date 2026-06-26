@@ -1,8 +1,8 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Two-line format: all context on line 1, prompt char alone on line 2.
-# Language modules and cmd_duration are conditional — they only render in
-# matching projects or after slow commands, so line 1 stays quiet otherwise.
+# Two-line format: all context on line 1, τ prompt alone on line 2, time at the right.
+# Language, nix_shell, and cmd_duration modules are conditional — they only render
+# in matching projects, nix shells, or after slow commands, so line 1 stays quiet.
 format = """
 $directory\
 $git_branch\
@@ -16,15 +16,25 @@ $rust\
 $lua\
 $php\
 $java\
+$nix_shell\
 $cmd_duration\
 $line_break\
 $character"""
+
+# Time floats at the right edge (zsh RPROMPT): present at a glance, out of the way.
+right_format = "$time"
 
 add_newline = true
 
 [character]
 success_symbol = "[τ](bold green)"
 error_symbol   = "[τ](bold red)"
+
+[time]
+disabled = false
+format = "[$time]($style)"
+style = "bright-black"
+time_format = "%H:%M:%S"
 
 [aws]
 symbol = " "
@@ -93,7 +103,7 @@ symbol = " "
 symbol = " "
 # Show the full branch name; only trim pathologically long ones.
 truncation_length = 40
-format = "[$symbol$branch]($style) "
+format = "on [$symbol$branch]($style) "
 style = "purple"
 
 [git_status]

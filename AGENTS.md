@@ -65,3 +65,17 @@ Key variables defined in `.zshrc`:
 - Making changes: edit in place (files are stowed symlinks), test in the current environment, commit
 - New app config: add to `.config/<app>/`, add the package to `brew/Brewfile`, add a `scripts/runs/` script only if setup is complex, update `.stow-local-ignore` if it must not be symlinked
 - Tool-generated dirs (composer, intelephense, opencode, btop, htop, fish completions...) are gitignored — don't track machine-written files
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in this repo's GitHub Issues (jmartinn/dotfiles), managed via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default label vocabulary — the five canonical roles used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: one `CONTEXT.md` and `docs/adr/` at the repo root (created lazily by `/domain-modeling`). See `docs/agents/domain.md`.

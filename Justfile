@@ -59,3 +59,16 @@ status:
     @echo ""
     @echo "Branch: $(git branch --show-current)"
     @echo "Ahead/behind: $(git rev-list --left-right --count origin/master...HEAD | awk '{print $2 " ahead, " $1 " behind origin/master"}')"
+
+# Validate Herdr config and installed agent integrations
+herdr-check:
+    herdr config check
+    herdr integration status
+
+# Refresh generated integrations and the user-level skill after `herdr update`
+herdr-refresh:
+    herdr integration install claude
+    herdr integration install codex
+    mkdir -p .claude/skills/herdr
+    herdr --skill > .claude/skills/herdr/SKILL.md
+    herdr config check

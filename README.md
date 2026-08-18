@@ -5,7 +5,7 @@ Personal macOS development environment, managed with [GNU Stow](https://www.gnu.
 ## What's in here
 
 - **Shell** — zsh + [Starship](https://starship.rs/) prompt
-- **Terminal** — [Ghostty](https://ghostty.org/) (primary) + [tmux](https://github.com/tmux/tmux)
+- **Terminal** — [Ghostty](https://ghostty.org/) (primary) + [tmux](https://github.com/tmux/tmux) + [Herdr](https://herdr.dev/)
 - **Editor** — [Neovim](https://neovim.io/) with a Lua-based config
 - **WM** — [AeroSpace](https://github.com/nikitabobko/AeroSpace) tiling window manager
 - **Tooling** — Homebrew for packages, [fnm](https://github.com/Schniz/fnm) for Node, [Bun](https://bun.sh/) for JS runtime, [Just](https://github.com/casey/just) for task running
@@ -48,6 +48,24 @@ CLAUDE.md        Guidance for Claude Code sessions
 | `just update` | brew update + upgrade + bundle install |
 | `just brew-dump` | Refresh `brew/Brewfile` from current state |
 | `just clean` | Clear caches / regenerable tool dirs |
+
+## Herdr
+
+Herdr is installed with its official direct installer into `~/.local/bin`, not Homebrew. The
+bootstrap script installs it only when missing, so it does not update or restart a live session.
+
+When ready to update, detach from the UI and run:
+
+```sh
+herdr update
+just herdr-refresh
+just herdr-check
+```
+
+`herdr-refresh` reinstalls the version-matched Claude/Codex session integrations and regenerates
+the user-level Herdr skill. It does not stop the server. If an update requires a protocol restart,
+handle that interactively after confirming no pane process would be lost. tmux remains installed
+during the Herdr adoption period.
 
 ## License
 

@@ -20,3 +20,7 @@
 .config/opencode/
 .config/psysh/
 .config/vercel-plugin/
+
+# Herdr: keep durable config only; runtime state can contain secrets and machine IDs
+.config/herdr/*
+!.config/herdr/config.toml

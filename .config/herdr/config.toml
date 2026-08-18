@@ -1,0 +1,20 @@
+onboarding = false
+
+[theme]
+name = "tokyo-night"
+
+[terminal]
+new_cwd = "follow"
+
+[ui]
+confirm_close = true
+
+[ui.toast]
+delivery = "terminal"
+delay_seconds = 1
+
+[session]
+resume_agents_on_restore = true
+
+[experimental]
+pane_history = false

@@ -10,6 +10,7 @@ if command -v herdr >/dev/null 2>&1; then
 else
   printf 'Installing Herdr through the official installer...\n'
   curl -fsSL https://herdr.dev/install.sh | sh
+  export PATH="$HOME/.local/bin:$PATH"
   herdr --version
 fi
 
@@ -17,11 +18,11 @@ skill_source="$dotfiles_dir/.claude/skills/herdr"
 skill_target="$HOME/.claude/skills/herdr"
 mkdir -p "$(dirname "$skill_target")"
 
-if [ -L "$skill_target" ]; then
-  if [ "$(cd "$(dirname "$skill_target")" && realpath "$(readlink "$skill_target")")" != "$skill_source" ]; then
-    printf 'Refusing to replace unrelated Herdr skill symlink: %s\n' "$skill_target" >&2
-    exit 1
-  fi
+if [ "$(realpath "$skill_target" 2>/dev/null || true)" = "$skill_source" ]; then
+  printf 'Herdr skill already linked: %s\n' "$skill_target"
+elif [ -L "$skill_target" ]; then
+  printf 'Refusing to replace unrelated Herdr skill symlink: %s\n' "$skill_target" >&2
+  exit 1
 elif [ -e "$skill_target" ]; then
   printf 'Refusing to replace existing Herdr skill path: %s\n' "$skill_target" >&2
   exit 1

@@ -70,5 +70,6 @@ herdr-refresh:
     herdr integration install claude
     herdr integration install codex
     mkdir -p .claude/skills/herdr
-    herdr --skill > .claude/skills/herdr/SKILL.md
+    herdr --skill > .claude/skills/herdr/SKILL.md.tmp
+    mv .claude/skills/herdr/SKILL.md.tmp .claude/skills/herdr/SKILL.md
     herdr config check

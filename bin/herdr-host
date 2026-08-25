@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+label="com.jmartinn.herdr-server"
+domain="gui/$(id -u)"
+dotfiles_dir="${DOTFILES:-$HOME/dotfiles}"
+plist_source="$dotfiles_dir/.config/herdr/$label.plist"
+plist_target="$HOME/Library/LaunchAgents/$label.plist"
+
+usage() {
+  printf 'Usage: %s <install|start|stop|status>\n' "${0##*/}" >&2
+  exit 2
+}
+
+require_gui_domain() {
+  if ! launchctl print "$domain" >/dev/null 2>&1; then
+    printf 'No logged-in macOS GUI session found for uid %s.\n' "$(id -u)" >&2
+    printf 'Log in locally or with Screen Sharing, then retry.\n' >&2
+    exit 1
+  fi
+}
+
+install_agent() {
+  require_gui_domain
+
+  if [ ! -x "$HOME/.local/bin/herdr" ]; then
+    printf 'Herdr is not installed at %s. Run scripts/runs/herdr first.\n' \
+      "$HOME/.local/bin/herdr" >&2
+    exit 1
+  fi
+
+  if [ ! -f "$plist_source" ]; then
+    printf 'LaunchAgent source is missing: %s\n' "$plist_source" >&2
+    exit 1
+  fi
+
+  plutil -lint "$plist_source" >/dev/null
+
+  mkdir -p "$HOME/Library/LaunchAgents"
+
+  if [ "$(realpath "$plist_target" 2>/dev/null || true)" = "$plist_source" ]; then
+    printf 'Herdr LaunchAgent already linked: %s\n' "$plist_target"
+  elif [ -e "$plist_target" ] || [ -L "$plist_target" ]; then
+    printf 'Refusing to replace existing LaunchAgent path: %s\n' "$plist_target" >&2
+    exit 1
+  else
+    ln -s "$plist_source" "$plist_target"
+    printf 'Linked Herdr LaunchAgent: %s\n' "$plist_target"
+  fi
+
+  if launchctl print "$domain/$label" >/dev/null 2>&1; then
+    printf 'Herdr LaunchAgent is already loaded; leaving the live server untouched.\n'
+  else
+    launchctl bootstrap "$domain" "$plist_target"
+    printf 'Loaded Herdr LaunchAgent in %s.\n' "$domain"
+  fi
+}
+
+start_agent() {
+  require_gui_domain
+
+  if ! launchctl print "$domain/$label" >/dev/null 2>&1; then
+    printf 'Herdr LaunchAgent is not loaded. Run %s install first.\n' "${0##*/}" >&2
+    exit 1
+  fi
+
+  if "$HOME/.local/bin/herdr" status server >/dev/null 2>&1; then
+    printf 'Herdr server is already running; leaving live panes untouched.\n'
+    return
+  fi
+
+  launchctl kickstart "$domain/$label"
+  printf 'Started Herdr server.\n'
+}
+
+stop_agent() {
+  if ! "$HOME/.local/bin/herdr" server stop; then
+    printf 'Herdr server was not running.\n'
+  fi
+}
+
+status_agent() {
+  printf 'LaunchAgent:\n'
+  if launchctl print "$domain/$label" 2>/dev/null | \
+    sed -n -e '/state =/p' -e '/pid =/p' -e '/last exit code =/p'; then
+    :
+  else
+    printf '  not loaded\n'
+  fi
+
+  printf '\nHerdr:\n'
+  "$HOME/.local/bin/herdr" status server
+}
+
+case "${1:-}" in
+  install) install_agent ;;
+  start) start_agent ;;
+  stop) stop_agent ;;
+  status) status_agent ;;
+  *) usage ;;
+esac

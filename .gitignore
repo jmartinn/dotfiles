@@ -21,6 +21,7 @@
 .config/psysh/
 .config/vercel-plugin/
 
-# Herdr: keep durable config only; runtime state can contain secrets and machine IDs
+# Herdr: keep durable config and host service; runtime state can contain secrets and machine IDs
 .config/herdr/*
 !.config/herdr/config.toml
+!.config/herdr/com.jmartinn.herdr-server.plist

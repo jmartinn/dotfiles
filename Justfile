@@ -73,3 +73,16 @@ herdr-refresh:
     herdr --skill > .claude/skills/herdr/SKILL.md.tmp
     mv .claude/skills/herdr/SKILL.md.tmp .claude/skills/herdr/SKILL.md
     herdr config check
+
+# Opt this Mac into running Herdr from the logged-in GUI domain at login
+herdr-host-install:
+    ./bin/herdr-host install
+
+herdr-host-start:
+    ./bin/herdr-host start
+
+herdr-host-stop:
+    ./bin/herdr-host stop
+
+herdr-host-status:
+    ./bin/herdr-host status

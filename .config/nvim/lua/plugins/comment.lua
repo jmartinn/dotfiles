@@ -25,10 +25,6 @@ function M.config()
     },
     pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
   })
-
-  -- Add <leader>/ keymap
-  vim.keymap.set("n", "<leader>/", "gcc", { remap = true, desc = "Comment line" })
-  vim.keymap.set("v", "<leader>/", "gc", { remap = true, desc = "Comment selection" })
 end
 
 return M

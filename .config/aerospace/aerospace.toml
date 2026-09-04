@@ -71,6 +71,9 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-1 = 'workspace 1'   # terminal
     alt-2 = 'workspace 2'   # browser
     alt-3 = 'workspace 3'   # scratch
+    alt-4 = 'workspace 4'   # aux n1
+    alt-8 = 'workspace 8'   # aux n2
+    alt-9 = 'workspace 9'   # aux n3
     alt-a = 'workspace A'   # AI
     alt-b = 'workspace B'   # database
     alt-c = 'workspace C'   # code (Cursor)
@@ -84,11 +87,15 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-w = 'workspace W'   # Word
     alt-x = 'workspace X'   # Xcode
     alt-y = 'workspace Y'   # Yaak (API client)
+    alt-z = 'workspace Z'   # Zed
 
     # --- Move focused window to workspace ---
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
     alt-shift-3 = 'move-node-to-workspace 3'
+    alt-shift-4 = 'move-node-to-workspace 4'
+    alt-shift-8 = 'move-node-to-workspace 8'
+    alt-shift-9 = 'move-node-to-workspace 9'
     alt-shift-a = 'move-node-to-workspace A'
     alt-shift-b = 'move-node-to-workspace B'
     alt-shift-c = 'move-node-to-workspace C'
@@ -102,6 +109,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-shift-w = 'move-node-to-workspace W'
     alt-shift-x = 'move-node-to-workspace X'
     alt-shift-y = 'move-node-to-workspace Y'
+    alt-shift-z = 'move-node-to-workspace Z'
 
     # --- Window state ---
     alt-shift-f = 'fullscreen'

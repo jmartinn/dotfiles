@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+buffer_path=${1:-}
+search_dir=${buffer_path%/*}
+
+if [[ -z "$search_dir" || "$search_dir" == "$buffer_path" ]]; then
+  search_dir=$PWD
+fi
+
+while [[ "$search_dir" != "/" ]]; do
+  if [[ -x "$search_dir/vendor/bin/pint" ]]; then
+    cd "$search_dir"
+    exec vendor/bin/pint -
+  fi
+
+  parent_dir=${search_dir%/*}
+  [[ -n "$parent_dir" ]] || parent_dir=/
+  search_dir=$parent_dir
+done
+
+if ! command -v php-cs-fixer >/dev/null 2>&1; then
+  echo "zed-php-formatter: neither project-local Pint nor php-cs-fixer is available" >&2
+  exit 1
+fi
+
+formatter_tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/zed-php-formatter.XXXXXX")
+formatted_file="$formatter_tmp_dir/input.php"
+trap 'rm -rf "$formatter_tmp_dir"' EXIT
+
+tee "$formatted_file" >/dev/null
+
+config_args=()
+search_dir=${buffer_path%/*}
+
+if [[ -z "$search_dir" || "$search_dir" == "$buffer_path" ]]; then
+  search_dir=$PWD
+fi
+
+while [[ "$search_dir" != "/" ]]; do
+  if [[ -f "$search_dir/.php-cs-fixer.php" ]]; then
+    config_args=(--config="$search_dir/.php-cs-fixer.php")
+    break
+  fi
+
+  if [[ -f "$search_dir/.php-cs-fixer.dist.php" ]]; then
+    config_args=(--config="$search_dir/.php-cs-fixer.dist.php")
+    break
+  fi
+
+  parent_dir=${search_dir%/*}
+  [[ -n "$parent_dir" ]] || parent_dir=/
+  search_dir=$parent_dir
+done
+
+if [[ ${#config_args[@]} -eq 0 ]]; then
+  config_args=(--rules=@PSR12)
+fi
+
+php-cs-fixer fix \
+  --quiet \
+  --using-cache=no \
+  --path-mode=override \
+  "${config_args[@]}" \
+  "$formatted_file"
+
+cat "$formatted_file"

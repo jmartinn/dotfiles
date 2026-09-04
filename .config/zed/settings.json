@@ -7,14 +7,83 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "disable_ai": true,
   "session": {
     "trust_all_worktrees": true
   },
+  "auto_install_extensions": {
+    "php": true,
+    "blade": true,
+    "laravel-official": true
+  },
+  "file_types": {
+    "Blade": ["*.blade.php"]
+  },
+  "languages": {
+    "PHP": {
+      "tab_size": 4,
+      "hard_tabs": false,
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "zed-php-formatter",
+          "arguments": ["{buffer_path}"]
+        }
+      },
+      "language_servers": [
+        "intelephense",
+        "laravel",
+        "tailwindcss-language-server",
+        "!phpactor",
+        "!phptools",
+        "!phpantom",
+        "..."
+      ]
+    },
+    "Blade": {
+      "tab_size": 4,
+      "hard_tabs": false,
+      "language_servers": [
+        "intelephense",
+        "laravel",
+        "tailwindcss-language-server",
+        "!phpactor",
+        "!phptools",
+        "!phpantom",
+        "..."
+      ]
+    }
+  },
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "php": "html",
+          "blade": "html"
+        },
+        "experimental": {
+          "classRegex": [
+            "class=\"([^\"]*)\"",
+            "class='([^']*)'",
+            "class=\\\"([^\\\"]*)\\\"",
+            "@class\\(\\[([^\\]]*)\\]\\)"
+          ]
+        }
+      }
+    }
+  },
   "agent_servers": {
+    "cursor": {
+      "type": "registry"
+    },
     "codex-acp": {
       "type": "registry"
     },
     "claude-acp": {
+      "default_config_options": {
+        "mode": "acceptEdits",
+        "model": "default"
+      },
       "type": "registry"
     }
   },
@@ -51,6 +120,6 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Tokyo Night"
+    "dark": "One Dark"
   }
 }

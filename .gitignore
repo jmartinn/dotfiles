@@ -1,5 +1,6 @@
 .env
 .DS_Store
+nvim.log
 .lazy-lock.json
 **/tmux/plugins
 .config/github-copilot/

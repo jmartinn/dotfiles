@@ -3,9 +3,11 @@ local VAULT = os.getenv("HOME") .. "/Library/Mobile Documents/iCloud~md~obsidian
 
 local M = {
   "obsidian-nvim/obsidian.nvim",
+  version = "*",
   ft = { "markdown" },
   dependencies = {
     "nvim-lua/plenary.nvim",
+    "nvim-telescope/telescope.nvim",
   },
   keys = {
     { "<leader>oT", "<cmd>Obsidian tags<cr>", desc = "Search By Tag" },
@@ -125,15 +127,13 @@ function M.config()
 
     open_notes_in = "current",
 
+    checkbox = {
+      order = { " ", "~", ">", "x" },
+    },
+
     ui = {
       enable = true,
       update_debounce = 200,
-      checkboxes = {
-        [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-        ["x"] = { char = "", hl_group = "ObsidianDone" },
-        [">"] = { char = "", hl_group = "ObsidianRightArrow" },
-        ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-      },
       bullets = { char = "•", hl_group = "ObsidianBullet" },
       external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
       reference_text = { hl_group = "ObsidianRefText" },

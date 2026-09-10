@@ -18,6 +18,7 @@ function M.config()
 
       -- Disable semantic tokens for servers where treesitter highlighting is better
       local disable_semantic_tokens_for = {
+        tsc = true,
         vtsls = true,
         -- Add other servers here if needed (e.g., gopls = true)
       }
@@ -91,7 +92,7 @@ function M.config()
 
   -- Per-server overrides: drop a <server>.lua in config/lspsettings/ and it
   -- extends the nvim-lspconfig defaults via vim.lsp.config()
-  local settings_dir = vim.fn.stdpath("config") .. "/lua/config/lspsettings"
+  local settings_dir = vim.fn.stdpath "config" .. "/lua/config/lspsettings"
   for file in vim.fs.dir(settings_dir) do
     local server = file:gsub("%.lua$", "")
     vim.lsp.config(server, require("config.lspsettings." .. server))
@@ -120,8 +121,11 @@ function M.config()
     },
   }
 
-  -- Servers outside Mason: sourcekit-lsp ships with the Xcode toolchain
-  vim.lsp.enable("sourcekit")
+  -- Native TypeScript 7 projects provide their own `tsc --lsp` server.
+  vim.lsp.enable "tsc"
+
+  -- Servers outside Mason: sourcekit-lsp ships with the Xcode toolchain.
+  vim.lsp.enable "sourcekit"
 end
 
 return M

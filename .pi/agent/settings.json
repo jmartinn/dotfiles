@@ -1,0 +1,13 @@
+{
+  "lastChangelogVersion": "0.85.1",
+  "theme": "dark",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-4-8",
+  "warnings": {
+    "anthropicExtraUsage": false
+  },
+  "packages": [
+    "git:github.com/dmmulroy/pi-web-tools@445836dcf4b6df202cd4a45ee641ec12eb86c36d",
+    "npm:@signalridge/pi-worktree@1.4.1"
+  ]
+}

@@ -1,0 +1,25 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+service="pi-deepgram-api-key"
+account="${USER:?USER is not set}"
+api_key="$(security find-generic-password -a "$account" -s "$service" -w 2>/dev/null || true)"
+
+if [[ -z "$api_key" ]]; then
+  if [[ ! -t 0 ]]; then
+    print -u2 "No Deepgram API key found in the macOS Keychain. Run pi-voice in a terminal once to add it."
+    exit 1
+  fi
+
+  read -r -s "api_key?Deepgram API key (stored in macOS Keychain): "
+  print
+  if [[ -z "$api_key" ]]; then
+    print -u2 "No API key entered."
+    exit 1
+  fi
+
+  security add-generic-password -U -a "$account" -s "$service" -w "$api_key" >/dev/null
+fi
+
+PI_TELEMETRY=0 DEEPGRAM_API_KEY="$api_key" exec pi "$@"

@@ -1,4 +1,8 @@
 homebrew
+node_modules
+^package(-lock)?\.json$
+^tsconfig\.json$
+^tests$
 .git
 .gitignore
 .DS_Store

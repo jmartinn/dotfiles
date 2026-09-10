@@ -2,6 +2,7 @@
 .DS_Store
 nvim.log
 .lazy-lock.json
+.pi/node_modules/
 **/tmux/plugins
 .config/github-copilot/
 

@@ -188,6 +188,10 @@ run = 'move-node-to-workspace A'
 if.app-id = 'com.tinyapp.TablePlus'
 run = 'move-node-to-workspace B'
 
+[[on-window-detected]]
+if.app-id = 'com.anysphere.sand' # Grok Bot
+run = 'move-node-to-workspace B'
+
 # C — code (Cursor)
 [[on-window-detected]]
 if.app-id = 'com.todesktop.230313mzl4w4u92'

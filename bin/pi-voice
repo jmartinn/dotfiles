@@ -3,23 +3,69 @@
 set -euo pipefail
 
 service="pi-deepgram-api-key"
-account="${USER:?USER is not set}"
-api_key="$(security find-generic-password -a "$account" -s "$service" -w 2>/dev/null || true)"
+account="$(id -un)"
+keychain="$HOME/Library/Keychains/login.keychain-db"
+script_dir="${0:A:h}"
+validator="$script_dir/pi-deepgram-key.mjs"
+mode="launch"
 
-if [[ -z "$api_key" ]]; then
+case "${1:-}" in
+  --update-key) mode="update"; shift ;;
+  --check-key) mode="check"; shift ;;
+esac
+
+read_stored_key() {
+  /usr/bin/security find-generic-password -a "$account" -s "$service" -w "$keychain" 2>/dev/null || true
+}
+
+validate_key() {
+  print -rn -- "$1" | node "$validator" validate
+}
+
+store_key() {
+  local candidate="$1"
+  local persisted
+
+  /usr/bin/security add-generic-password -U -a "$account" -s "$service" -w "$candidate" "$keychain" >/dev/null
+  persisted="$(read_stored_key)"
+  if [[ "$persisted" != "$candidate" ]]; then
+    print -u2 "Deepgram API key verification failed after writing to the login Keychain."
+    return 1
+  fi
+}
+
+api_key="$(read_stored_key)"
+
+if [[ "$mode" == "check" ]]; then
+  if [[ -z "$api_key" ]]; then
+    print -u2 "No Deepgram API key is stored in the login Keychain."
+    exit 1
+  fi
+  validate_key "$api_key"
+  exit
+fi
+
+if [[ -z "$api_key" || "$mode" == "update" ]]; then
   if [[ ! -t 0 ]]; then
-    print -u2 "No Deepgram API key found in the macOS Keychain. Run pi-voice in a terminal once to add it."
+    print -u2 "A terminal is required to enter the Deepgram API key securely."
     exit 1
   fi
 
-  read -r -s "api_key?Deepgram API key (stored in macOS Keychain): "
+  print "Create a Deepgram key with usage:write permission (Member works) and Expiration: Never."
+  read -r -s "api_key?Deepgram API key: "
   print
   if [[ -z "$api_key" ]]; then
     print -u2 "No API key entered."
     exit 1
   fi
 
-  security add-generic-password -U -a "$account" -s "$service" -w "$api_key" >/dev/null
+  validate_key "$api_key"
+  store_key "$api_key"
+fi
+
+if [[ "$mode" == "update" ]]; then
+  print "Deepgram API key validated and stored in the login Keychain."
+  exit 0
 fi
 
 PI_TELEMETRY=0 DEEPGRAM_API_KEY="$api_key" exec pi "$@"

@@ -5,6 +5,8 @@ import { continuationPrompt } from "../extensions/continue-after-compaction.ts";
 import { guardGitCommand } from "../extensions/git-guard.ts";
 import { environmentSecrets, redactText } from "../extensions/redact-secrets.ts";
 import { assistantText } from "../extensions/save-markdown.ts";
+import { deepgramKeychainLocation, resolveDeepgramApiKey } from "../extensions/dictate/deepgram-auth.ts";
+import { validateDeepgramApiKey } from "../../../bin/pi-deepgram-key.mjs";
 
 test("git guard ignores non-git commands", () => {
   assert.deepEqual(guardGitCommand("rg git"), { action: "pass" });
@@ -42,4 +44,30 @@ test("secret redaction uses environment names and common token formats", () => {
     redactText("key=private-deepgram-value Authorization: Bearer visible-token", secrets),
     "key=[REDACTED] Authorization: Bearer [REDACTED]",
   );
+});
+
+test("dictation prefers a rotated Keychain key over a stale process key", () => {
+  assert.equal(resolveDeepgramApiKey("stale-process-key", "rotated-keychain-key"), "rotated-keychain-key");
+  assert.equal(resolveDeepgramApiKey("current-process-key", null), "current-process-key");
+  assert.equal(resolveDeepgramApiKey("  ", "  "), null);
+});
+
+test("dictation uses an explicit login Keychain derived from the macOS account", () => {
+  assert.deepEqual(deepgramKeychainLocation({ username: "alice", homedir: "/Users/alice" }), {
+    account: "alice",
+    keychain: "/Users/alice/Library/Keychains/login.keychain-db",
+  });
+});
+
+test("Deepgram key validation accepts only an authenticated response", async () => {
+  const valid = await validateDeepgramApiKey("candidate", async () => new Response("{}", { status: 200 }));
+  assert.deepEqual(valid, { valid: true, status: 200 });
+
+  const rejected = await validateDeepgramApiKey("candidate", async () => new Response("no", { status: 401 }));
+  assert.deepEqual(rejected, { valid: false, status: 401 });
+
+  const unavailable = await validateDeepgramApiKey("candidate", async () => {
+    throw new Error("offline");
+  });
+  assert.deepEqual(unavailable, { valid: false, status: null });
 });

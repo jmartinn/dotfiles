@@ -21,6 +21,7 @@ export GPG_TTY=$(tty)
 export EDITOR='nvim'
 export PNPM_HOME="$HOME/Library/pnpm"
 export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
+export PI_WEB_TOOLS_EXA_ENDPOINT='https://mcp.exa.ai/mcp'
 
 # Homebrew prefix (hardcoded for performance - Apple Silicon is always /opt/homebrew)
 HOMEBREW_PREFIX="/opt/homebrew"

@@ -17,6 +17,8 @@
     <string>/Users/jmartinn</string>
     <key>PATH</key>
     <string>/opt/homebrew/bin:/opt/homebrew/sbin:/Users/jmartinn/.local/bin:/Users/jmartinn/.bun/bin:/Users/jmartinn/Library/pnpm:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>PI_WEB_TOOLS_EXA_ENDPOINT</key>
+    <string>https://mcp.exa.ai/mcp</string>
   </dict>
 
   <key>WorkingDirectory</key>

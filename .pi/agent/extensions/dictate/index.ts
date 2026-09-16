@@ -36,6 +36,7 @@ import { matchesKey, isKeyRelease, isKeyRepeat } from "@earendil-works/pi-tui";
 import { spawn, type ChildProcessByStdio } from "node:child_process";
 import type { Readable } from "node:stream";
 import { appendFileSync } from "node:fs";
+import { getDeepgramApiKey } from "./deepgram-auth.ts";
 
 // Optional forensic logging: run pi with DICTATE_DEBUG=1 to append timestamped
 // lifecycle events (listener hits, toggles, ws open/error/close with their
@@ -302,9 +303,9 @@ export default function (pi: ExtensionAPI) {
   };
 
   const startDictation = (ctx: ExtensionContext) => {
-    const apiKey = process.env.DEEPGRAM_API_KEY;
+    const apiKey = getDeepgramApiKey();
     if (!apiKey) {
-      ctx.ui.notify("DEEPGRAM_API_KEY not set in environment", "error");
+      ctx.ui.notify("No Deepgram API key found. Run 'pi-voice --update-key' in a terminal.", "error");
       return;
     }
 
@@ -314,6 +315,7 @@ export default function (pi: ExtensionAPI) {
     cancelled = false;
     state = "recording";
     const myGeneration = ++generation;
+    let wsOpened = false;
     dbg(`start (gen ${myGeneration})`);
     startMeter();
 
@@ -377,6 +379,7 @@ export default function (pi: ExtensionAPI) {
         dbg(`ws open (stale gen ${myGeneration}, current ${generation}) — ignored`);
         return;
       }
+      wsOpened = true;
       dbg(`ws open (gen ${myGeneration})`);
       if (!rec || !ws) return;
       rec.stdout.on("data", (chunk: Buffer) => {
@@ -410,7 +413,12 @@ export default function (pi: ExtensionAPI) {
         return;
       }
       dbg(`ws error (gen ${myGeneration})`);
-      if (activeCtx) activeCtx.ui.notify("Deepgram WebSocket error", "error");
+      if (activeCtx) {
+        const message = wsOpened
+          ? "Deepgram connection dropped while dictating"
+          : "Deepgram connection failed. If you rotated the key, run 'pi-voice --update-key'.";
+        activeCtx.ui.notify(message, "error");
+      }
       cleanup();
     });
 

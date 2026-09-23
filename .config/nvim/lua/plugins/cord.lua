@@ -3,6 +3,9 @@ return {
   event = "VeryLazy",
   cmd = "Cord",
   opts = {
+    display = {
+      theme = "classic",
+    },
     editor = {
       tooltip = "Neovim",
     },

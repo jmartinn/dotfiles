@@ -1,0 +1,14 @@
+{
+  "autoMemoryEnabled": false,
+  "autoCompactWindow": 200000,
+  "disableBundledSkills": true,
+  "syncClaudeAiSkills": false,
+  "disableClaudeAiConnectors": true,
+  "skillOverrides": {
+    "code-review": "user-invocable-only",
+    "diagnose": "user-invocable-only",
+    "herdr": "user-invocable-only",
+    "research": "user-invocable-only",
+    "tdd": "user-invocable-only"
+  }
+}

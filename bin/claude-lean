@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+"""Explicitly apply the lean Claude baseline, keeping a reversible local backup."""
+
+import argparse
+import json
+import shutil
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--apply", action="store_true", help="apply (default: preview)")
+    args = parser.parse_args()
+    repo = Path(__file__).resolve().parents[1]
+    config = Path.home() / ".claude"
+    settings_path = config / "settings.json"
+    settings = json.loads(settings_path.read_text()) if settings_path.exists() else {}
+    baseline = json.loads((repo / ".claude/user-settings.json").read_text())
+    skills = config / "skills"
+    keep = set(baseline["skillOverrides"])
+    sources = {
+        name: repo / ".claude/skills/herdr" if name == "herdr"
+        else Path.home() / ".agents/skills" / name
+        for name in keep
+    }
+    missing = [name for name in keep if not (skills / name / "SKILL.md").is_file()
+               and not (sources[name] / "SKILL.md").is_file()]
+    if missing:
+        parser.error(f"Retained skill sources are missing: {', '.join(sorted(missing))}")
+    extras = sorted(p for p in skills.iterdir() if p.name not in keep) if skills.exists() else []
+    plugins = settings.get("enabledPlugins", {})
+    enabled = [name for name, value in plugins.items() if value]
+    for name in plugins:
+        plugins[name] = False
+    # Synced plugins are not necessarily represented in enabledPlugins yet.
+    synced = config / "plugins/synced"
+    if synced.exists():
+        for manifest in synced.glob("*/**/.claude-plugin/plugin.json"):
+            name = json.loads(manifest.read_text())["name"]
+            plugins[f"{name}@synced"] = False
+    settings["enabledPlugins"] = plugins
+    overrides = settings.get("skillOverrides", {})
+    overrides.update(baseline.pop("skillOverrides"))
+    settings.update(baseline)
+    settings["skillOverrides"] = overrides
+    # This environment was learned in a CRM session; it must not govern every repo.
+    # Preserve custom denial rules and all other auto-mode controls.
+    settings.get("autoMode", {}).pop("environment", None)
+    instructions = repo / ".claude/CLAUDE.user.md"
+    print(f"Archive {len(extras)} extra skill entries; keep: {', '.join(sorted(keep))}")
+    print(f"Disable {len(enabled)} configured plugins and synced plugins")
+    print("Apply lean context settings and global instructions; preserve other preferences")
+    print("Remove CRM environment from global auto-mode context; preserve denial rules")
+    if not args.apply:
+        print("Preview only. Run claude-lean --apply to apply with a backup.")
+        return
+
+    config.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
+    backup = config / "backups" / f"lean-{stamp}"
+    backup.mkdir(parents=True, mode=0o700)
+    for path in [settings_path, config / "CLAUDE.md", repo / ".claude/settings.local.json"]:
+        if path.exists():
+            name = "dotfiles-settings.local.json" if path.parent == repo / ".claude" else path.name
+            shutil.copy2(path, backup / name)
+    if extras:
+        (backup / "skills").mkdir()
+        for path in extras:
+            # Resolve relative links before moving them out of their original directory.
+            if path.is_symlink():
+                (backup / "skills" / path.name).symlink_to(path.resolve())
+                path.unlink()
+            else:
+                shutil.move(str(path), backup / "skills" / path.name)
+    skills.mkdir(exist_ok=True)
+    for name in sorted(keep):
+        target = skills / name
+        source = sources[name]
+        if not target.exists() and not target.is_symlink() and (source / "SKILL.md").exists():
+            target.symlink_to(source)
+    settings_path.write_text(json.dumps(settings, indent=2) + "\n")
+    settings_path.chmod(0o600)
+    (config / "CLAUDE.md").write_text(instructions.read_text())
+    local = repo / ".claude/settings.local.json"
+    if local.exists():
+        local_settings = json.loads(local.read_text())
+        # Remove accumulated one-off approvals in this repo, preserving other settings.
+        local_settings.get("permissions", {}).pop("allow", None)
+        if not local_settings.get("permissions"):
+            local_settings.pop("permissions", None)
+        local.write_text(json.dumps(local_settings, indent=2) + "\n")
+    print(f"Backup: {backup}")
+
+
+if __name__ == "__main__":
+    main()

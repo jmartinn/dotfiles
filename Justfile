@@ -65,6 +65,13 @@ herdr-check:
     herdr config check
     herdr integration status
 
+# Preview or explicitly reapply the lean user-level Claude configuration
+claude-preview:
+    ./bin/claude-lean
+
+claude-lean:
+    ./bin/claude-lean --apply
+
 # Refresh generated integrations and the user-level skill after `herdr update`
 herdr-refresh:
     herdr integration install claude

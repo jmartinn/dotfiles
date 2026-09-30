@@ -82,21 +82,6 @@ local M = {
       desc = "Toggle Diagnostics",
     },
     {
-      "<leader>tf",
-      function()
-        Snacks.toggle({
-          name = "Format on Save",
-          get = function()
-            return vim.g.autoformat ~= false
-          end,
-          set = function(state)
-            vim.g.autoformat = state
-          end,
-        }):toggle()
-      end,
-      desc = "Toggle Format on Save",
-    },
-    {
       "<leader>tx",
       function()
         local tsc = require "treesitter-context"

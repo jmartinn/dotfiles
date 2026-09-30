@@ -1,6 +1,5 @@
 local M = {
   "stevearc/conform.nvim",
-  event = { "BufWritePre" },
   cmd = { "ConformInfo" },
   keys = {
     {
@@ -31,13 +30,6 @@ function M.config()
       php = { "php_cs_fixer" },
       swift = { "swiftformat" },
     },
-    -- on by default; suspend per session with <leader>tf (or per buffer via vim.b.autoformat)
-    format_on_save = function(bufnr)
-      if vim.g.autoformat == false or vim.b[bufnr].autoformat == false then
-        return
-      end
-      return { timeout_ms = 1000, lsp_format = "fallback" }
-    end,
   })
 end
 

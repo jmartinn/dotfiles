@@ -1,9 +1,36 @@
 {
   "autoMemoryEnabled": false,
   "autoCompactWindow": 200000,
+  "includeGitInstructions": false,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "permissions": {
+    "deny": [
+      "AskUserQuestion",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "NotebookEdit",
+      "PushNotification",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "SendMessage"
+    ]
+  },
   "disableBundledSkills": true,
-  "syncClaudeAiSkills": false,
+  "disableWorkflows": true,
+  "disableRemoteControl": true,
   "disableClaudeAiConnectors": true,
+  "enableArtifact": false,
+  "feedbackDrafts": "off",
+  "syncClaudeAiSkills": false,
   "skillOverrides": {
     "code-review": "user-invocable-only",
     "diagnose": "user-invocable-only",

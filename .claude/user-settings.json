@@ -37,5 +37,9 @@
     "herdr": "user-invocable-only",
     "research": "user-invocable-only",
     "tdd": "user-invocable-only"
+  },
+  "theme": "custom:tokyonight",
+  "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/dotfiles/.claude/mods/hud"
   }
 }

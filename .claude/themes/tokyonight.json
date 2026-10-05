@@ -1,0 +1,7 @@
+{
+  "name": "Tokyo Night",
+  "base": "dark",
+  "overrides": {
+    "composerSidebarBackground": "rgb(26,27,38)"
+  }
+}

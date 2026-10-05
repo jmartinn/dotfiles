@@ -1,0 +1,6 @@
+{
+  "name": "hud",
+  "version": "0.1.0",
+  "description": "A slim Tokyo Night session HUD: activity, context, limits, disk and modified files",
+  "types": "./types/index.d.ts"
+}

@@ -1,13 +1,29 @@
 {
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "1.3.0",
   "theme": "dark",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-4-8",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-6-sol",
+  "defaultThinkingLevel": "medium",
+  "extensions": [
+    "-extensions/continue-after-compaction.ts"
+  ],
   "warnings": {
     "anthropicExtraUsage": false
   },
   "packages": [
     "git:github.com/dmmulroy/pi-web-tools@445836dcf4b6df202cd4a45ee641ec12eb86c36d",
     "npm:@signalridge/pi-worktree@1.4.1"
-  ]
+  ],
+  "tuiMode": "regular",
+  "modelThinkingLevels": {
+    "openai-codex/gpt-6-sol": "medium",
+    "openai-codex/gpt-6-astra": "low",
+    "xai/grok-4.6": "high"
+  },
+  "outputPad": 1,
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "enableInstallTelemetry": false,
+  "collapseChangelog": true
 }

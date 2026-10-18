@@ -3,6 +3,9 @@
 nvim.log
 .lazy-lock.json
 .pi/node_modules/
+# Installer-managed Pi launcher and Herdr integration
+bin/pi
+.pi/agent/extensions/herdr-agent-state.ts
 **/tmux/plugins
 .config/github-copilot/
 

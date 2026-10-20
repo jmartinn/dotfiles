@@ -79,7 +79,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-1 = 'workspace 1'   # terminal
     alt-2 = 'workspace 2'   # browser
     alt-3 = 'workspace 3'   # scratch
-    alt-4 = 'workspace 4'   # aux n1
+    alt-4 = 'workspace 4'   # AutoCAD
     alt-8 = 'workspace 8'   # aux n2
     alt-9 = 'workspace 9'   # aux n3
     alt-a = 'workspace A'   # AI
@@ -149,8 +149,8 @@ enable-normalization-opposite-orientation-for-nested-containers = true
     alt-shift-l = ['join-with right', 'mode main']
 
 # --- Window auto-assignment ---
-# Each app opens on its mnemonic workspace.  Layout is intentionally omitted:
-# the root container defaults to 'tiles', so windows tile without forcing it.
+# Each app opens on its assigned workspace. Layout is usually omitted:
+# the root container defaults to 'tiles'; exceptions force tiling explicitly.
 
 # 1 — terminal
 [[on-window-detected]]
@@ -169,6 +169,11 @@ run = 'move-node-to-workspace 2'
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
 run = 'move-node-to-workspace 2'
+
+# 4 — AutoCAD main window (requires AeroSpace support for AXDocumentWindow)
+[[on-window-detected]]
+if.app-id = 'com.autodesk.AutoCAD2027'
+run = ['layout tiling', 'move-node-to-workspace 4']
 
 # A — AI assistants
 [[on-window-detected]]

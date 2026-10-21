@@ -20,7 +20,7 @@ function M.config()
       width = 35,
       relativenumber = false,
       float = {
-        enable = true,
+        enable = false,
       },
     },
     renderer = {

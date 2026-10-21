@@ -1,5 +1,5 @@
 # Ghostty theme
-theme = TokyoNight Night
+theme = dark:Gruvbox Dark Hard,light:Gruvbox Light Hard
 
 # Shell integrations
 shell-integration-features = no-cursor,sudo,no-title

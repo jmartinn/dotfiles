@@ -1,18 +1,15 @@
 local M = {
-  "folke/tokyonight.nvim",
+  "ellisonleao/gruvbox.nvim",
   lazy = false,
   priority = 1000,
 }
 
 function M.config()
-  require("tokyonight").setup {
-    style = "night",
-    styles = {
-      comments = { italic = true },
-      keywords = { italic = true },
-    },
+  -- Let Neovim detect dark/light from the terminal; match Ghostty's hard contrast.
+  require("gruvbox").setup {
+    contrast = "hard",
   }
-  vim.cmd.colorscheme "tokyonight"
+  vim.cmd.colorscheme "gruvbox"
 end
 
 return M

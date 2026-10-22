@@ -16,6 +16,10 @@ bootstrap-only filter:
 bootstrap-dry:
     ./scripts/run --dry
 
+# Install the Android CLI toolchain and SDK (prompts for SDK licenses)
+android-setup:
+    ./scripts/runs/android
+
 # Deploy symlinks via stow
 stow:
     stow .

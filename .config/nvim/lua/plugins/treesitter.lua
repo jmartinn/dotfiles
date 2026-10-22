@@ -16,6 +16,11 @@ local ensure_installed = {
   "gitignore",
   "php",
   "swift",
+  "kotlin",
+  "java",
+  "groovy",
+  "xml",
+  "toml",
 }
 
 function M.config()

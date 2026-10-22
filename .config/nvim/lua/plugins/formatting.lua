@@ -5,7 +5,7 @@ local M = {
     {
       "<leader>lf",
       function()
-        require("conform").format({ async = true })
+        require("conform").format { async = true }
       end,
       desc = "Format buffer",
     },
@@ -13,7 +13,7 @@ local M = {
 }
 
 function M.config()
-  require("conform").setup({
+  require("conform").setup {
     formatters_by_ft = {
       javascript = { "prettierd" },
       typescript = { "prettierd" },
@@ -29,8 +29,15 @@ function M.config()
       go = { "gofmt" },
       php = { "php_cs_fixer" },
       swift = { "swiftformat" },
+      kotlin = { "ktlint" },
     },
-  })
+    formatters = {
+      ktlint = {
+        -- Resolve .editorconfig and script rules using the actual buffer path.
+        append_args = { "--stdin-path", "$FILENAME", "--ignore-autocorrect-failures" },
+      },
+    },
+  }
 end
 
 return M

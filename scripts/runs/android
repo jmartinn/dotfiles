@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Match the project's version catalog; override for other Android projects.
+android_api="${ANDROID_API:-37.0}"
+android_build_tools="${ANDROID_BUILD_TOOLS:-37.0.0}"
+
+if [[ "${1:-}" == "--dry" ]]; then
+  echo "Install openjdk@21, ktlint, JetBrains/utils/kotlin-lsp, and android-commandlinetools via Homebrew"
+  echo "Review Android SDK licenses and install platform-tools, platforms;android-$android_api, build-tools;$android_build_tools"
+  exit 0
+elif [[ $# -gt 0 ]]; then
+  echo "Usage: $0 [--dry]" >&2
+  exit 1
+fi
+
+brew install openjdk@21 ktlint JetBrains/utils/kotlin-lsp
+brew install --cask android-commandlinetools
+
+brew_prefix="$(brew --prefix)"
+export JAVA_HOME="${JAVA_HOME:-$brew_prefix/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home}"
+export ANDROID_HOME="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
+export PATH="$JAVA_HOME/bin:$brew_prefix/bin:$PATH"
+
+sdkmanager --sdk_root="$ANDROID_HOME" --licenses
+sdkmanager --sdk_root="$ANDROID_HOME" \
+  "platform-tools" "platforms;android-$android_api" "build-tools;$android_build_tools"

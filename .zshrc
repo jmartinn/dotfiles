@@ -26,13 +26,20 @@ export PI_WEB_TOOLS_EXA_ENDPOINT='https://mcp.exa.ai/mcp'
 # Homebrew prefix (hardcoded for performance - Apple Silicon is always /opt/homebrew)
 HOMEBREW_PREFIX="/opt/homebrew"
 
+# Android/Gradle builds use JDK 21; allow project-specific environment overrides.
+export JAVA_HOME="${JAVA_HOME:-$HOMEBREW_PREFIX/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home}"
+export ANDROID_HOME="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
+
 # PATH management
 typeset -U path
 path=(
     $HOMEBREW_PREFIX/bin
     $HOMEBREW_PREFIX/sbin
     $HOMEBREW_PREFIX/opt/libpq/bin
-    $HOMEBREW_PREFIX/opt/openjdk@17/bin
+    $JAVA_HOME/bin
+    $ANDROID_HOME/platform-tools
+    $ANDROID_HOME/emulator
+    $ANDROID_HOME/cmdline-tools/latest/bin
     $SCRIPTS
     $BUN_INSTALL/bin
     $PNPM_HOME

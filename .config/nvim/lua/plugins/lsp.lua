@@ -118,6 +118,8 @@ function M.config()
       "gopls",
       "intelephense",
       "yamlls",
+      "lemminx",
+      "taplo",
     },
   }
 
@@ -126,6 +128,9 @@ function M.config()
 
   -- Servers outside Mason: sourcekit-lsp ships with the Xcode toolchain.
   vim.lsp.enable "sourcekit"
+
+  -- JetBrains' official Homebrew package (Mason's CDN URL currently fails).
+  vim.lsp.enable "kotlin_lsp"
 end
 
 return M

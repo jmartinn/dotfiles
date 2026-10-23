@@ -49,6 +49,42 @@ CLAUDE.md        Guidance for Claude Code sessions
 | `just brew-dump` | Refresh `brew/Brewfile` from current state |
 | `just clean` | Clear caches / regenerable tool dirs |
 
+## GitHub pull requests in LazyGit
+
+The stowed config lives in `.config/lazygit/config.yml`; `.zshrc` sets
+`LG_CONFIG_FILE` so LazyGit uses it on macOS as well. Open a new terminal after
+setup, or run `export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"` in an
+existing shell, then restart LazyGit.
+
+In the **Branches → Local branches** panel:
+
+| Key | Action |
+|---|---|
+| `v` | Pick from up to 100 open PRs and check out the selected branch |
+| `V` | Pick from up to 100 of your PRs (open, closed or merged) and read the details and discussion in a popup |
+
+Use arrow keys and Enter to choose a PR; Escape closes the picker or popup.
+`V` does not switch branches. `v` runs `gh pr checkout`, so commit or stash
+conflicting local changes before switching branches.
+
+Both commands require `gh auth login` and use GitHub CLI's default repository.
+For a fork, the PR belongs to the original repository where it was opened.
+Check the resolved repository with `gh repo view --json nameWithOwner`.
+If needed, run `gh repo set-default upstream` (or `gh repo set-default owner/repo`)
+once inside that checkout. This changes GitHub CLI's default for PRs, issues and
+other API commands; it does not change Git's push remote.
+
+For example, inside the `bitchat-android` fork, these commands read PR #985
+directly in the terminal without checking out its branch:
+
+```sh
+gh pr view 985 --repo permissionlesstech/bitchat-android
+gh pr view 985 --repo permissionlesstech/bitchat-android --comments
+gh pr diff 985 --repo permissionlesstech/bitchat-android
+```
+
+The checkout picker follows the [LazyGit custom commands collection](https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium#list-and-select-github-pr-for-checkout).
+
 ## Herdr
 
 Herdr is installed with its official direct installer into `~/.local/bin`, not Homebrew. The

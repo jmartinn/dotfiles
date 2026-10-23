@@ -19,6 +19,8 @@ export SECOND_BRAIN="$HOME/Documents/svalbard/"
 export BUN_INSTALL="$HOME/.bun"
 export GPG_TTY=$(tty)
 export EDITOR='nvim'
+# Keep LazyGit's config in the stowed dotfiles directory on macOS too.
+export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
 export PNPM_HOME="$HOME/Library/pnpm"
 export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
 export PI_WEB_TOOLS_EXA_ENDPOINT='https://mcp.exa.ai/mcp'

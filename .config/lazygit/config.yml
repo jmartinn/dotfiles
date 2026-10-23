@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
+# Uses gh's default repository; for forks, select the PR's base repository with
+# `gh repo set-default upstream` from the checkout if automatic detection differs.
+customCommands:
+  - key: 'v'
+    context: 'localBranches'
+    description: 'Check out an open GitHub PR'
+    loadingText: 'Checking out pull request'
+    command: 'gh pr checkout {{.Form.PR | quote}}'
+    prompts:
+      - type: 'menuFromCommand'
+        title: 'Open pull requests (up to 100) — select to check out'
+        key: 'PR'
+        command: >-
+          gh pr list --state open --limit 100 --json number,title
+          --jq '.[] | "#" + (.number | tostring) + ": " + .title'
+        filter: '#(?P<number>[0-9]+): (?P<title>[^\r\n]*)'
+        valueFormat: '{{.number}}'
+        labelFormat: '#{{.number}} {{.title}}'
+
+  - key: 'V'
+    context: 'localBranches'
+    description: 'Read my GitHub PRs (all states)'
+    loadingText: 'Loading pull request'
+    # Popup output is captured, so --comments prints only the discussion.
+    # Fetch the summary separately to include the title, body and status too.
+    command: >-
+      gh pr view {{.Form.PR | quote}} &&
+      gh pr view {{.Form.PR | quote}} --comments
+    output: 'popup'
+    outputTitle: 'Pull request details and discussion'
+    prompts:
+      - type: 'menuFromCommand'
+        title: 'My pull requests (all states, up to 100) — select to read'
+        key: 'PR'
+        command: >-
+          gh pr list --author @me --state all --limit 100 --json number,title,state
+          --jq '.[] | "#" + (.number | tostring) + ": [" + .state + "] " + .title'
+        filter: '#(?P<number>[0-9]+): (?P<title>[^\r\n]*)'
+        valueFormat: '{{.number}}'
+        labelFormat: '#{{.number}} {{.title}}'

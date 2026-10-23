@@ -51,10 +51,11 @@ CLAUDE.md        Guidance for Claude Code sessions
 
 ## GitHub pull requests in LazyGit
 
-The stowed config lives in `.config/lazygit/config.yml`; `.zshrc` sets
-`LG_CONFIG_FILE` so LazyGit uses it on macOS as well. Open a new terminal after
-setup, or run `export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"` in an
-existing shell, then restart LazyGit.
+The config lives in `.config/lazygit/config.yml`. On macOS, the tracked symlink
+at `Library/Application Support/lazygit/config.yml` lets Stow deploy it to
+LazyGit's standard config location. No shell environment setting is required;
+restart LazyGit after deployment. If Stow reports an existing config at that
+path, preserve any settings from it and move it aside before running Stow.
 
 In the **Branches → Local branches** panel:
 

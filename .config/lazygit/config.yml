@@ -1,9 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
 # Uses gh's default repository; for forks, select the PR's base repository with
 # `gh repo set-default upstream` from the checkout if automatic detection differs.
-# Return directly after quitting a pager/editor (applies to all subprocesses).
-promptToReturnFromSubprocess: false
-
 customCommands:
   - key: 'v'
     context: 'localBranches'
@@ -23,20 +20,22 @@ customCommands:
 
   - key: 'V'
     context: 'localBranches'
-    description: 'Read my GitHub PRs with rendered Markdown (all states)'
-    # A terminal subprocess lets gh render Markdown and include the discussion.
-    # LazyGit cannot direct custom output into its main [0] pane.
-    # Use the selected URL so interactive gh also targets the upstream repository.
+    description: 'Read my GitHub PRs (all states)'
+    loadingText: 'Loading pull request'
+    # Popup output is captured, so --comments prints only the discussion.
+    # Fetch the summary separately to include the title, body and status too.
     command: >-
-      GH_PAGER='less -R' gh pr view {{.Form.PR | quote}} --comments
-    output: 'terminal'
+      gh pr view {{.Form.PR | quote}} &&
+      gh pr view {{.Form.PR | quote}} --comments
+    output: 'popup'
+    outputTitle: 'Pull request details and discussion'
     prompts:
       - type: 'menuFromCommand'
         title: 'My pull requests (all states, up to 100) — select to read'
         key: 'PR'
         command: >-
-          gh pr list --author @me --state all --limit 100 --json number,title,state,url
-          --jq '.[] | .url + " #" + (.number | tostring) + ": [" + .state + "] " + .title'
-        filter: '(?P<url>https://[^ ]+) #(?P<number>[0-9]+): (?P<title>[^\r\n]*)'
-        valueFormat: '{{.url}}'
+          gh pr list --author @me --state all --limit 100 --json number,title,state
+          --jq '.[] | "#" + (.number | tostring) + ": [" + .state + "] " + .title'
+        filter: '#(?P<number>[0-9]+): (?P<title>[^\r\n]*)'
+        valueFormat: '{{.number}}'
         labelFormat: '#{{.number}} {{.title}}'

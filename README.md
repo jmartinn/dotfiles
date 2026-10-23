@@ -62,9 +62,15 @@ In the **Branches → Local branches** panel:
 | Key | Action |
 |---|---|
 | `v` | Pick from up to 100 open PRs and check out the selected branch |
-| `V` | Pick from up to 100 of your PRs (open, closed or merged) and read the details and discussion in a popup |
+| `V` | Pick from up to 100 of your PRs (open, closed or merged) and read rendered Markdown, comments and reviews in a full-screen terminal pager |
 
-Use arrow keys and Enter to choose a PR; Escape closes the picker or popup.
+Use arrow keys and Enter to choose a PR; Escape closes the picker. In the reader,
+use arrows or Space to scroll, `/` to search, and `q` to return to LazyGit.
+The config disables LazyGit's extra "Press enter to return" prompt for all
+terminal subprocesses, including editors and pagers.
+GitHub CLI renders Markdown using its built-in renderer; no extra plugin is needed.
+LazyGit 0.66.2 cannot send custom command output to the main `[0]-Log` pane;
+the reader temporarily takes over the terminal instead.
 `V` does not switch branches. `v` runs `gh pr checkout`, so commit or stash
 conflicting local changes before switching branches.
 

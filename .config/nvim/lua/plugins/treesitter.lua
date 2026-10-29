@@ -17,6 +17,7 @@ local ensure_installed = {
   "php",
   "swift",
   "kotlin",
+  "rust",
   "java",
   "groovy",
   "xml",

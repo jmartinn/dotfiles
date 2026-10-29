@@ -27,6 +27,7 @@ function M.config()
       lua = { "stylua" },
       python = { "ruff_format" },
       go = { "gofmt" },
+      rust = { "rustfmt" },
       php = { "php_cs_fixer" },
       swift = { "swiftformat" },
       kotlin = { "ktlint" },

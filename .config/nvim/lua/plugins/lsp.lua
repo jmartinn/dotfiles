@@ -116,6 +116,7 @@ function M.config()
       "tailwindcss",
       "pyright",
       "gopls",
+      "rust_analyzer",
       "intelephense",
       "yamlls",
       "lemminx",
